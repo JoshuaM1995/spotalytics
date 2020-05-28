@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Dropdown, Icon, Nav, Sidebar, Sidenav} from "rsuite";
 import NavToggle from "../NavToggle/NavToggle";
 import {useLocation} from "react-router-dom";
@@ -6,6 +6,7 @@ import {dashboardRoutes} from "../../../App";
 import NavigationItem from "../NavigationItem/NavigationItem";
 import DropdownItem from "../Dropdown/DropdownItem";
 import DropdownItemLink from "../Dropdown/DropdownItemLink";
+import SpotifyContext from "../../../context/spotify";
 
 const headerStyles = {
   padding: 18,
@@ -19,8 +20,7 @@ const headerStyles = {
 
 const SideNavigation = () => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const location = useLocation();
-  console.log('pathname', location.pathname);
+  const { spotifyContext, setSpotifyContext } = useContext(SpotifyContext);
 
   return (
     <Sidebar
@@ -98,21 +98,24 @@ const SideNavigation = () => {
               <Dropdown.Item eventKey="5-1" icon={<Icon icon="user-circle"/>}>
                 My Profile
               </Dropdown.Item>
-              <Dropdown.Item
-                eventKey="5-2"
-                icon={<Icon icon="spotify"/>}
-                renderItem={() => (
-                  <a
-                    className="rs-dropdown-item-content"
-                    href="https://www.spotify.com/ca-en/account/apps/"
-                    target="_blank"
-                  >
-                    <i className="rs-dropdown-item-menu-icon rs-icon rs-icon-spotify"/>
-                    Unlink Application
-                  </a>
-                )}
-              >
-              </Dropdown.Item>
+              {/* Show the "unlink" menu item if the user is authenticated with Spotify */}
+              {spotifyContext.isAuthenticated &&
+                <Dropdown.Item
+                  eventKey="5-2"
+                  icon={<Icon icon="spotify"/>}
+                  renderItem={() => (
+                    <a
+                      className="rs-dropdown-item-content"
+                      href="https://www.spotify.com/ca-en/account/apps/"
+                      target="_blank"
+                    >
+                      <Icon icon="spotify" />
+                      Unlink Application
+                    </a>
+                  )}
+                >
+                </Dropdown.Item>
+              }
             </Dropdown>
           </Nav>
         </Sidenav.Body>

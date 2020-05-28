@@ -1,11 +1,12 @@
 import React from 'react';
 import {Container} from "rsuite";
+import Page from "../Page/Page";
 
 const Dashboard = () => {
   return (
-    <Container>
+    <Page title={<h2>Dashboard</h2>}>
       Dashboard
-    </Container>
+    </Page>
   );
 };
 
