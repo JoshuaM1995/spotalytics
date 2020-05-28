@@ -1,1 +1,2 @@
-/// <reference types="react-scripts" />
+// / <reference types="react-scripts" />
+PUBLIC_URL = 'localhost:3000';
