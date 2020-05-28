@@ -19,6 +19,7 @@ const App = () => {
           <Route exact path={dashboardRoutes} component={Dashboard} />
           <Route path="/artists" render={() => <ArtistsRoutes />} />
           <Route>
+            {/* 404 Page */}
             <NoMatch />
           </Route>
         </Switch>
