@@ -3,7 +3,7 @@ import Page from "../../Page/Page";
 
 const TopArtists = () => {
   return (
-    <Page title={<h2>Top Artists</h2>}>
+    <Page title="Top Artists">
       Top artists
     </Page>
   );

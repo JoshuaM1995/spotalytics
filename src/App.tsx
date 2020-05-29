@@ -7,6 +7,8 @@ import {Container} from 'rsuite';
 import SideNavigation from './components/Navigation/SideNavigation/SideNavigation';
 import ArtistsRoutes from "./routes/ArtistsRoutes";
 import SpotifyContext, {spotifyContextDefaultValue} from './context/spotify';
+import AlbumsRoutes from "./routes/AlbumsRoutes";
+import SongsRoutes from "./routes/SongsRoutes";
 
 export const dashboardRoutes = ['/', '/dashboard'];
 
@@ -23,6 +25,8 @@ const App = () => {
           <Switch>
             <Route exact path={dashboardRoutes} component={Dashboard} />
             <Route path="/artists" render={() => <ArtistsRoutes />} />
+            <Route path="/albums" render={() => <AlbumsRoutes />} />
+            <Route path="/songs" render={() => <SongsRoutes />} />
             <Route>
               {/* 404 Page */}
               <NoMatch />

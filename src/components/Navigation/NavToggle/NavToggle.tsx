@@ -1,5 +1,6 @@
 import {Dropdown, Icon, Nav, Navbar} from "rsuite";
-import React from "react";
+import React, {useContext, useState} from "react";
+import SpotifyContext from "../../../context/spotify";
 
 interface NavToggleProps {
   expand: any;
@@ -14,6 +15,23 @@ const iconStyles = {
 };
 
 const NavToggle = ({ expand, onChange }: NavToggleProps) => {
+  const { spotifyContext, setSpotifyContext } = useContext(SpotifyContext);
+  const [isUnlinkIconLoading, setIsUnlinkIconLoading] = useState(false);
+
+  const unlinkSpotifyAccount = () => {
+    setIsUnlinkIconLoading(true);
+
+    // TODO: Replace with action to unlink the user from Spotify via Passport
+    setTimeout(() => {
+      setSpotifyContext({
+        ...spotifyContext,
+        isAuthenticated: false,
+      });
+      setIsUnlinkIconLoading(false);
+      window.open('https://www.spotify.com/ca-en/account/apps/', '_blank');
+    }, 1000);
+  };
+
   return (
     <Navbar appearance="subtle" className="nav-toggle">
       <Navbar.Body>
@@ -26,9 +44,26 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
               return <Icon style={iconStyles} icon="cog" />;
             }}
           >
-            <Dropdown.Item>Help</Dropdown.Item>
-            <Dropdown.Item>Settings</Dropdown.Item>
-            <Dropdown.Item>Sign out</Dropdown.Item>
+            <Dropdown.Item eventKey="5-1" icon={<Icon icon="user-circle"/>}>
+              My Profile
+            </Dropdown.Item>
+            {/* Show the "unlink" menu item if the user is authenticated with Spotify */}
+            {spotifyContext.isAuthenticated &&
+            <Dropdown.Item
+              eventKey="5-2"
+              icon={<Icon icon="spotify"/>}
+              renderItem={() => (
+                <a
+                  className="rs-dropdown-item-content"
+                  onClick={() => unlinkSpotifyAccount()}
+                >
+                  <Icon icon={isUnlinkIconLoading ? 'spinner' : 'spotify'} pulse={isUnlinkIconLoading} />
+                  {isUnlinkIconLoading ? 'Unlinking Spotify...' : 'Unlink Application'}
+                </a>
+              )}
+            >
+            </Dropdown.Item>
+            }
           </Dropdown>
         </Nav>
 

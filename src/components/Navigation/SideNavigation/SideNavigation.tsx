@@ -20,7 +20,6 @@ const headerStyles = {
 
 const SideNavigation = () => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const { spotifyContext, setSpotifyContext } = useContext(SpotifyContext);
 
   return (
     <Sidebar
@@ -32,7 +31,7 @@ const SideNavigation = () => {
         {/*@ts-ignore*/}
         <div style={headerStyles}>
           <Icon icon="logo-analytics" size="lg" style={{verticalAlign: 0}}/>
-          <span style={{marginLeft: 12}}>SPOTICS</span>
+          <span style={{marginLeft: 18}}>SPOTICS</span>
         </div>
       </Sidenav.Header>
       <Sidenav
@@ -62,6 +61,14 @@ const SideNavigation = () => {
               <Dropdown.Item eventKey="2-2" icon={<Icon icon="user-plus"/>}>
                 Recently Followed
               </Dropdown.Item>
+              <DropdownItemLink
+                to="/artists/all"
+                path="/artists/all"
+                eventKey="2-1"
+              >
+                <Icon icon="list-ol" />
+                All Artists
+              </DropdownItemLink>
             </DropdownItem>
             <Dropdown
               eventKey="4"
@@ -74,14 +81,22 @@ const SideNavigation = () => {
               <Dropdown.Item eventKey="3-2" icon={<Icon icon="heart"/>}>
                 Favorite Albums
               </Dropdown.Item>
+              <DropdownItemLink
+                to="/albums/all"
+                path="/albums/all"
+                eventKey="3-3"
+              >
+                <Icon icon="list-ol" />
+                All Albums
+              </DropdownItemLink>
             </Dropdown>
             <Dropdown
               eventKey="5"
-              title="Tracks"
+              title="Songs"
               icon={<Icon icon="music"/>}
             >
               <Dropdown.Item eventKey="4-1" icon={<Icon icon="bar-chart-ranking" flip="horizontal"/>}>
-                Top Tracks
+                Top Songs
               </Dropdown.Item>
               <Dropdown.Item eventKey="4-2" icon={<Icon icon="play"/>}>
                 Recently Played
@@ -89,33 +104,14 @@ const SideNavigation = () => {
               <Dropdown.Item eventKey="4-3" icon={<Icon icon="thumbs-up"/>}>
                 Liked Songs
               </Dropdown.Item>
-            </Dropdown>
-            <Dropdown
-              eventKey="6"
-              title="Settings"
-              icon={<Icon icon="gear-circle"/>}
-            >
-              <Dropdown.Item eventKey="5-1" icon={<Icon icon="user-circle"/>}>
-                My Profile
-              </Dropdown.Item>
-              {/* Show the "unlink" menu item if the user is authenticated with Spotify */}
-              {spotifyContext.isAuthenticated &&
-                <Dropdown.Item
-                  eventKey="5-2"
-                  icon={<Icon icon="spotify"/>}
-                  renderItem={() => (
-                    <a
-                      className="rs-dropdown-item-content"
-                      href="https://www.spotify.com/ca-en/account/apps/"
-                      target="_blank"
-                    >
-                      <Icon icon="spotify" />
-                      Unlink Application
-                    </a>
-                  )}
-                >
-                </Dropdown.Item>
-              }
+              <DropdownItemLink
+                to="/songs/all"
+                path="/songs/all"
+                eventKey="4-4"
+              >
+                <Icon icon="list-ol" />
+                All Songs
+              </DropdownItemLink>
             </Dropdown>
           </Nav>
         </Sidenav.Body>

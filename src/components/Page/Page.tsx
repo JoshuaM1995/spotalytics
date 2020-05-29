@@ -1,16 +1,20 @@
-import React, {PropsWithChildren, ReactNode} from 'react';
+import React, {PropsWithChildren, useEffect} from 'react';
 import {Container, Content, Header} from "rsuite";
 import {contentStyles, headerStyles} from "../../styles";
 
 interface PageProps {
-  title: ReactNode;
+  title: string;
 }
 
 const Page = ({ title, children }: PropsWithChildren<PageProps>) => {
+  useEffect(() => {
+    document.title = `Spotics - ${title}`;
+  }, []);
+
   return (
     <Container>
       <Header style={headerStyles}>
-        { title }
+        <h2>{ title }</h2>
       </Header>
       <Content style={contentStyles}>
         { children }
