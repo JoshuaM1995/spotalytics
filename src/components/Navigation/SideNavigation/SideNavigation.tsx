@@ -42,7 +42,7 @@ const SideNavigation = () => {
         <Sidenav.Body>
           <Nav>
             {!spotifyContext.isAuthenticated &&
-              <NavigationItem to="/" path="/home" exact>
+              <NavigationItem to="/" path="/" exact>
                 <Icon icon="home"/>
                 Home
               </NavigationItem>
@@ -104,25 +104,30 @@ const SideNavigation = () => {
             </Dropdown>
             <Dropdown
               eventKey="4"
-              title="Songs"
+              title="Tracks"
               icon={<Icon icon="music"/>}
             >
               <Dropdown.Item eventKey="4-1" icon={<Icon icon="bar-chart-ranking" flip="horizontal"/>}>
-                Top Songs
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="4-2" icon={<Icon icon="play"/>}>
-                Recently Played
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="4-3" icon={<Icon icon="thumbs-up"/>}>
-                Liked Songs
+                Top Tracks
               </Dropdown.Item>
               <DropdownItemLink
-                to="/songs/all"
-                path="/songs/all"
+                to="/tracks/recently-played"
+                path="/tracks/recently-played"
+                eventKey="3-3"
+              >
+                <Icon icon="play" />
+                Recently Played
+              </DropdownItemLink>
+              <Dropdown.Item eventKey="4-3" icon={<Icon icon="thumbs-up"/>}>
+                Liked Tracks
+              </Dropdown.Item>
+              <DropdownItemLink
+                to="/tracks/all"
+                path="/tracks/all"
                 eventKey="4-4"
               >
                 <Icon icon="list-ol" />
-                All Songs
+                All Tracks
               </DropdownItemLink>
             </Dropdown>
           </Nav>

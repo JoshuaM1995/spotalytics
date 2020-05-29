@@ -1,7 +1,6 @@
 import React from 'react';
 import {Col, Row} from "rsuite";
 import Page from "../Page/Page";
-import StatisticCard from "../shared/StatisticCard";
 import StatisticCardLink from "../shared/StatisticCardLink";
 
 const Dashboard = () => {
@@ -28,11 +27,11 @@ const Dashboard = () => {
         </Col>
         <Col xs={24} sm={24} md={8}>
           <StatisticCardLink
-            to="songs/all"
+            to="tracks/all"
             background="#f44336"
             icon="music"
             statisticValue={5000}
-            statisticText="Total Songs"
+            statisticText="Total Tracks"
           />
         </Col>
       </Row>

@@ -11,7 +11,7 @@ import NotFound from "./components/NotFound/NotFound";
 import Loading from "./components/Loading/Loading";
 import ArtistsRoutes from "./router/routes/ArtistsRoutes";
 import AlbumsRoutes from "./router/routes/AlbumsRoutes";
-import SongsRoutes from "./router/routes/SongsRoutes";
+import TracksRoutes from "./router/routes/TracksRoutes";
 import Home from "./components/Home/Home";
 import Unauthenticated from "./components/Authenticate/Unauthenticated";
 
@@ -47,7 +47,7 @@ const App = () => {
               <GuardedRoute path={'/dashboard'} component={Dashboard}/>
               <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>}/>
               <GuardedRoute path="/albums" render={() => <AlbumsRoutes/>}/>
-              <GuardedRoute path="/songs" render={() => <SongsRoutes/>}/>
+              <GuardedRoute path="/tracks" render={() => <TracksRoutes/>}/>
               <GuardedRoute path="/authenticate" component={Authenticate}/>
               <GuardedRoute path="/unauthenticated" component={Unauthenticated}/>
               <Route path="*">
