@@ -10,7 +10,7 @@ interface SpotifyContext {
 }
 
 export const spotifyContextDefaultValue: Context = {
-  isAuthenticated: true,
+  isAuthenticated: false,
 };
 
 export const spotifyContext = {

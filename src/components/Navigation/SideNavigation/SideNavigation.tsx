@@ -1,8 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Dropdown, Icon, Nav, Sidebar, Sidenav} from "rsuite";
 import NavToggle from "../NavToggle/NavToggle";
-import {useLocation} from "react-router-dom";
-import {dashboardRoutes} from "../../../App";
 import NavigationItem from "../NavigationItem/NavigationItem";
 import DropdownItem from "../Dropdown/DropdownItem";
 import DropdownItemLink from "../Dropdown/DropdownItemLink";
@@ -20,6 +18,7 @@ const headerStyles = {
 
 const SideNavigation = () => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { spotifyContext } = useContext(SpotifyContext);
 
   return (
     <Sidebar
@@ -31,7 +30,9 @@ const SideNavigation = () => {
         {/*@ts-ignore*/}
         <div style={headerStyles}>
           <Icon icon="logo-analytics" size="lg" style={{verticalAlign: 0}}/>
-          <span style={{marginLeft: 18}}>SPOTICS</span>
+          <span style={{marginLeft: 18}}>
+            { process.env.REACT_APP_SITE_NAME }
+          </span>
         </div>
       </Sidenav.Header>
       <Sidenav
@@ -40,7 +41,13 @@ const SideNavigation = () => {
       >
         <Sidenav.Body>
           <Nav>
-            <NavigationItem to="/" path={dashboardRoutes} exact>
+            {!spotifyContext.isAuthenticated &&
+              <NavigationItem to="/" path="/home" exact>
+                <Icon icon="home"/>
+                Home
+              </NavigationItem>
+            }
+            <NavigationItem to="/dashboard" path="/dashboard">
               <Icon icon="dashboard"/>
               Dashboard
             </NavigationItem>
@@ -58,20 +65,25 @@ const SideNavigation = () => {
                 <Icon icon="bar-chart-ranking" flip="horizontal" />
                 Top Artists
               </DropdownItemLink>
-              <Dropdown.Item eventKey="2-2" icon={<Icon icon="user-plus"/>}>
+              <DropdownItemLink
+                to="/artists/recently-followed"
+                path="/artists/recently-followed"
+                eventKey="2-2"
+              >
+                <Icon icon="user-plus" />
                 Recently Followed
-              </Dropdown.Item>
+              </DropdownItemLink>
               <DropdownItemLink
                 to="/artists/all"
                 path="/artists/all"
-                eventKey="2-1"
+                eventKey="2-3"
               >
                 <Icon icon="list-ol" />
                 All Artists
               </DropdownItemLink>
             </DropdownItem>
             <Dropdown
-              eventKey="4"
+              eventKey="3"
               title="Albums"
               icon={<Icon icon="play-circle"/>}
             >
@@ -91,7 +103,7 @@ const SideNavigation = () => {
               </DropdownItemLink>
             </Dropdown>
             <Dropdown
-              eventKey="5"
+              eventKey="4"
               title="Songs"
               icon={<Icon icon="music"/>}
             >
