@@ -4,12 +4,13 @@ import {Col, Icon, IconButton, Panel, Row} from "rsuite";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext, {SpotifyContextValues} from "../../context/spotify";
 import {SPOTIFY_CONTEXT} from "../../constants";
-import {Redirect} from "react-router";
+import {Redirect, useParams} from "react-router";
 
 const urlParams = new URLSearchParams(window.location.hash);
 const accessToken = urlParams.get('#access_token') ?? '';
 
 const AuthenticateSpotify = () => {
+  const { action } = useParams();
   const {spotifyContext, setSpotifyContext} = useContext(SpotifyContext);
   const [redirect, setRedirect] = useState(false);
 
@@ -23,6 +24,15 @@ const AuthenticateSpotify = () => {
       setSpotifyContext(context);
       sessionStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(context));
       setRedirect(true);
+    }
+
+    // We need to re-authenticate, so remove the spotify context authentication values
+    if(action === 'reauthenticate') {
+      setSpotifyContext({
+        ...spotifyContext,
+        isAuthenticated: false,
+        accessToken: '',
+      });
     }
   }, []);
 
