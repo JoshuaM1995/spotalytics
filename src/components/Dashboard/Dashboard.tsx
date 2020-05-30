@@ -79,7 +79,7 @@ const Dashboard = () => {
         images.push({
           url: album.images[0].url,
           title: album.name,
-          subtitle: album.top_track,
+          subtitle: album.artists[0].name,
         });
       });
 

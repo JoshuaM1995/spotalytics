@@ -78,6 +78,8 @@ export default class SpotifyApi {
           };
         });
 
+        console.log('albums', albums);
+
         resolve(albums);
       });
     });
