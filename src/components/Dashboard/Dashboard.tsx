@@ -46,7 +46,7 @@ const Dashboard = () => {
       topArtists.forEach((artist: any) => {
         images.push({
           url: artist.images[0].url,
-          title: <Link to={`artist/${artist.name}`}>{ artist.name }</Link>,
+          title: <Link to={`artist/${artist.id}`}>{ artist.name }</Link>,
           subtitle: `${artist.followers.total} Followers`
         });
       });
@@ -60,7 +60,7 @@ const Dashboard = () => {
       topAlbums.forEach((album: any) => {
         images.push({
           url: album.images[0].url,
-          title: <Link to={`artist/${album.artists[0].name}/album/${album.name}`}>{ album.name }</Link>,
+          title: <Link to={`album/${album.id}`}>{ album.name }</Link>,
           subtitle: album.artists[0].name,
         });
       });

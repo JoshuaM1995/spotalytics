@@ -18,6 +18,7 @@ import './App.scss';
 import {SPOTIFY_CONTEXT} from "./constants";
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
 import ArtistRoutes from "./router/routes/ArtistRoutes";
+import AlbumRoutes from "./router/routes/AlbumRoutes";
 
 const App = () => {
   const [spotifyContext, setSpotifyContext] = useState(spotifyContextDefaultValue);
@@ -54,14 +55,15 @@ const App = () => {
           <GuardProvider guards={[authenticateGuard]} loading={Loading} error={SomethingWentWrong}>
             <Switch>
               <Route exact path="/" component={Home} />
-              <GuardedRoute path={'/dashboard'} component={Dashboard}/>
-              <GuardedRoute path="/artist" render={() => <ArtistRoutes/>}/>
-              <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>}/>
-              <GuardedRoute path="/albums" render={() => <AlbumsRoutes/>}/>
-              <GuardedRoute path="/tracks" render={() => <TracksRoutes/>}/>
-              <GuardedRoute exact path="/authenticate-spotify" component={AuthenticateSpotify}/>
-              <GuardedRoute exact path="/authenticate-spotify/:action" component={AuthenticateSpotify}/>
-              <GuardedRoute path="/unauthenticated-spotify" component={UnauthenticatedSpotify}/>
+              <GuardedRoute path={'/dashboard'} component={Dashboard} />
+              <GuardedRoute path="/artist" render={() => <ArtistRoutes/>} />
+              <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>} />
+              <GuardedRoute path="/album" render={() => <AlbumRoutes/>} />
+              <GuardedRoute path="/albums" render={() => <AlbumsRoutes/>} />
+              <GuardedRoute path="/tracks" render={() => <TracksRoutes/>} />
+              <GuardedRoute exact path="/authenticate-spotify" component={AuthenticateSpotify} />
+              <GuardedRoute exact path="/authenticate-spotify/:action" component={AuthenticateSpotify} />
+              <GuardedRoute path="/unauthenticated-spotify" component={UnauthenticatedSpotify} />
               <Route path="*">
                 <NotFound/>
               </Route>

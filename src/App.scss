@@ -2,6 +2,14 @@
 @import 'scss/mixins';
 @import 'scss/helpers';
 
+a {
+  color: $spotify-green;
+
+  &:hover {
+    color: $spotify-light-green;
+  }
+}
+
 .page-header {
   padding: 10px 10px 10px 20px;
 }

@@ -1,10 +1,10 @@
 const Spotify = require('spotify-web-api-js');
 
 export default class SpotifyApi {
-  private spotifyApi = new Spotify();
+  private spotify = new Spotify();
 
   constructor(accessToken: string) {
-    this.spotifyApi.setAccessToken(accessToken);
+    this.spotify.setAccessToken(accessToken);
   }
 
   public static getAuthorizeURL(): string {
@@ -18,7 +18,7 @@ export default class SpotifyApi {
 
   public getTotalArtistCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getFollowedArtists({ limit }, (error: any, response: any) => {
+      this.spotify.getFollowedArtists({ limit }, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);
         resolve(response.artists.total);
       });
@@ -27,7 +27,7 @@ export default class SpotifyApi {
 
   public getTotalAlbumCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMySavedAlbums({ limit }, (error: any, response: any) => {
+      this.spotify.getMySavedAlbums({ limit }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -39,7 +39,7 @@ export default class SpotifyApi {
 
   public getTotalTrackCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMySavedTracks({ limit }, (error: any, response: any) => {
+      this.spotify.getMySavedTracks({ limit }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -51,7 +51,7 @@ export default class SpotifyApi {
 
   public getTopArtists(limit: number = 5): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopArtists({ limit, time_range: 'long_term' }, (error: any, response: any) => {
+      this.spotify.getMyTopArtists({ limit, time_range: 'long_term' }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -70,7 +70,7 @@ export default class SpotifyApi {
 
   public getTopAlbums(limit: number = 5): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopTracks({ limit, time_range: 'long_term' }, (error: any, response: any) => {
+      this.spotify.getMyTopTracks({ limit, time_range: 'long_term' }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -96,7 +96,7 @@ export default class SpotifyApi {
 
   public getTopTracks(limit: number = 10): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopTracks({ limit, time_range: 'long_term' }, (error: any, response: any) => {
+      this.spotify.getMyTopTracks({ limit, time_range: 'long_term' }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -109,6 +109,15 @@ export default class SpotifyApi {
         });
 
         resolve(tracks);
+      });
+    });
+  }
+
+  public getAlbumInfo(id: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getAlbum(id, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response);
       });
     });
   }

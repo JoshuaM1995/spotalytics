@@ -5,10 +5,9 @@ import {useParams} from "react-router";
 const lastFMApi = new LastFMApi();
 
 const ArtistDetails = () => {
-  const { artistName } = useParams();
+  const { artistId } = useParams();
 
   useEffect(() => {
-    lastFMApi.getArtistInfo(artistName);
   }, []);
 
   return (
