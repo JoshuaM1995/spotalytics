@@ -3,7 +3,7 @@ import {Col, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
 import './Dashboard.scss';
-import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock";
+import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock/ImageBlock";
 import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
 

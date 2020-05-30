@@ -1,5 +1,6 @@
 import React, {ReactNode} from 'react';
 import {Col, Row} from "rsuite";
+import './ImageBlock.scss';
 
 export interface ImageBlockImage {
   url: string;
