@@ -3,6 +3,7 @@ import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
 import SpotifyContext from "../../context/spotify";
 import {Redirect} from "react-router";
+import Spotify from "../../api/Spotify";
 
 const Home = () => {
   const {spotifyContext} = useContext(SpotifyContext);
@@ -22,9 +23,11 @@ const Home = () => {
             your top artists, favorite albums and total songs.
           </h5>
           <br/>
-          <IconButton icon={<Icon icon="spotify"/>} placement="left" color="green" size="lg">
-            Link to Spotify
-          </IconButton>
+          <a href={Spotify.getAuthorizeURL()}>
+            <IconButton icon={<Icon icon="spotify"/>} placement="left" color="green" size="lg">
+              Link to Spotify
+            </IconButton>
+          </a>
         </Panel>
         <br /><br />
 

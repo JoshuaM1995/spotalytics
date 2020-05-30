@@ -1,16 +1,18 @@
 import React from "react";
 
-interface Context {
+export interface SpotifyContextValues {
   isAuthenticated: boolean;
+  accessToken: string;
 }
 
 interface SpotifyContext {
-  spotifyContext: Context;
+  spotifyContext: SpotifyContextValues;
   setSpotifyContext: any;
 }
 
-export const spotifyContextDefaultValue: Context = {
-  isAuthenticated: true,
+export const spotifyContextDefaultValue: SpotifyContextValues = {
+  isAuthenticated: false,
+  accessToken: '',
 };
 
 export const spotifyContext = {

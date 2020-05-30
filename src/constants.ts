@@ -1,0 +1,1 @@
+export const SPOTIFY_CONTEXT = 'SPOTIFY_CONTEXT';

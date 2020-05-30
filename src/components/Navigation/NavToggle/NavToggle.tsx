@@ -2,6 +2,7 @@ import {Dropdown, Icon, Nav, Navbar} from "rsuite";
 import React, {useContext, useState} from "react";
 import SpotifyContext from "../../../context/spotify";
 import {Redirect} from "react-router";
+import {SPOTIFY_CONTEXT} from "../../../constants";
 
 interface NavToggleProps {
   expand: any;
@@ -23,12 +24,12 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
   const unlinkSpotifyAccount = () => {
     setIsUnlinkIconLoading(true);
 
-    // TODO: Replace with action to unlink the user from Spotify via Passport
     setTimeout(() => {
       setSpotifyContext({
         ...spotifyContext,
         isAuthenticated: false,
       });
+      sessionStorage.removeItem(SPOTIFY_CONTEXT);
       setIsUnlinkIconLoading(false);
 
       setRedirect(<Redirect to="/unauthenticated" />);
