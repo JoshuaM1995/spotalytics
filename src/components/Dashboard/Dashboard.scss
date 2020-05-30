@@ -3,3 +3,14 @@
 .panel {
   background: $gray-medium;
 }
+
+.track-name {
+  padding-bottom: 5px;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.popularity {
+  font-size: 1.2em;
+  font-weight: 500;
+}

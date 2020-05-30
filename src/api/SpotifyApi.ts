@@ -78,8 +78,6 @@ export default class SpotifyApi {
           };
         });
 
-        console.log('albums', albums);
-
         resolve(albums);
       });
     });
@@ -91,8 +89,6 @@ export default class SpotifyApi {
         if(error) {
           reject(error);
         }
-
-        console.log('getTopTracks', response);
 
         resolve(response.items);
       });

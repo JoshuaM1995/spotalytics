@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Panel, Row} from "rsuite";
+import {Col, Panel, Row, List, FlexboxGrid} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
 import './Dashboard.scss';
@@ -7,33 +7,12 @@ import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock/ImageBlock";
 import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
 
-const topAlbumsImages: ImageBlockImage[] = [
-  {
-    url: 'https://via.placeholder.com/500x500/0000FF/FFFFFF',
-    title: 'Prehensile Tales',
-    subtitle: <span>Pattern-Seeking Animals<br />72 Plays</span>,
-  },
-  {
-    url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF',
-    title: 'What the Dead Men Say',
-    subtitle: <span>Trivium<br />52 Plays</span>,
-  },
-  {
-    url: 'https://via.placeholder.com/250x250/FFFF00/000000',
-    title: 'V',
-    subtitle: <span>Havok<br />48 Plays</span>,
-  },
-  {
-    url: 'https://via.placeholder.com/250x250/FFFF00/000000',
-    title: 'Underneath',
-    subtitle: <span>Code Orange<br />42 Plays</span>,
-  },
-  {
-    url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF',
-    title: 'Rise Radiant (Bonus Tracks Version)',
-    subtitle: <span>Caligula's Horse<br />39 Plays</span>,
-  },
-];
+interface TopTrack {
+  track_name: string;
+  artist: string;
+  album_image_url: string;
+  popularity: number;
+}
 
 const Dashboard = () => {
   const [totalArtists, setTotalArtists] = useState(0);
@@ -41,24 +20,25 @@ const Dashboard = () => {
   const [totalTracks, setTotalTracks] = useState(0);
   const [topArtistsImages, setTopArtistsImages] = useState<ImageBlockImage[]>([]);
   const [topAlbumsImages, setTopAlbumsImages] = useState<ImageBlockImage[]>([]);
+  const [topTracks, setTopTracks] = useState<TopTrack[]>([]);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
-    spotifyApi.getTotalArtistCount().then((totalArtistCount) => {
+    spotifyApi.getTotalArtistCount().then(totalArtistCount => {
       setTotalArtists(totalArtistCount);
     });
 
-    spotifyApi.getTotalAlbumCount().then((totalAlbumCount) => {
+    spotifyApi.getTotalAlbumCount().then(totalAlbumCount => {
       setTotalAlbums(totalAlbumCount);
     });
 
-    spotifyApi.getTotalTrackCount().then((totalTrackCount) => {
+    spotifyApi.getTotalTrackCount().then(totalTrackCount => {
       setTotalTracks(totalTrackCount);
     });
 
-    spotifyApi.getTopArtists().then((topArtists) => {
+    spotifyApi.getTopArtists().then(topArtists => {
       const images: ImageBlockImage[] = [];
 
       topArtists.forEach((artist: any) => {
@@ -72,7 +52,7 @@ const Dashboard = () => {
       setTopArtistsImages(images);
     });
 
-    spotifyApi.getTopAlbums().then((topAlbums) => {
+    spotifyApi.getTopAlbums().then(topAlbums => {
       const images: ImageBlockImage[] = [];
 
       topAlbums.forEach((album: any) => {
@@ -85,8 +65,24 @@ const Dashboard = () => {
 
       setTopAlbumsImages(images);
     });
+
+    spotifyApi.getTopTracks().then(tracks => {
+      const topTrackValues: TopTrack[] = [];
+
+      tracks.forEach((track: any) => {
+        topTrackValues.push({
+          track_name: track.name,
+          artist: track.artists[0].name,
+          album_image_url: track.album.images[0].url,
+          popularity: track.popularity,
+        });
+      });
+
+      setTopTracks(topTrackValues);
+    });
   }, []);
 
+  // @ts-ignore
   return (
     <Page title="Dashboard">
       <Row>
@@ -139,6 +135,50 @@ const Dashboard = () => {
       <Panel className="panel-light">
         <h3>Top Tracks</h3>
         <br />
+        <List hover>
+          {topTracks.map((track: any, index: number) => (
+            <List.Item key={track.track_name} index={index}>
+              <FlexboxGrid>
+                {/*icon*/}
+                <FlexboxGrid.Item colspan={2} className="center" style={{ height: '60px' }}>
+                  <img src={track.album_image_url} height={50} width={50} />
+                </FlexboxGrid.Item>
+                {/*base info*/}
+                <FlexboxGrid.Item
+                  colspan={6}
+                  className="center"
+                  style={{
+                    height: '60px',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div className="track-name">{track.track_name}</div>
+                  <div>
+                    <div>
+                      {track.artist}
+                    </div>
+                  </div>
+                </FlexboxGrid.Item>
+                <FlexboxGrid.Item colspan={6} className="center" style={{ height: '60px' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    {/*@ts-ignore*/}
+                    <div className="text-slim">Popularity</div>
+                    <div className="popularity">{track.popularity}</div>
+                  </div>
+                </FlexboxGrid.Item>
+                <FlexboxGrid.Item
+                  colspan={4}
+                  className="center"
+                  style={{ height: '60px' }}
+                >
+                  <a href="#">View Details</a>
+                </FlexboxGrid.Item>
+              </FlexboxGrid>
+            </List.Item>
+          ))}
+        </List>
       </Panel>
     </Page>
   );
