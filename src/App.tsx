@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
 import 'rsuite/dist/styles/rsuite-dark.min.css';
@@ -34,11 +34,11 @@ const App = () => {
         if(sessionStorageSpotify) {
           setSpotifyContext({ ...spotifyContext, ...sessionStorageSpotify });
         } else {
-          next.redirect('/');
+          next.redirect('/authenticate');
         }
+      } else {
+        next.redirect('/authenticate');
       }
-    } else {
-      next.redirect('/authenticate');
     }
 
     next();

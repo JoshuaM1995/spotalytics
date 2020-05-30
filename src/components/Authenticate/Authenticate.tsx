@@ -1,24 +1,24 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
-import Spotify from "../../api/Spotify";
+import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext, {SpotifyContextValues} from "../../context/spotify";
 import {SPOTIFY_CONTEXT} from "../../constants";
 import {Redirect} from "react-router";
 
-const urlParams = new URLSearchParams(window.location.search);
-const code = urlParams.get('code') ?? '';
+const urlParams = new URLSearchParams(window.location.hash);
+const accessToken = urlParams.get('#access_token') ?? '';
 
 const Authenticate = () => {
   const {spotifyContext, setSpotifyContext} = useContext(SpotifyContext);
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    if (code) {
+    if (accessToken) {
       const context: SpotifyContextValues = {
         ...spotifyContext,
         isAuthenticated: true,
-        accessToken: code,
+        accessToken: accessToken,
       };
       setSpotifyContext(context);
       sessionStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(context));
@@ -43,7 +43,7 @@ const Authenticate = () => {
                 your top artists, favorite albums and total songs.
               </h5>
               <br/>
-              <a href={Spotify.getAuthorizeURL()}>
+              <a href={SpotifyApi.getAuthorizeURL()}>
                 <IconButton icon={<Icon icon="spotify"/>} placement="left" color="green" size="lg">
                   Link to Spotify
                 </IconButton>

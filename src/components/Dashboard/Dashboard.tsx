@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Col, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCardLink";
 import '../../styles/Dashboard.scss';
 import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock";
+import SpotifyApi from '../../api/SpotifyApi';
+import SpotifyContext from "../../context/spotify";
 
 const topArtistsImages: ImageBlockImage[] = [
   { url: 'https://via.placeholder.com/500x500/0000FF/FFFFFF', title: 'Pattern-Seeking Animals', subtitle: '103 Plays' },
@@ -42,6 +44,13 @@ const topAlbumsImages: ImageBlockImage[] = [
 ];
 
 const Dashboard = () => {
+  const { spotifyContext } = useContext(SpotifyContext);
+
+  useEffect(() => {
+    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+    spotifyApi.getSavedTracks();
+  }, []);
+
   return (
     <Page title="Dashboard">
       <Row>
