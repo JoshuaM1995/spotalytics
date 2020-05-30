@@ -2,7 +2,7 @@ import React from 'react';
 import {Icon, IconButton} from "rsuite";
 import {Link} from "react-router-dom";
 import Page from "../Page/Page";
-import '../../styles/NotFound.scss';
+import './Error.scss';
 
 const SomethingWentWrong = () => {
   return (

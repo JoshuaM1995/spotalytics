@@ -5,7 +5,7 @@ import NavigationItem from "../NavigationItem/NavigationItem";
 import DropdownItem from "../Dropdown/DropdownItem";
 import DropdownItemLink from "../Dropdown/DropdownItemLink";
 import SpotifyContext from "../../../context/spotify";
-import '../../../styles/SideNavigation.scss';
+import './SideNavigation.scss';
 
 const SideNavigation = () => {
   const [isExpanded, setIsExpanded] = useState(true);

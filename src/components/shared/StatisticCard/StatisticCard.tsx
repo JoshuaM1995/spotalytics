@@ -1,7 +1,7 @@
 import {FlexboxGrid, Icon, Panel} from "rsuite";
 import React, {ReactNode, useState} from "react";
 import {IconNames} from "rsuite/es/Icon";
-import '../../styles/StatisticCard.scss';
+import './StatisticCard.scss';
 
 export interface StatisticCardProps {
   background: string;

@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Col, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
-import StatisticCardLink from "../shared/StatisticCardLink";
-import '../../styles/Dashboard.scss';
+import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
+import './Dashboard.scss';
 import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock";
 import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
