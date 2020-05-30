@@ -19,10 +19,7 @@ export default class SpotifyApi {
   public getTotalArtistCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
       this.spotifyApi.getFollowedArtists({ limit }, (error: any, response: any) => {
-        if(error) {
-          reject(error);
-        }
-
+        SpotifyApi.processError(error, reject);
         resolve(response.artists.total);
       });
     });
@@ -114,5 +111,15 @@ export default class SpotifyApi {
         resolve(tracks);
       });
     });
+  }
+
+  private static processError(error: any, reject: any) {
+    if(error) {
+      if(error.status === 401) {
+        window.location.href = '/authenticate-spotify/reauthenticate';
+      }
+
+      reject(error);
+    }
   }
 }

@@ -26,13 +26,14 @@ const AuthenticateSpotify = () => {
       setRedirect(true);
     }
 
-    // We need to re-authenticate, so remove the spotify context authentication values
+    // We need to re-authenticate, so remove the spotify context authentication values and session storage values
     if(action === 'reauthenticate') {
       setSpotifyContext({
         ...spotifyContext,
         isAuthenticated: false,
         accessToken: '',
       });
+      sessionStorage.removeItem(SPOTIFY_CONTEXT);
     }
   }, []);
 
