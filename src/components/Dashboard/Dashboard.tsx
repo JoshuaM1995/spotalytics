@@ -7,14 +7,6 @@ import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock";
 import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
 
-const topArtistsImages: ImageBlockImage[] = [
-  { url: 'https://via.placeholder.com/500x500/0000FF/FFFFFF', title: 'Pattern-Seeking Animals', subtitle: '103 Plays' },
-  { url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF', title: 'Caligula\'s Horse', subtitle: '70 Plays' },
-  { url: 'https://via.placeholder.com/250x250/FFFF00/000000', title: 'Trivium', subtitle: '68 Plays' },
-  { url: 'https://via.placeholder.com/250x250/FFFF00/000000', title: 'Veil of Maya', subtitle: '57 Plays' },
-  { url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF', title: 'Havok', subtitle: '48 Plays' },
-];
-
 const topAlbumsImages: ImageBlockImage[] = [
   {
     url: 'https://via.placeholder.com/500x500/0000FF/FFFFFF',
@@ -47,6 +39,8 @@ const Dashboard = () => {
   const [totalArtists, setTotalArtists] = useState(0);
   const [totalAlbums, setTotalAlbums] = useState(0);
   const [totalTracks, setTotalTracks] = useState(0);
+  const [topArtistsImages, setTopArtistsImages] = useState<ImageBlockImage[]>([]);
+  const [topAlbumsImages, setTopAlbumsImages] = useState<ImageBlockImage[]>([]);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
@@ -63,6 +57,34 @@ const Dashboard = () => {
     spotifyApi.getTotalTrackCount().then((totalTrackCount) => {
       setTotalTracks(totalTrackCount);
     });
+
+    spotifyApi.getTopArtists().then((topArtists) => {
+      const images: ImageBlockImage[] = [];
+
+      topArtists.forEach((artist: any) => {
+        images.push({
+          url: artist.images[0].url,
+          title: artist.name,
+          subtitle: `${artist.followers.total} Followers`
+        });
+      });
+
+      setTopArtistsImages(images);
+    });
+
+    // spotifyApi.getTopAlbums().then((topAlbums) => {
+    //   const images: ImageBlockImage[] = [];
+    //
+    //   topAlbums.forEach((album: any) => {
+    //     // images.push({
+    //     //   url: album.images[0].url,
+    //     //   title: album.name,
+    //     //   subtitle: `${album.followers.total} Followers`
+    //     // });
+    //   });
+    //
+    //   setTopArtistsImages(images);
+    // });
   }, []);
 
   return (

@@ -8,7 +8,7 @@ export default class SpotifyApi {
   }
 
   public static getAuthorizeURL(): string {
-    const scopes = ['user-library-read', 'user-follow-read'];
+    const scopes = ['user-library-read', 'user-follow-read', 'user-top-read'];
     return'https://accounts.spotify.com/authorize' +
       '?response_type=token' +
       '&client_id=' + process.env.REACT_APP_SPOTIFY_CLIENT_ID +
@@ -48,6 +48,32 @@ export default class SpotifyApi {
         }
 
         resolve(response.total);
+      });
+    });
+  }
+
+  public getTopArtists(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      this.spotifyApi.getMyTopArtists({ limit: 5, time_range: 'long_term' }, (error: any, response: any) => {
+        if(error) {
+          reject(error);
+        }
+
+        resolve(response.items);
+      });
+    });
+  }
+
+  public getTopAlbums(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      this.spotifyApi.getMyTopAlbums({ limit: 5 }, (error: any, response: any) => {
+        if(error) {
+          reject(error);
+        }
+
+        console.log('getTopAlbums', response);
+
+        resolve(response.items);
       });
     });
   }

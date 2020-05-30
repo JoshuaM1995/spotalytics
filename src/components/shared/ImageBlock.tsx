@@ -27,13 +27,13 @@ const ImageBlock = ({images}: ImageBlockProps) => {
       {images.map((image, index) => {
         if (index === 0) {
           return (
-            <Col md={12} className="image-block-item">
+            <Col md={12} className="image-block-item" key={index}>
               { imageBlockItemInner(image) }
             </Col>
           );
         } else {
           return (
-            <Col xs={12} md={6} className="image-block-item">
+            <Col xs={12} md={6} className="image-block-item" key={index}>
               { imageBlockItemInner(image) }
             </Col>
           );
