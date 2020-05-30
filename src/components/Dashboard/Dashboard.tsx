@@ -36,7 +36,7 @@ const Dashboard = () => {
           />
         </Col>
       </Row>
-      <br /><br />
+      <br />
 
       <Panel className="panel-light">
         <h3>Top Artists</h3>
@@ -46,16 +46,40 @@ const Dashboard = () => {
           <Col md={12} className="image-block">
             <img src="https://via.placeholder.com/500x500/0000FF/FFFFFF" alt="Pattern-Seeking Animals" />
           </Col>
-          <Col xs={6} className="image-block">
+          <Col xs={12} md={6} className="image-block">
             <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Caligula's Horse" />
           </Col>
-          <Col xs={6} className="image-block">
+          <Col xs={12} md={6} className="image-block">
             <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Trivium" />
           </Col>
-          <Col xs={6} className="image-block">
+          <Col xs={12} md={6} className="image-block">
             <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Veil of Maya" />
           </Col>
-          <Col xs={6} className="image-block">
+          <Col xs={12} md={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Havok" />
+          </Col>
+        </Row>
+      </Panel>
+      <br />
+
+      <Panel className="panel-light">
+        <h3>Top Albums</h3>
+        <br />
+
+        <Row>
+          <Col md={12} className="image-block">
+            <img src="https://via.placeholder.com/500x500/0000FF/FFFFFF" alt="Pattern-Seeking Animals" />
+          </Col>
+          <Col xs={12} md={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Caligula's Horse" />
+          </Col>
+          <Col xs={12} md={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Trivium" />
+          </Col>
+          <Col xs={12} md={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Veil of Maya" />
+          </Col>
+          <Col xs={12} md={6} className="image-block">
             <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Havok" />
           </Col>
         </Row>

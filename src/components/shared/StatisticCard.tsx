@@ -1,14 +1,13 @@
 import {FlexboxGrid, Icon, Panel} from "rsuite";
 import React, {ReactNode, useState} from "react";
 import {IconNames} from "rsuite/es/Icon";
-import styled, {ThemedStyledFunction} from "styled-components";
+import '../../styles/StatisticCard.scss';
 
 export interface StatisticCardProps {
   background: string;
   icon: IconNames;
   statisticValue: number | string;
   statisticText: ReactNode;
-  style?: ThemedStyledFunction<'div', any>;
 }
 
 const StatisticCard = ({background, icon, statisticValue, statisticText}: StatisticCardProps) => {
@@ -20,6 +19,7 @@ const StatisticCard = ({background, icon, statisticValue, statisticText}: Statis
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{background: background}}
+      className="statistic-card"
     >
       <FlexboxGrid align="middle">
         <FlexboxGrid.Item colspan={6}>

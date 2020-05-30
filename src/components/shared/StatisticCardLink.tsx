@@ -8,7 +8,7 @@ interface StatisticCardLinkProps extends StatisticCardProps {
 
 const StatisticCardLink = ({to, background, icon, statisticValue, statisticText}: StatisticCardLinkProps) => {
   return (
-    <Link to={to} className="stat-card-link">
+    <Link to={to} className="statistic-card-link">
       <StatisticCard
         background={background}
         icon={icon}

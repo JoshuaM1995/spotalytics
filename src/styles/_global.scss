@@ -9,25 +9,26 @@
 .page-content {
   background: #1a1d24;
   padding: 20px;
-}
 
-.jumbotron {
-  text-align: center;
-}
+  .panel-light {
+    background: $gray-medium;
+  }
 
-.panel-light {
-  background: $gray-medium;
-}
+  .jumbotron {
+    text-align: center;
+  }
 
-.image-block {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  .image-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 0;
 
-  img {
-    flex-shrink: 0;
-    min-width: 100%;
-    min-height: 100%;
+    img {
+      flex-shrink: 0;
+      min-width: 100%;
+      min-height: 100%;
+    }
   }
 }
