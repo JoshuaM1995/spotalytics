@@ -3,6 +3,43 @@ import {Col, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCardLink";
 import '../../styles/Dashboard.scss';
+import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock";
+
+const topArtistsImages: ImageBlockImage[] = [
+  { url: 'https://via.placeholder.com/500x500/0000FF/FFFFFF', title: 'Pattern-Seeking Animals', subtitle: '103 Plays' },
+  { url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF', title: 'Caligula\'s Horse', subtitle: '70 Plays' },
+  { url: 'https://via.placeholder.com/250x250/FFFF00/000000', title: 'Trivium', subtitle: '68 Plays' },
+  { url: 'https://via.placeholder.com/250x250/FFFF00/000000', title: 'Veil of Maya', subtitle: '57 Plays' },
+  { url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF', title: 'Havok', subtitle: '48 Plays' },
+];
+
+const topAlbumsImages: ImageBlockImage[] = [
+  {
+    url: 'https://via.placeholder.com/500x500/0000FF/FFFFFF',
+    title: 'Prehensile Tales',
+    subtitle: <span>Pattern-Seeking Animals<br />72 Plays</span>,
+  },
+  {
+    url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF',
+    title: 'What the Dead Men Say',
+    subtitle: <span>Trivium<br />52 Plays</span>,
+  },
+  {
+    url: 'https://via.placeholder.com/250x250/FFFF00/000000',
+    title: 'V',
+    subtitle: <span>Havok<br />48 Plays</span>,
+  },
+  {
+    url: 'https://via.placeholder.com/250x250/FFFF00/000000',
+    title: 'Underneath',
+    subtitle: <span>Code Orange<br />42 Plays</span>,
+  },
+  {
+    url: 'https://via.placeholder.com/250x250/FF0000/FFFFFF',
+    title: 'Rise Radiant (Bonus Tracks Version)',
+    subtitle: <span>Caligula's Horse<br />39 Plays</span>,
+  },
+];
 
 const Dashboard = () => {
   return (
@@ -42,23 +79,7 @@ const Dashboard = () => {
         <h3>Top Artists</h3>
         <br />
 
-        <Row>
-          <Col md={12} className="image-block">
-            <img src="https://via.placeholder.com/500x500/0000FF/FFFFFF" alt="Pattern-Seeking Animals" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Caligula's Horse" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Trivium" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Veil of Maya" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Havok" />
-          </Col>
-        </Row>
+        <ImageBlock images={topArtistsImages} />
       </Panel>
       <br />
 
@@ -66,23 +87,13 @@ const Dashboard = () => {
         <h3>Top Albums</h3>
         <br />
 
-        <Row>
-          <Col md={12} className="image-block">
-            <img src="https://via.placeholder.com/500x500/0000FF/FFFFFF" alt="Pattern-Seeking Animals" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Caligula's Horse" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Trivium" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Veil of Maya" />
-          </Col>
-          <Col xs={12} md={6} className="image-block">
-            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Havok" />
-          </Col>
-        </Row>
+        <ImageBlock images={topAlbumsImages} />
+      </Panel>
+      <br />
+
+      <Panel className="panel-light">
+        <h3>Top Tracks</h3>
+        <br />
       </Panel>
     </Page>
   );

@@ -18,7 +18,7 @@
     text-align: center;
   }
 
-  .image-block {
+  .image-block-item {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,6 +29,17 @@
       flex-shrink: 0;
       min-width: 100%;
       min-height: 100%;
+      position: relative;
+    }
+
+    .image-block-item-overlay {
+      position: absolute;
+      left: 15px;
+      bottom: 15px;
+
+      .image-block-item-subtitle {
+        font-weight: normal;
+      }
     }
   }
 }
