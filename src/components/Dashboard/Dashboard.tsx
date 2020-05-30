@@ -6,6 +6,7 @@ import './Dashboard.scss';
 import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock/ImageBlock";
 import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
+import {Link} from "react-router-dom";
 
 interface TopTrack {
   track_name: string;
@@ -45,7 +46,7 @@ const Dashboard = () => {
       topArtists.forEach((artist: any) => {
         images.push({
           url: artist.images[0].url,
-          title: artist.name,
+          title: <Link to={`artist/${artist.name}`}>{ artist.name }</Link>,
           subtitle: `${artist.followers.total} Followers`
         });
       });
@@ -59,7 +60,7 @@ const Dashboard = () => {
       topAlbums.forEach((album: any) => {
         images.push({
           url: album.images[0].url,
-          title: album.name,
+          title: <Link to={`artist/${album.artists[0].name}/album/${album.name}`}>{ album.name }</Link>,
           subtitle: album.artists[0].name,
         });
       });

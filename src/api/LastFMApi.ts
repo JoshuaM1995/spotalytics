@@ -1,3 +1,6 @@
+import {AlbumInfoResponse} from "./interfaces/responses/lastfm";
+import {AlbumInfo} from "./interfaces/responses/lastfm/AlbumInfoResponse";
+
 const LastFm = require("lastfm-node-client");
 
 export default class LastFMApi {
@@ -10,9 +13,13 @@ export default class LastFMApi {
     );
   }
 
-  public getArtistInfo(artist: string) {
-    this.lastFmApi.artistGetInfo({ artist }).then((data: any) => {
-      console.log('data', data);
+  public async getArtistInfo(artist: string): Promise<any> {
+    return this.lastFmApi.artistGetInfo({ artist });
+  }
+
+  public async getAlbumInfo(artist: string, album: string): Promise<AlbumInfo> {
+    return this.lastFmApi.albumGetInfo({ artist, album }).then((data: AlbumInfoResponse) => {
+      return data.album;
     });
   }
 }

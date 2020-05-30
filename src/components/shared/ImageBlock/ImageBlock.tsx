@@ -4,7 +4,7 @@ import './ImageBlock.scss';
 
 export interface ImageBlockImage {
   url: string;
-  title: string;
+  title: JSX.Element;
   subtitle?: ReactNode;
 }
 
@@ -15,7 +15,7 @@ interface ImageBlockProps {
 const ImageBlock = ({images}: ImageBlockProps) => {
   const imageBlockItemInner = (image: ImageBlockImage) => (
     <>
-      <img src={image.url} alt={image.title}/>
+      <img src={image.url} alt="" />
       <div className="image-block-item-overlay">
         <h4 className="image-block-item-title">{ image.title }</h4>
         { image.subtitle && <h5 className="image-block-item-subtitle">{ image.subtitle }</h5> }
