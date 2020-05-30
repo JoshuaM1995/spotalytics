@@ -72,19 +72,19 @@ const Dashboard = () => {
       setTopArtistsImages(images);
     });
 
-    // spotifyApi.getTopAlbums().then((topAlbums) => {
-    //   const images: ImageBlockImage[] = [];
-    //
-    //   topAlbums.forEach((album: any) => {
-    //     // images.push({
-    //     //   url: album.images[0].url,
-    //     //   title: album.name,
-    //     //   subtitle: `${album.followers.total} Followers`
-    //     // });
-    //   });
-    //
-    //   setTopArtistsImages(images);
-    // });
+    spotifyApi.getTopAlbums().then((topAlbums) => {
+      const images: ImageBlockImage[] = [];
+
+      topAlbums.forEach((album: any) => {
+        images.push({
+          url: album.images[0].url,
+          title: album.name,
+          subtitle: album.top_track,
+        });
+      });
+
+      setTopAlbumsImages(images);
+    });
   }, []);
 
   return (

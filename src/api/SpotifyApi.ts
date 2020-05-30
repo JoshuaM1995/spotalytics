@@ -66,12 +66,31 @@ export default class SpotifyApi {
 
   public getTopAlbums(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopAlbums({ limit: 5 }, (error: any, response: any) => {
+      this.spotifyApi.getMyTopTracks({ limit: 5 }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
 
-        console.log('getTopAlbums', response);
+        const albums = response.items.map((item: any) => {
+          return {
+            ...item.album,
+            top_track: item.name,
+          };
+        });
+
+        resolve(albums);
+      });
+    });
+  }
+
+  public getTopTracks(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      this.spotifyApi.getMyTopTracks({ limit: 10 }, (error: any, response: any) => {
+        if(error) {
+          reject(error);
+        }
+
+        console.log('getTopTracks', response);
 
         resolve(response.items);
       });
