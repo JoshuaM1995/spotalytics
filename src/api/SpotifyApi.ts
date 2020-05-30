@@ -16,9 +16,9 @@ export default class SpotifyApi {
       '&redirect_uri=' + encodeURIComponent('http://localhost:3000/authenticate');
   }
 
-  public getTotalArtistCount(): Promise<number> {
+  public getTotalArtistCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getFollowedArtists({ limit: 1 }, (error: any, response: any) => {
+      this.spotifyApi.getFollowedArtists({ limit }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -28,9 +28,9 @@ export default class SpotifyApi {
     });
   }
 
-  public getTotalAlbumCount(): Promise<number> {
+  public getTotalAlbumCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMySavedAlbums({ limit: 1 }, (error: any, response: any) => {
+      this.spotifyApi.getMySavedAlbums({ limit }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -40,9 +40,9 @@ export default class SpotifyApi {
     });
   }
 
-  public getTotalTrackCount(): Promise<number> {
+  public getTotalTrackCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMySavedTracks({ limit: 1 }, (error: any, response: any) => {
+      this.spotifyApi.getMySavedTracks({ limit }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
@@ -52,26 +52,40 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopArtists(): Promise<any[]> {
+  public getTopArtists(limit: number = 5): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopArtists({ limit: 5, time_range: 'long_term' }, (error: any, response: any) => {
+      this.spotifyApi.getMyTopArtists({ limit, time_range: 'long_term' }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
 
-        resolve(response.items);
+        const artists = response.items;
+
+        // Sort artists by highest number of followers
+        artists.sort((a: any, b: any) => {
+          return (a.followers.total > b.followers.total) ? -1 : 1;
+        });
+
+        resolve(artists);
       });
     });
   }
 
-  public getTopAlbums(): Promise<any[]> {
+  public getTopAlbums(limit: number = 5): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopTracks({ limit: 5 }, (error: any, response: any) => {
+      this.spotifyApi.getMyTopTracks({ limit, time_range: 'long_term' }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
 
-        const albums = response.items.map((item: any) => {
+        let albums = response.items;
+
+        // Sort albums by highest popularity
+        albums.sort((a: any, b: any) => {
+          return (a.popularity > b.popularity) ? -1 : 1;
+        });
+
+        albums = response.items.map((item: any) => {
           return {
             ...item.album,
             top_track: item.name,
@@ -83,14 +97,21 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopTracks(): Promise<any[]> {
+  public getTopTracks(limit: number = 10): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotifyApi.getMyTopTracks({ limit: 10 }, (error: any, response: any) => {
+      this.spotifyApi.getMyTopTracks({ limit, time_range: 'long_term' }, (error: any, response: any) => {
         if(error) {
           reject(error);
         }
 
-        resolve(response.items);
+        let tracks = response.items;
+
+        // Sort tracks by highest popularity
+        tracks.sort((a: any, b: any) => {
+          return (a.popularity > b.popularity) ? 1 : -1;
+        });
+
+        resolve(tracks);
       });
     });
   }
