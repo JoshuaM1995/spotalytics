@@ -17,6 +17,7 @@ import UnauthenticatedSpotify from "./components/AuthenticateSpotify/Unauthentic
 import './App.scss';
 import {SPOTIFY_CONTEXT} from "./constants";
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
+import ArtistRoutes from "./router/routes/ArtistRoutes";
 
 const App = () => {
   const [spotifyContext, setSpotifyContext] = useState(spotifyContextDefaultValue);
@@ -54,6 +55,7 @@ const App = () => {
             <Switch>
               <Route exact path="/" component={Home} />
               <GuardedRoute path={'/dashboard'} component={Dashboard}/>
+              <GuardedRoute path="/artist" render={() => <ArtistRoutes/>}/>
               <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>}/>
               <GuardedRoute path="/albums" render={() => <AlbumsRoutes/>}/>
               <GuardedRoute path="/tracks" render={() => <TracksRoutes/>}/>
