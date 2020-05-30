@@ -1,13 +1,8 @@
-import React, {CSSProperties, useContext} from 'react';
+import React, {useContext} from 'react';
 import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
-import {Jumbotron} from "../../styles";
 import SpotifyContext from "../../context/spotify";
 import {Redirect} from "react-router";
-
-const panelStyles: CSSProperties = {
-  background: '#2a313c',
-};
 
 const Home = () => {
   const {spotifyContext} = useContext(SpotifyContext);
@@ -18,7 +13,7 @@ const Home = () => {
 
   return (
     <Page title={process.env.REACT_APP_SITE_NAME}>
-      <Jumbotron>
+      <div className="jumbotron">
         <Panel bordered>
           <h3>{process.env.REACT_APP_SITE_NAME}</h3>
           <br/>
@@ -35,7 +30,7 @@ const Home = () => {
 
         <Row gutter={20}>
           <Col md={12}>
-            <Panel style={panelStyles}>
+            <Panel className="panel-light">
               <Icon icon="bar-chart" size="5x" />
               <h3>Custom Charts</h3>
               <h5 style={{ fontWeight: 'normal' }}>
@@ -44,7 +39,7 @@ const Home = () => {
             </Panel>
           </Col>
           <Col md={12}>
-            <Panel style={panelStyles}>
+            <Panel className="panel-light">
               <Icon icon="exchange" size="5x" />
               <h3>Compare to Last Visit</h3>
               <h5 style={{ fontWeight: 'normal' }}>
@@ -58,7 +53,7 @@ const Home = () => {
 
         <Row gutter={20}>
           <Col md={12}>
-            <Panel style={panelStyles}>
+            <Panel className="panel-light">
               <Icon icon="headphones" size="5x" />
               <h3>Create Playlists</h3>
               <h5 style={{ fontWeight: 'normal' }}>
@@ -67,7 +62,7 @@ const Home = () => {
             </Panel>
           </Col>
           <Col md={12}>
-            <Panel style={panelStyles}>
+            <Panel className="panel-light">
               <Icon icon="refresh" size="5x" />
               <h3>Recently Played Tracks</h3>
               <h5 style={{ fontWeight: 'normal' }}>
@@ -76,7 +71,7 @@ const Home = () => {
             </Panel>
           </Col>
         </Row>
-      </Jumbotron>
+      </div>
     </Page>
   );
 };

@@ -1,12 +1,13 @@
 import React from 'react';
-import {Col, Row} from "rsuite";
+import {Col, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCardLink";
+import '../../styles/Dashboard.scss';
 
 const Dashboard = () => {
   return (
     <Page title="Dashboard">
-      <Row className="show-grid">
+      <Row>
         <Col xs={24} sm={24} md={8}>
             <StatisticCardLink
               to="/artists/all"
@@ -35,6 +36,30 @@ const Dashboard = () => {
           />
         </Col>
       </Row>
+      <br /><br />
+
+      <Panel className="panel-light">
+        <h3>Top Artists</h3>
+        <br />
+
+        <Row>
+          <Col md={12} className="image-block">
+            <img src="https://via.placeholder.com/500x500/0000FF/FFFFFF" alt="Pattern-Seeking Animals" />
+          </Col>
+          <Col xs={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Caligula's Horse" />
+          </Col>
+          <Col xs={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Trivium" />
+          </Col>
+          <Col xs={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FFFF00/000000" alt="Veil of Maya" />
+          </Col>
+          <Col xs={6} className="image-block">
+            <img src="https://via.placeholder.com/250x250/FF0000/FFFFFF" alt="Havok" />
+          </Col>
+        </Row>
+      </Panel>
     </Page>
   );
 };

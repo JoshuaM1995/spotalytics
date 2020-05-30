@@ -1,6 +1,5 @@
 import React, {CSSProperties, PropsWithChildren, useEffect} from 'react';
 import {Container, Content, Header} from "rsuite";
-import {contentStyles, headerStyles} from "../../styles";
 
 interface PageProps {
   title?: string;
@@ -19,11 +18,11 @@ const Page = ({ style, title, children }: PropsWithChildren<PageProps>) => {
   return (
     <Container style={style}>
       {title &&
-        <Header style={headerStyles}>
+        <Header className="page-header">
           <h2>{title}</h2>
         </Header>
       }
-      <Content style={contentStyles}>
+      <Content className="page-content">
         { children }
       </Content>
     </Container>

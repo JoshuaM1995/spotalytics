@@ -5,16 +5,7 @@ import NavigationItem from "../NavigationItem/NavigationItem";
 import DropdownItem from "../Dropdown/DropdownItem";
 import DropdownItemLink from "../Dropdown/DropdownItemLink";
 import SpotifyContext from "../../../context/spotify";
-
-const headerStyles = {
-  padding: 18,
-  fontSize: 16,
-  height: 56,
-  background: '#34c3ff',
-  color: ' #fff',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden'
-};
+import '../../../styles/SideNavigation.scss';
 
 const SideNavigation = () => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -28,7 +19,7 @@ const SideNavigation = () => {
     >
       <Sidenav.Header>
         {/*@ts-ignore*/}
-        <div style={headerStyles}>
+        <div className="header">
           <Icon icon="logo-analytics" size="lg" style={{verticalAlign: 0}}/>
           <span style={{marginLeft: 18}}>
             { process.env.REACT_APP_SITE_NAME }

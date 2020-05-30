@@ -14,6 +14,7 @@ import AlbumsRoutes from "./router/routes/AlbumsRoutes";
 import TracksRoutes from "./router/routes/TracksRoutes";
 import Home from "./components/Home/Home";
 import Unauthenticated from "./components/Authenticate/Unauthenticated";
+import './styles/_global.scss';
 
 const App = () => {
   const [spotifyContext, setSpotifyContext] = useState(spotifyContextDefaultValue);

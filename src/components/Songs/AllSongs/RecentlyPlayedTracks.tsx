@@ -1,8 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import Page from "../../Page/Page";
 import {Table} from "rsuite";
 import moment from 'moment';
 import TablePagination from "rsuite/es/Table/TablePagination";
+import tableReducer, {TableState} from "../../../reducers/tableReducer";
+import {IS_NOT_LOADING, UPDATE_DATA, UPDATE_DISPLAY_LENGTH, UPDATE_PAGE} from "../../../actions/tableActions";
+import {getFilteredTableData} from "../../../utils/table";
+
 const Chance = require('chance');
 
 interface RecentlyPlayedTrack {
@@ -12,42 +16,44 @@ interface RecentlyPlayedTrack {
 }
 
 const chance = new Chance();
-
 const { Column, HeaderCell, Cell } = Table;
+const initialTableState: TableState<RecentlyPlayedTrack> = {
+  data: [],
+  page: 1,
+  displayLength: 50,
+  isLoading: true,
+};
 
 const RecentlyPlayedTracks = () => {
-  const [recentlyPlayedTracks, setRecentlyPlayedTracks] = useState<RecentlyPlayedTrack[]>([]);
-  const [page, setPage] = useState(1);
-  const [displayLength, setDisplayLength] = useState(50);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<RecentlyPlayedTrack[]>([]);
+  const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
+  const { data: recentlyPlayedTracks, page, displayLength, isLoading } = tableState;
 
   useEffect(() => {
+    let tracks: RecentlyPlayedTrack[] = [];
+
     for(let i = 0; i < 100; i++) {
-      setRecentlyPlayedTracks(artists => [
-        ...artists,
-        {
-          track: chance.sentence({ words: 5 }),
-          artists: chance.name(),
-          playedAt: moment(chance.date()).format('MMMM Do, YYYY [at] h:mm A'),
-        }
-      ]);
+      tracks.push({
+        track: chance.sentence({ words: 5 }),
+        artists: chance.name(),
+        playedAt: moment(chance.date()).format('MMMM Do, YYYY [at] h:mm A'),
+      });
     }
+
+    tableStateDispatch({ type: UPDATE_DATA, value: tracks });
   }, []);
 
-  const getData = () => {
-    return recentlyPlayedTracks.filter((v: RecentlyPlayedTrack, i: number) => {
-      const start = displayLength * (page - 1);
-      const end = start + displayLength;
-      return i >= start && i < end;
-    });
-  }
+  useEffect(() => {
+    setData(getFilteredTableData<RecentlyPlayedTrack>(recentlyPlayedTracks, page, displayLength));
+    tableStateDispatch({ type: IS_NOT_LOADING });
+  }, [recentlyPlayedTracks, page, displayLength]);
 
   return (
     <Page title="Recently Played Tracks">
       <Table
-        height={1080}
-        data={getData()}
-        loading={loading}
+        height={800}
+        data={data}
+        loading={isLoading}
       >
         <Column width={300} align="center">
           <HeaderCell>Track</HeaderCell>
@@ -83,8 +89,12 @@ const RecentlyPlayedTracks = () => {
         activePage={page}
         displayLength={displayLength}
         total={recentlyPlayedTracks.length}
-        onChangePage={(dataKey) => setPage(dataKey)}
-        onChangeLength={(dataKey) => setDisplayLength(dataKey)}
+        onChangePage={(dataKey) => {
+          tableStateDispatch({ type: UPDATE_PAGE, value: dataKey })
+        }}
+        onChangeLength={(dataKey) => {
+          tableStateDispatch({ type: UPDATE_DISPLAY_LENGTH, value: dataKey })
+        }}
       />
     </Page>
   );

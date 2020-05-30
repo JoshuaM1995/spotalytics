@@ -1,0 +1,33 @@
+@import 'variables';
+@import 'mixins';
+@import 'helpers';
+
+.page-header {
+  padding: 10px 10px 10px 20px;
+}
+
+.page-content {
+  background: #1a1d24;
+  padding: 20px;
+}
+
+.jumbotron {
+  text-align: center;
+}
+
+.panel-light {
+  background: $gray-medium;
+}
+
+.image-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+}

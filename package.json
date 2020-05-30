@@ -1,5 +1,5 @@
 {
-  "name": "spotics",
+  "name": "spotalytics",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,6 +11,7 @@
     "axios": "^0.19.2",
     "chance": "^1.1.6",
     "moment": "^2.26.0",
+    "node-sass": "^4.14.1",
     "passport-spotify": "^1.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

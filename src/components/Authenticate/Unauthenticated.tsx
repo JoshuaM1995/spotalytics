@@ -1,7 +1,6 @@
 import React from 'react';
 import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
-import {Jumbotron} from "../../styles";
 
 const Unauthenticated = () => {
   return (
@@ -9,7 +8,7 @@ const Unauthenticated = () => {
       <Row>
         <Col md={3}/>
         <Col md={18}>
-          <Jumbotron>
+          <div className="jumbotron">
             <Panel bordered>
               <h3>Successfully Unlinked</h3>
               <br/>
@@ -29,7 +28,7 @@ const Unauthenticated = () => {
                 </IconButton>
               </a>
             </Panel>
-          </Jumbotron>
+          </div>
         </Col>
         <Col md={3}/>
       </Row>
