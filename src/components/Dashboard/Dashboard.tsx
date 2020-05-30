@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Col, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCardLink";
@@ -44,11 +44,25 @@ const topAlbumsImages: ImageBlockImage[] = [
 ];
 
 const Dashboard = () => {
+  const [totalArtists, setTotalArtists] = useState(0);
+  const [totalAlbums, setTotalAlbums] = useState(0);
+  const [totalTracks, setTotalTracks] = useState(0);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
-    spotifyApi.getSavedTracks();
+
+    spotifyApi.getTotalArtistCount().then((totalArtistCount) => {
+      setTotalArtists(totalArtistCount);
+    });
+
+    spotifyApi.getTotalAlbumCount().then((totalAlbumCount) => {
+      setTotalAlbums(totalAlbumCount);
+    });
+
+    spotifyApi.getTotalTrackCount().then((totalTrackCount) => {
+      setTotalTracks(totalTrackCount);
+    });
   }, []);
 
   return (
@@ -58,8 +72,8 @@ const Dashboard = () => {
             <StatisticCardLink
               to="/artists/all"
               background="#429321"
-              icon="user"
-              statisticValue={200}
+              icon="user-plus"
+              statisticValue={totalArtists}
               statisticText="Total Artists"
             />
         </Col>
@@ -68,7 +82,7 @@ const Dashboard = () => {
             to="albums/all"
             background="#4a148c"
             icon="play-circle"
-            statisticValue={400}
+            statisticValue={totalAlbums}
             statisticText="Total Albums"
           />
         </Col>
@@ -77,7 +91,7 @@ const Dashboard = () => {
             to="tracks/all"
             background="#f44336"
             icon="music"
-            statisticValue={5000}
+            statisticValue={totalTracks}
             statisticText="Total Tracks"
           />
         </Col>
