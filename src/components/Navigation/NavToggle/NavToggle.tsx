@@ -32,7 +32,7 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
       sessionStorage.removeItem(SPOTIFY_CONTEXT);
       setIsUnlinkIconLoading(false);
 
-      setRedirect(<Redirect to="/unauthenticated" />);
+      setRedirect(<Redirect to="/unauthenticated-spotify" />);
     }, 1000);
   };
 

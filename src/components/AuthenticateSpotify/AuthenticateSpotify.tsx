@@ -9,7 +9,7 @@ import {Redirect} from "react-router";
 const urlParams = new URLSearchParams(window.location.hash);
 const accessToken = urlParams.get('#access_token') ?? '';
 
-const Authenticate = () => {
+const AuthenticateSpotify = () => {
   const {spotifyContext, setSpotifyContext} = useContext(SpotifyContext);
   const [redirect, setRedirect] = useState(false);
 
@@ -57,4 +57,4 @@ const Authenticate = () => {
   );
 };
 
-export default Authenticate;
+export default AuthenticateSpotify;

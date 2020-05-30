@@ -2,7 +2,7 @@ import React from 'react';
 import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
 
-const Unauthenticated = () => {
+const UnauthenticatedSpotify = () => {
   return (
     <Page>
       <Row>
@@ -36,4 +36,4 @@ const Unauthenticated = () => {
   );
 };
 
-export default Unauthenticated;
+export default UnauthenticatedSpotify;

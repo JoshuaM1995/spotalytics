@@ -5,7 +5,7 @@ import 'rsuite/dist/styles/rsuite-dark.min.css';
 import {Container} from 'rsuite';
 import SideNavigation from './components/Navigation/SideNavigation/SideNavigation';
 import SpotifyContext, {spotifyContextDefaultValue} from './context/spotify';
-import Authenticate from "./components/Authenticate/Authenticate";
+import AuthenticateSpotify from "./components/AuthenticateSpotify/AuthenticateSpotify";
 import {GuardProvider, GuardedRoute} from 'react-router-guards';
 import NotFound from "./components/Error/NotFound";
 import Loading from "./components/Loading/Loading";
@@ -13,7 +13,7 @@ import ArtistsRoutes from "./router/routes/ArtistsRoutes";
 import AlbumsRoutes from "./router/routes/AlbumsRoutes";
 import TracksRoutes from "./router/routes/TracksRoutes";
 import Home from "./components/Home/Home";
-import Unauthenticated from "./components/Authenticate/Unauthenticated";
+import UnauthenticatedSpotify from "./components/AuthenticateSpotify/UnauthenticatedSpotify";
 import './App.scss';
 import {SPOTIFY_CONTEXT} from "./constants";
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
@@ -34,10 +34,10 @@ const App = () => {
         if(sessionStorageSpotify) {
           setSpotifyContext({ ...spotifyContext, ...sessionStorageSpotify });
         } else {
-          next.redirect('/authenticate');
+          next.redirect('/authenticate-spotify');
         }
       } else {
-        next.redirect('/authenticate');
+        next.redirect('/authenticate-spotify');
       }
     }
 
@@ -57,8 +57,8 @@ const App = () => {
               <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>}/>
               <GuardedRoute path="/albums" render={() => <AlbumsRoutes/>}/>
               <GuardedRoute path="/tracks" render={() => <TracksRoutes/>}/>
-              <GuardedRoute path="/authenticate" component={Authenticate}/>
-              <GuardedRoute path="/unauthenticated" component={Unauthenticated}/>
+              <GuardedRoute path="/authenticate-spotify" component={AuthenticateSpotify}/>
+              <GuardedRoute path="/unauthenticated-spotify" component={UnauthenticatedSpotify}/>
               <Route path="*">
                 <NotFound/>
               </Route>
