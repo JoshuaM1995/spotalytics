@@ -10,6 +10,7 @@ import SpotifyContext from "../../context/spotify";
 interface TopTrack {
   track_name: string;
   artist: string;
+  album_name: string;
   album_image_url: string;
   popularity: number;
 }
@@ -73,6 +74,7 @@ const Dashboard = () => {
         topTrackValues.push({
           track_name: track.name,
           artist: track.artists[0].name,
+          album_name: track.album.name,
           album_image_url: track.album.images[0].url,
           popularity: track.popularity,
         });
@@ -139,11 +141,9 @@ const Dashboard = () => {
           {topTracks.map((track: any, index: number) => (
             <List.Item key={track.track_name} index={index}>
               <FlexboxGrid>
-                {/*icon*/}
                 <FlexboxGrid.Item colspan={2} className="center" style={{ height: '60px' }}>
-                  <img src={track.album_image_url} height={50} width={50} />
+                  <img src={track.album_image_url} height={50} width={50} alt={track.album_name} />
                 </FlexboxGrid.Item>
-                {/*base info*/}
                 <FlexboxGrid.Item
                   colspan={6}
                   className="center"
@@ -163,17 +163,9 @@ const Dashboard = () => {
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={6} className="center" style={{ height: '60px' }}>
                   <div style={{ textAlign: 'right' }}>
-                    {/*@ts-ignore*/}
                     <div className="text-slim">Popularity</div>
                     <div className="popularity">{track.popularity}</div>
                   </div>
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item
-                  colspan={4}
-                  className="center"
-                  style={{ height: '60px' }}
-                >
-                  <a href="#">View Details</a>
                 </FlexboxGrid.Item>
               </FlexboxGrid>
             </List.Item>

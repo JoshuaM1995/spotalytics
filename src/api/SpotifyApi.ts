@@ -108,7 +108,7 @@ export default class SpotifyApi {
 
         // Sort tracks by highest popularity
         tracks.sort((a: any, b: any) => {
-          return (a.popularity > b.popularity) ? 1 : -1;
+          return (a.popularity > b.popularity) ? -1 : 1;
         });
 
         resolve(tracks);
