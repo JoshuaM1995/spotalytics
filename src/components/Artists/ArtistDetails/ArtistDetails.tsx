@@ -3,32 +3,34 @@ import Page from "../../Page/Page";
 import {useParams} from "react-router";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
-import {Badge, Col, Content, FlexboxGrid, Icon, List, Nav, Panel, Progress} from "rsuite";
+import {Content, Icon, Nav, Panel, Progress} from "rsuite";
 import {getLineStatus} from "../../../utils/progress";
-import {Link} from "react-router-dom";
-import moment from 'moment';
 import './ArtistDetails.scss';
-import {nl2br, numberWithCommas} from "../../../utils/global";
+import ArtistAlbums from "./ArtistAlbums";
+import RelatedArtists from "./RelatedArtists";
+import ArtistBio from "./ArtistBio";
 
-const getArtistInfoMarkup = (html: string) => {
-  return {__html: html ? nl2br(html) : html + '<br /><br />'};
+enum Tab {
+  ALBUMS = 'ALBUMS',
+  TOP_TRACKS = 'TOP_TRACKS',
+  RELATED_ARTISTS = 'RELATED_ARTISTS',
+  INFO = 'INFO',
 }
 
 const ArtistDetails = () => {
   const {artistId} = useParams();
   const {spotifyContext} = useContext(SpotifyContext);
   const [artistInfo, setArtistInfo] = useState<any>();
-  const [activeTab, setActiveTab] = useState('albums');
+  const [activeTab, setActiveTab] = useState(Tab.ALBUMS);
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
     spotifyApi.getArtistInfo(artistId).then((artist: any) => {
-      console.log('artist info', artist);
       setArtistInfo(artist);
     });
   }, []);
 
-  const handleSelect = (activeKey: string) => {
+  const handleSelect = (activeKey: Tab) => {
     setActiveTab(activeKey);
   };
 
@@ -63,124 +65,51 @@ const ArtistDetails = () => {
         <div style={{padding: '0 20px'}}>
           <Nav appearance="subtle" justified>
             <Nav.Item
-              active={activeTab === 'albums'}
+              active={activeTab === Tab.ALBUMS}
               icon={<Icon icon="play-circle"/>}
-              onClick={() => handleSelect('albums')}
+              onClick={() => handleSelect(Tab.ALBUMS)}
             >
               Albums
             </Nav.Item>
             <Nav.Item
-              active={activeTab === 'top-tracks'}
+              active={activeTab === Tab.TOP_TRACKS}
               icon={<Icon icon="globe"/>}
-              onClick={() => handleSelect('top-tracks')}
+              onClick={() => handleSelect(Tab.TOP_TRACKS)}
             >
               Top Tracks
             </Nav.Item>
             <Nav.Item
-              active={activeTab === 'related-artists'}
+              active={activeTab === Tab.RELATED_ARTISTS}
               icon={<Icon icon="user"/>}
-              onClick={() => handleSelect('related-artists')}
+              onClick={() => handleSelect(Tab.RELATED_ARTISTS)}
             >
               Related Artists
             </Nav.Item>
             <Nav.Item
-              active={activeTab === 'about'}
+              active={activeTab === Tab.INFO}
               icon={<Icon icon="info-circle"/>}
-              onClick={() => handleSelect('about')}
+              onClick={() => handleSelect(Tab.INFO)}
             >
-              About
+              Info
             </Nav.Item>
           </Nav>
 
-          <Content
-            style={{display: (activeTab === 'about') ? 'block' : 'none', marginTop: '20px'}}
-            dangerouslySetInnerHTML={getArtistInfoMarkup(artistInfo?.bio.content)}
-          />
-
-          <Content style={{display: (activeTab === 'albums') ? 'block' : 'none', marginTop: '20px'}}>
-            <List hover>
-              {artistInfo?.albums.map((album: any, index: number) => (
-                <Link to={`/album/${album.id}`}>
-                  <List.Item key={album.uri} index={index}>
-                    <FlexboxGrid>
-                      <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
-                        <img src={album.images[0].url} height={50} width={50} alt={album.name}/>
-                      </FlexboxGrid.Item>
-                      <FlexboxGrid.Item
-                        colspan={16}
-                        className="center"
-                        style={{
-                          height: '60px',
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div>
-                          <div>
-                            <h5>{album.name}</h5>
-                            <span className="text-slim">
-                              {moment(album.release_date).format('MMMM Do, YYYY')}
-                            </span>
-                          </div>
-                        </div>
-                      </FlexboxGrid.Item>
-                    </FlexboxGrid>
-                  </List.Item>
-                </Link>
-              ))}
-            </List>
-            <br/>
+          <Content style={{display: (activeTab === Tab.ALBUMS) ? 'block' : 'none', marginTop: '20px'}}>
+            <ArtistAlbums artistId={artistId} active />
+            <br />
           </Content>
 
-          <Content style={{display: (activeTab === 'top-tracks') ? 'block' : 'none', marginTop: '20px'}}>
+          <Content style={{display: (activeTab === Tab.TOP_TRACKS) ? 'block' : 'none', marginTop: '20px'}}>
             Top Tracks Map
           </Content>
 
-          <Content style={{display: (activeTab === 'related-artists') ? 'block' : 'none', marginTop: '20px'}}>
-            <List hover>
-              {artistInfo?.related_artists.map((artist: any, index: number) => (
-                <Link to={`/artist/${artist.id}`}>
-                  <List.Item key={artist.uri} index={index}>
-                    <FlexboxGrid>
-                      <FlexboxGrid.Item
-                        colspan={2}
-                        className="center"
-                        style={{height: '100px', marginLeft: '30px',}}
-                      >
-                        <img src={artist.images[0].url} height={100} width={100} alt={artist.name}/>
-                      </FlexboxGrid.Item>
-                      <FlexboxGrid.Item
-                        colspan={16}
-                        className="center"
-                        style={{
-                          height: '100px',
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                          overflow: 'hidden',
-                          marginLeft: '40px',
-                        }}
-                      >
-                        <div>
-                          <div>
-                            <h5 style={{marginBottom: '10px'}}>{artist.name}</h5>
-                            {artist.genres.map((genre: any) => {
-                              return (
-                                <Badge content={genre} className="related-artist-badge"/>
-                              );
-                            })}
-                            <div className="text-slim" style={{marginTop: '10px'}}>
-                              {numberWithCommas(artist.followers.total)} Followers
-                            </div>
-                          </div>
-                        </div>
-                      </FlexboxGrid.Item>
-                    </FlexboxGrid>
-                  </List.Item>
-                </Link>
-              ))}
-            </List>
-            <br/>
+          <Content style={{display: (activeTab === Tab.RELATED_ARTISTS) ? 'block' : 'none', marginTop: '20px'}}>
+            <RelatedArtists artistId={artistId} active={activeTab === Tab.RELATED_ARTISTS} />
+            <br />
+          </Content>
+
+          <Content style={{display: (activeTab === Tab.INFO) ? 'block' : 'none', marginTop: '20px'}}>
+            <ArtistBio artistName={artistInfo?.name} active={activeTab === Tab.INFO} />
           </Content>
         </div>
       </Panel>
