@@ -1,19 +1,22 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Panel, Row, List, FlexboxGrid} from "rsuite";
+import {Col, Panel, Row, List, FlexboxGrid, Progress} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
 import './Dashboard.scss';
-import ImageBlock, {ImageBlockImage} from "../shared/ImageBlock/ImageBlock";
+import ImageBlockList, {ImageBlockImage} from "../shared/ImageBlock/ImageBlockList";
 import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
 import {Link} from "react-router-dom";
+import {numberWithCommas} from "../../utils/global";
 
 interface TopTrack {
   track_name: string;
   artist: string;
+  album_id: string;
   album_name: string;
   album_image_url: string;
   popularity: number;
+  uri: string;
 }
 
 const Dashboard = () => {
@@ -40,24 +43,24 @@ const Dashboard = () => {
       setTotalTracks(totalTrackCount);
     });
 
-    spotifyApi.getTopArtists().then(topArtists => {
+    spotifyApi.getTopArtists().then(artists => {
       const images: ImageBlockImage[] = [];
 
-      topArtists.forEach((artist: any) => {
+      artists.forEach((artist: any) => {
         images.push({
           url: artist.images[0].url,
           title: <Link to={`artist/${artist.id}`}>{ artist.name }</Link>,
-          subtitle: `${artist.followers.total} Followers`
+          subtitle: `${numberWithCommas(artist.followers.total)} Followers`
         });
       });
 
       setTopArtistsImages(images);
     });
 
-    spotifyApi.getTopAlbums().then(topAlbums => {
+    spotifyApi.getTopAlbums().then(albums => {
       const images: ImageBlockImage[] = [];
 
-      topAlbums.forEach((album: any) => {
+      albums.forEach((album: any) => {
         images.push({
           url: album.images[0].url,
           title: <Link to={`album/${album.id}`}>{ album.name }</Link>,
@@ -75,9 +78,11 @@ const Dashboard = () => {
         topTrackValues.push({
           track_name: track.name,
           artist: track.artists[0].name,
+          album_id: track.album.id,
           album_name: track.album.name,
           album_image_url: track.album.images[0].url,
           popularity: track.popularity,
+          uri: track.uri,
         });
       });
 
@@ -95,7 +100,7 @@ const Dashboard = () => {
               background="#429321"
               icon="user-plus"
               statisticValue={totalArtists}
-              statisticText="Total Artists"
+              statisticText="Artists Followed"
             />
         </Col>
         <Col xs={24} sm={24} md={8}>
@@ -104,7 +109,7 @@ const Dashboard = () => {
             background="#4a148c"
             icon="play-circle"
             statisticValue={totalAlbums}
-            statisticText="Total Albums"
+            statisticText="Albums Saved"
           />
         </Col>
         <Col xs={24} sm={24} md={8}>
@@ -113,7 +118,7 @@ const Dashboard = () => {
             background="#f44336"
             icon="music"
             statisticValue={totalTracks}
-            statisticText="Total Tracks"
+            statisticText="Tracks Favorited"
           />
         </Col>
       </Row>
@@ -123,7 +128,7 @@ const Dashboard = () => {
         <h3>Top Artists</h3>
         <br />
 
-        <ImageBlock images={topArtistsImages} />
+        <ImageBlockList images={topArtistsImages} />
       </Panel>
       <br />
 
@@ -131,7 +136,7 @@ const Dashboard = () => {
         <h3>Top Albums</h3>
         <br />
 
-        <ImageBlock images={topAlbumsImages} />
+        <ImageBlockList images={topAlbumsImages} />
       </Panel>
       <br />
 
@@ -143,7 +148,9 @@ const Dashboard = () => {
             <List.Item key={track.track_name} index={index}>
               <FlexboxGrid>
                 <FlexboxGrid.Item colspan={2} className="center" style={{ height: '60px' }}>
-                  <img src={track.album_image_url} height={50} width={50} alt={track.album_name} />
+                  <Link to={`/album/${track.album_id}`}>
+                    <img src={track.album_image_url} height={50} width={50} alt={track.album_name} />
+                  </Link>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item
                   colspan={6}
@@ -155,7 +162,9 @@ const Dashboard = () => {
                     overflow: 'hidden',
                   }}
                 >
-                  <div className="track-name">{track.track_name}</div>
+                  <div className="track-name">
+                    <a href={track.uri}>{track.track_name}</a>
+                  </div>
                   <div>
                     <div>
                       {track.artist}
@@ -165,7 +174,7 @@ const Dashboard = () => {
                 <FlexboxGrid.Item colspan={6} className="center" style={{ height: '60px' }}>
                   <div style={{ textAlign: 'right' }}>
                     <div className="text-slim">Popularity</div>
-                    <div className="popularity">{track.popularity}</div>
+                    <Progress.Line percent={track.popularity} showInfo={false} />
                   </div>
                 </FlexboxGrid.Item>
               </FlexboxGrid>

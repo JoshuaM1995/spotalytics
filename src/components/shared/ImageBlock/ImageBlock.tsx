@@ -1,46 +1,19 @@
-import React, {ReactNode} from 'react';
-import {Col, Row} from "rsuite";
-import './ImageBlock.scss';
-
-export interface ImageBlockImage {
-  url: string;
-  title: JSX.Element;
-  subtitle?: ReactNode;
-}
+import React from "react";
+import {ImageBlockImage} from "./ImageBlockList";
 
 interface ImageBlockProps {
-  images: ImageBlockImage[];
+  image: ImageBlockImage;
 }
 
-const ImageBlock = ({images}: ImageBlockProps) => {
-  const imageBlockItemInner = (image: ImageBlockImage) => (
+const ImageBlock = ({ image }: ImageBlockProps) => {
+  return (
     <>
-      <img src={image.url} alt="" />
+      <img src={image.url} alt=""/>
       <div className="image-block-item-overlay">
-        <h4 className="image-block-item-title">{ image.title }</h4>
-        { image.subtitle && <h5 className="image-block-item-subtitle">{ image.subtitle }</h5> }
+        <h4 className="image-block-item-title">{image.title}</h4>
+        {image.subtitle && <h5 className="image-block-item-subtitle">{image.subtitle}</h5>}
       </div>
     </>
-  );
-
-  return (
-    <Row>
-      {images.map((image, index) => {
-        if (index === 0) {
-          return (
-            <Col md={12} className="image-block-item" key={index}>
-              { imageBlockItemInner(image) }
-            </Col>
-          );
-        } else {
-          return (
-            <Col xs={12} md={6} className="image-block-item" key={index}>
-              { imageBlockItemInner(image) }
-            </Col>
-          );
-        }
-      })}
-    </Row>
   );
 };
 

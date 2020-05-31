@@ -1,3 +1,6 @@
+import LastFMApi from "./LastFMApi";
+import moment from "moment";
+
 const Spotify = require('spotify-web-api-js');
 
 export default class SpotifyApi {
@@ -109,6 +112,60 @@ export default class SpotifyApi {
         });
 
         resolve(tracks);
+      });
+    });
+  }
+
+  public getArtistsAlbums(artistId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getArtistAlbums(artistId, (error: any, artistsAlbums: any) => {
+        SpotifyApi.processError(error, reject);
+        // Sort albums by release date, with the latest release at the top
+        artistsAlbums.items.sort((a: any, b: any) => {
+          const releaseDateOne = moment(a.release_date);
+          const releaseDateTwo = moment(b.release_date);
+          return releaseDateTwo.isAfter(releaseDateOne) ? 1 : -1;
+        });
+        resolve(artistsAlbums.items);
+      });
+    });
+  }
+
+  public getRelatedArtists(artistId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getArtistRelatedArtists(artistId, (error: any, relatedArtists: any) => {
+        SpotifyApi.processError(error, reject);
+
+        // Sort related artists by the most followers at the top
+        relatedArtists.artists.sort((a: any, b: any) => {
+          return b.followers.total > a.followers.total ? 1 : -1;
+        });
+
+        resolve(relatedArtists.artists);
+      });
+    });
+  }
+
+  public getArtistInfo(artistId: string): Promise<any> {
+    const lastFMApi = new LastFMApi();
+
+    return new Promise((resolve, reject) => {
+      this.spotify.getArtist(artistId, (error: any, artistInfo: any) => {
+        SpotifyApi.processError(error, reject);
+        this.getArtistsAlbums(artistId).then((artistsAlbums) => {
+          SpotifyApi.processError(error, reject);
+          artistInfo.albums = artistsAlbums;
+
+          this.getRelatedArtists(artistId).then((relatedArtists: any) => {
+            SpotifyApi.processError(error, reject);
+            artistInfo.related_artists = relatedArtists;
+
+            lastFMApi.getArtistInfo(artistInfo.name).then((artist) => {
+              artistInfo.bio = artist.artist.bio;
+              resolve(artistInfo);
+            });
+          });
+        });
       });
     });
   }
