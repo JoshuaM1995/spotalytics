@@ -1,5 +1,11 @@
 @import '../../scss/variables';
 
+a.statistic-card-link {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 .panel {
   background: $gray-medium;
 }

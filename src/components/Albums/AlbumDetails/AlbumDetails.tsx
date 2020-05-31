@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Page from "../../Page/Page";
 import {useParams} from "react-router";
 import {Badge, Col, Icon, List, Panel, Row, Table} from "rsuite";
@@ -24,7 +24,11 @@ const TrackNumberCell = ({ rowData, dataKey, ...props }: any) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      { hovered ? <a href={rowData.uri}><Icon icon="play-circle" size="2x" /></a> : rowData[dataKey] }
+      {
+        hovered ? <a href={rowData.uri}>
+          <Icon icon="play-circle" size="2x" style={{ marginTop: '-5px', marginLeft: '-5px' }} />
+        </a> : rowData[dataKey]
+      }
     </Cell>
   );
 };
