@@ -6,8 +6,9 @@ import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
 import moment from "moment";
 import './AlbumDetails.scss';
+import {Link} from "react-router-dom";
 
-const { Column, HeaderCell, Cell } = Table;
+const {Column, HeaderCell, Cell} = Table;
 const getLength = (durationInMs: number) => {
   const duration = moment.duration(durationInMs);
   const zero = duration.seconds() < 10 ? '0' : '';
@@ -15,7 +16,7 @@ const getLength = (durationInMs: number) => {
   return `${duration.minutes()}:${zero}${duration.seconds()}`;
 }
 
-const TrackNumberCell = ({ rowData, dataKey, ...props }: any) => {
+const TrackNumberCell = ({rowData, dataKey, ...props}: any) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -26,26 +27,26 @@ const TrackNumberCell = ({ rowData, dataKey, ...props }: any) => {
     >
       {
         hovered ? <a href={rowData.uri}>
-          <Icon icon="play-circle" size="2x" style={{ marginTop: '-5px', marginLeft: '-5px' }} />
+          <Icon icon="play-circle" size="2x" style={{marginTop: '-5px', marginLeft: '-5px'}}/>
         </a> : rowData[dataKey]
       }
     </Cell>
   );
 };
 
-const DurationCell = ({ rowData, dataKey, ...props }: any) => (
-  <Cell {...props}>{ getLength(rowData[dataKey]) }</Cell>
+const DurationCell = ({rowData, dataKey, ...props}: any) => (
+  <Cell {...props}>{getLength(rowData[dataKey])}</Cell>
 );
 
-const ExplicitCell = ({ rowData, dataKey, ...props }: any) => (
+const ExplicitCell = ({rowData, dataKey, ...props}: any) => (
   <Cell {...props}>
-    { rowData[dataKey] ? <Badge content="Explicit" /> : '' }
+    {rowData[dataKey] ? <Badge content="Explicit"/> : ''}
   </Cell>
 );
 
 const AlbumDetails = () => {
-  const { albumId } = useParams();
-  const { spotifyContext } = useContext(SpotifyContext);
+  const {albumId} = useParams();
+  const {spotifyContext} = useContext(SpotifyContext);
   const [albumInfo, setAlbumInfo] = useState<any>();
 
   useEffect(() => {
@@ -61,23 +62,22 @@ const AlbumDetails = () => {
         <Col md={3}/>
         <Col md={18}>
           <Panel shaded bordered bodyFill className="panel-light">
-            <br />
-            <div style={{ display: 'flex', justifyContent: 'center', }}>
+            <br/>
+            <div style={{display: 'flex', justifyContent: 'center',}}>
               <img
                 src={albumInfo?.images[0].url}
                 alt={albumInfo?.name}
                 title={albumInfo?.name}
-                style={{ width: '400px', height: '400px', position: 'relative' }}
+                style={{width: '400px', height: '400px', position: 'relative'}}
               />
-              <div style={{ position: 'absolute' }}>
-                <h1 style={{ textAlign: 'center' }}>
-                  { albumInfo?.name }
-                </h1>
-                <h3 style={{ textAlign: 'center', fontWeight: 'normal' }}>
-                  { albumInfo?.artists[0].name }
-                </h3>
-              </div>
             </div>
+            <br />
+            <h1 style={{textAlign: 'center'}}>
+              { albumInfo?.name }
+            </h1>
+            <h3 style={{textAlign: 'center', fontWeight: 'normal'}}>
+              <Link to={`/artist/${albumInfo?.artists[0].id}`}>{ albumInfo?.artists[0].name }</Link>
+            </h3>
             <Panel>
               <Table
                 height={(albumInfo?.tracks.items.length + 1) * 46}
@@ -85,22 +85,22 @@ const AlbumDetails = () => {
               >
                 <Column width={70} align="left">
                   <HeaderCell>#</HeaderCell>
-                  <TrackNumberCell dataKey="track_number" />
+                  <TrackNumberCell dataKey="track_number"/>
                 </Column>
 
                 <Column resizable width={200} align="left">
                   <HeaderCell>Track Name</HeaderCell>
-                  <Cell dataKey="name" />
+                  <Cell dataKey="name"/>
                 </Column>
 
                 <Column align="right">
                   <HeaderCell>Length</HeaderCell>
-                  <DurationCell dataKey="duration_ms" />
+                  <DurationCell dataKey="duration_ms"/>
                 </Column>
 
                 <Column align="right">
                   <HeaderCell>Explicit</HeaderCell>
-                  <ExplicitCell dataKey="explicit" />
+                  <ExplicitCell dataKey="explicit"/>
                 </Column>
               </Table>
             </Panel>

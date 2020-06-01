@@ -49,7 +49,7 @@ const ArtistDetails = () => {
         </div>
         <br/>
         <div style={{width: '400px', margin: '0 auto'}}>
-          <h2 style={{textAlign: 'center'}}>{ artistInfo?.name }</h2>
+          <h1 style={{textAlign: 'center'}}>{ artistInfo?.name }</h1>
           <h5 className="text-slim" style={{ textAlign: 'center' }}>
             <Icon icon="user-plus" />{' '}
             { numberWithCommas(artistInfo?.followers.total ?? 0) } Followers
