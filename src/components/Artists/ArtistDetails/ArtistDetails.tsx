@@ -9,6 +9,7 @@ import './ArtistDetails.scss';
 import ArtistAlbums from "./ArtistAlbums";
 import RelatedArtists from "./RelatedArtists";
 import ArtistBio from "./ArtistBio";
+import {numberWithCommas} from "../../../utils/global";
 
 enum Tab {
   ALBUMS = 'ALBUMS',
@@ -45,20 +46,14 @@ const ArtistDetails = () => {
             title={artistInfo?.name}
             style={{width: '400px', height: '400px', position: 'relative'}}
           />
-          <div style={{position: 'absolute'}}>
-            <h1 style={{textAlign: 'center'}}>
-              {artistInfo?.name}
-            </h1>
-          </div>
         </div>
         <br/>
         <div style={{width: '400px', margin: '0 auto'}}>
-          <h3 style={{textAlign: 'center'}}>Popularity</h3>
-          <Progress.Line
-            percent={artistInfo?.popularity}
-            showInfo={false}
-            status={getLineStatus(artistInfo?.popularity)}
-          />
+          <h2 style={{textAlign: 'center'}}>{ artistInfo?.name }</h2>
+          <h5 className="text-slim" style={{ textAlign: 'center' }}>
+            <Icon icon="user-plus" />{' '}
+            { numberWithCommas(artistInfo?.followers.total ?? 0) } Followers
+          </h5>
         </div>
         <br/>
 

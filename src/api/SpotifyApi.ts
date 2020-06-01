@@ -147,16 +147,10 @@ export default class SpotifyApi {
   }
 
   public getArtistInfo(artistId: string): Promise<any> {
-    const lastFMApi = new LastFMApi();
-
     return new Promise((resolve, reject) => {
       this.spotify.getArtist(artistId, (error: any, artistInfo: any) => {
         SpotifyApi.processError(error, reject);
-
-        lastFMApi.getArtistInfo(artistInfo.name).then((artist) => {
-          artistInfo.bio = artist.artist.bio;
           resolve(artistInfo);
-        });
       });
     });
   }
