@@ -59,12 +59,8 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
               onClick={() => getTopTracks(countryCode)}
             >
               <List hover>
-                {topTracks?.filter((item: any) => {
-                  return item.country_code === countryCode
-                })
-                  .map((track: any, index: number) => {
-                    console.log('track', track);
-                    return (
+                {topTracks?.filter((item: any) => item.country_code === countryCode)
+                  .map((track: any, index: number) => (
                       <List.Item key={track.name} index={index}>
                         <FlexboxGrid>
                           <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
@@ -98,7 +94,7 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
                         </FlexboxGrid>
                       </List.Item>
                     )
-                  })}
+                  )}
               </List>
             </Panel>
           );

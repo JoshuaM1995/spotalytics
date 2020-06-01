@@ -36,8 +36,8 @@ const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
       </List>
       <List hover>
         {albums?.map((album: any, index: number) => (
-          <Link to={`/album/${album.id}`}>
-            <List.Item key={album.uri} index={index}>
+          <Link to={`/album/${album.id}`} key={index}>
+            <List.Item index={index}>
               <FlexboxGrid>
                 <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
                   <img src={album.images[0].url} height={50} width={50} alt={album.name}/>

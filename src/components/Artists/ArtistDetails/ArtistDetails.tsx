@@ -15,7 +15,7 @@ enum Tab {
   ALBUMS = 'ALBUMS',
   TOP_TRACKS = 'TOP_TRACKS',
   RELATED_ARTISTS = 'RELATED_ARTISTS',
-  INFO = 'INFO',
+  BIOGRAPHY = 'BIOGRAPHY',
 }
 
 const ArtistDetails = () => {
@@ -67,13 +67,6 @@ const ArtistDetails = () => {
               Albums
             </Nav.Item>
             <Nav.Item
-              active={activeTab === Tab.TOP_TRACKS}
-              icon={<Icon icon="music"/>}
-              onClick={() => handleSelect(Tab.TOP_TRACKS)}
-            >
-              Top Tracks
-            </Nav.Item>
-            <Nav.Item
               active={activeTab === Tab.RELATED_ARTISTS}
               icon={<Icon icon="user"/>}
               onClick={() => handleSelect(Tab.RELATED_ARTISTS)}
@@ -81,11 +74,18 @@ const ArtistDetails = () => {
               Related Artists
             </Nav.Item>
             <Nav.Item
-              active={activeTab === Tab.INFO}
-              icon={<Icon icon="info-circle"/>}
-              onClick={() => handleSelect(Tab.INFO)}
+              active={activeTab === Tab.TOP_TRACKS}
+              icon={<Icon icon="music"/>}
+              onClick={() => handleSelect(Tab.TOP_TRACKS)}
             >
-              Info
+              Top Tracks
+            </Nav.Item>
+            <Nav.Item
+              active={activeTab === Tab.BIOGRAPHY}
+              icon={<Icon icon="info-circle"/>}
+              onClick={() => handleSelect(Tab.BIOGRAPHY)}
+            >
+              Biography
             </Nav.Item>
           </Nav>
 
@@ -103,8 +103,8 @@ const ArtistDetails = () => {
             <br />
           </Content>
 
-          <Content style={{display: (activeTab === Tab.INFO) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistBio artistName={artistInfo?.name} active={activeTab === Tab.INFO} />
+          <Content style={{display: (activeTab === Tab.BIOGRAPHY) ? 'block' : 'none', marginTop: '20px'}}>
+            <ArtistBio artistName={artistInfo?.name} active={activeTab === Tab.BIOGRAPHY} />
           </Content>
         </div>
       </Panel>

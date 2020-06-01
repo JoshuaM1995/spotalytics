@@ -28,12 +28,11 @@ const ArtistBio = ({ artistName, active }: ArtistBioProps) => {
 
   return (
     <>
-      {!artistInfo && placeholderItems(10).map(() => (
-        <Placeholder.Paragraph />
-      ))}
-      <h3>Biography</h3>
+      {!artistInfo && placeholderItems(10).map((num) => {
+        return <Placeholder.Paragraph key={num} />
+      })}
+      <div dangerouslySetInnerHTML={getArtistInfoMarkup(artistInfo?.bio.content ?? '')} />
       <br />
-      <div dangerouslySetInnerHTML={getArtistInfoMarkup(artistInfo?.bio.content ?? '')}/>
     </>
   );
 };

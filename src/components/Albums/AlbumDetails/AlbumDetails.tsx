@@ -75,9 +75,9 @@ const AlbumDetails = () => {
             <h1 style={{textAlign: 'center'}}>
               { albumInfo?.name }
             </h1>
-            <h3 style={{textAlign: 'center', fontWeight: 'normal'}}>
+            <h2 style={{textAlign: 'center', fontWeight: 'normal'}}>
               <Link to={`/artist/${albumInfo?.artists[0].id}`}>{ albumInfo?.artists[0].name }</Link>
-            </h3>
+            </h2>
             <Panel>
               <Table
                 height={(albumInfo?.tracks.items.length + 1) * 46}
