@@ -8,6 +8,8 @@ import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
 import {Link} from "react-router-dom";
 import {numberWithCommas} from "../../utils/global";
+import {CacheKey} from "../../constants";
+const ls = require('localstorage-ttl');
 
 interface TopTrack {
   track_name: string;
@@ -30,18 +32,36 @@ const Dashboard = () => {
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+    const totalArtistCountCache = ls.get(CacheKey.FOLLOWED_ARTISTS_COUNT);
+    const totalAlbumCountCache = ls.get(CacheKey.ALBUMS_SAVED_COUNT);
+    const totalTrackCountCache = ls.get(CacheKey.TRACKS_FAVORITED_COUNT);
 
-    spotifyApi.getTotalArtistCount().then(totalArtistCount => {
-      setTotalArtists(totalArtistCount);
-    });
+    if(!totalArtistCountCache) {
+      spotifyApi.getTotalArtistCount().then(totalArtistCount => {
+        setTotalArtists(totalArtistCount);
+        ls.set(CacheKey.FOLLOWED_ARTISTS_COUNT, totalArtistCount, 3600 * 1000);
+      });
+    } else {
+      setTotalArtists(totalArtistCountCache);
+    }
 
-    spotifyApi.getTotalAlbumCount().then(totalAlbumCount => {
-      setTotalAlbums(totalAlbumCount);
-    });
+    if(!totalAlbumCountCache) {
+      spotifyApi.getTotalAlbumCount().then(totalAlbumCount => {
+        setTotalAlbums(totalAlbumCount);
+        ls.set(CacheKey.ALBUMS_SAVED_COUNT, totalAlbumCount, 3600 * 1000);
+      });
+    } else {
+      setTotalAlbums(totalAlbumCountCache);
+    }
 
-    spotifyApi.getTotalTrackCount().then(totalTrackCount => {
-      setTotalTracks(totalTrackCount);
-    });
+    if(!totalTrackCountCache) {
+      spotifyApi.getTotalTrackCount().then(totalTrackCount => {
+        setTotalTracks(totalTrackCount);
+        ls.set(CacheKey.TRACKS_FAVORITED_COUNT, totalTrackCount, 3600 * 1000);
+      });
+    } else {
+      setTotalTracks(totalTrackCountCache);
+    }
 
     spotifyApi.getTopArtists().then(artists => {
       const images: ImageBlockImage[] = [];
@@ -90,14 +110,13 @@ const Dashboard = () => {
     });
   }, []);
 
-  // @ts-ignore
   return (
     <Page title="Dashboard">
       <Row>
         <Col xs={24} sm={24} md={8}>
             <StatisticCardLink
               to="/artists/all"
-              background="#429321"
+              background={'#429321'}
               icon="user-plus"
               statisticValue={totalArtists}
               statisticText="Artists Followed"
@@ -106,7 +125,7 @@ const Dashboard = () => {
         <Col xs={24} sm={24} md={8}>
           <StatisticCardLink
             to="albums/all"
-            background="#4a148c"
+            background={'#4a148c'}
             icon="play-circle"
             statisticValue={totalAlbums}
             statisticText="Albums Saved"
@@ -115,7 +134,7 @@ const Dashboard = () => {
         <Col xs={24} sm={24} md={8}>
           <StatisticCardLink
             to="tracks/all"
-            background="#f44336"
+            background={'#f44336'}
             icon="music"
             statisticValue={totalTracks}
             statisticText="Tracks Favorited"
