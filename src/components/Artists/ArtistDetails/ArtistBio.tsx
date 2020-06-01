@@ -1,7 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {nl2br, placeholderItems} from "../../../utils/global";
 import {Placeholder} from "rsuite";
-import SpotifyContext from "../../../context/spotify";
 import LastFMApi from "../../../api/LastFMApi";
 
 interface ArtistBioProps {
@@ -22,7 +21,6 @@ const ArtistBio = ({ artistName, active }: ArtistBioProps) => {
     // Only load the info when the tab becomes active, and if it hasn't already been loaded
     if(active && !artistInfo) {
       lastFMApi.getArtistInfo(artistName).then((info) => {
-        console.log('info', info.artist);
         setArtistInfo(info.artist);
       });
     }

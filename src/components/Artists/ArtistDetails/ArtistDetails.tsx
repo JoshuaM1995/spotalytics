@@ -4,12 +4,12 @@ import {useParams} from "react-router";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
 import {Content, Icon, Nav, Panel, Progress} from "rsuite";
-import {getLineStatus} from "../../../utils/progress";
 import './ArtistDetails.scss';
 import ArtistAlbums from "./ArtistAlbums";
 import RelatedArtists from "./RelatedArtists";
 import ArtistBio from "./ArtistBio";
 import {numberWithCommas} from "../../../utils/global";
+import ArtistTopTracks from "./ArtistTopTracks";
 
 enum Tab {
   ALBUMS = 'ALBUMS',
@@ -68,7 +68,7 @@ const ArtistDetails = () => {
             </Nav.Item>
             <Nav.Item
               active={activeTab === Tab.TOP_TRACKS}
-              icon={<Icon icon="globe"/>}
+              icon={<Icon icon="music"/>}
               onClick={() => handleSelect(Tab.TOP_TRACKS)}
             >
               Top Tracks
@@ -95,7 +95,7 @@ const ArtistDetails = () => {
           </Content>
 
           <Content style={{display: (activeTab === Tab.TOP_TRACKS) ? 'block' : 'none', marginTop: '20px'}}>
-            Top Tracks Map
+            <ArtistTopTracks artistId={artistId} active={activeTab === Tab.TOP_TRACKS} />
           </Content>
 
           <Content style={{display: (activeTab === Tab.RELATED_ARTISTS) ? 'block' : 'none', marginTop: '20px'}}>

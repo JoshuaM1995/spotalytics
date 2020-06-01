@@ -164,6 +164,15 @@ export default class SpotifyApi {
     });
   }
 
+  public getTopTracksByCountry(artistId: string, countryCode: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getArtistTopTracks(artistId, countryCode, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response.tracks);
+      });
+    });
+  }
+
   private static processError(error: any, reject: any) {
     if (error) {
       if (error.status === 401) {
