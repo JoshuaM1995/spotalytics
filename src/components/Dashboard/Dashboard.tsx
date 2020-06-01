@@ -39,7 +39,7 @@ const Dashboard = () => {
     if(!totalArtistCountCache) {
       spotifyApi.getTotalArtistCount().then(totalArtistCount => {
         setTotalArtists(totalArtistCount);
-        ls.set(CacheKey.FOLLOWED_ARTISTS_COUNT, totalArtistCount, 3600 * 1000);
+        ls.set(CacheKey.FOLLOWED_ARTISTS_COUNT, totalArtistCount, 300000);
       });
     } else {
       setTotalArtists(totalArtistCountCache);
@@ -48,7 +48,7 @@ const Dashboard = () => {
     if(!totalAlbumCountCache) {
       spotifyApi.getTotalAlbumCount().then(totalAlbumCount => {
         setTotalAlbums(totalAlbumCount);
-        ls.set(CacheKey.ALBUMS_SAVED_COUNT, totalAlbumCount, 3600 * 1000);
+        ls.set(CacheKey.ALBUMS_SAVED_COUNT, totalAlbumCount, 300000);
       });
     } else {
       setTotalAlbums(totalAlbumCountCache);
@@ -57,7 +57,7 @@ const Dashboard = () => {
     if(!totalTrackCountCache) {
       spotifyApi.getTotalTrackCount().then(totalTrackCount => {
         setTotalTracks(totalTrackCount);
-        ls.set(CacheKey.TRACKS_FAVORITED_COUNT, totalTrackCount, 3600 * 1000);
+        ls.set(CacheKey.TRACKS_FAVORITED_COUNT, totalTrackCount, 300000);
       });
     } else {
       setTotalTracks(totalTrackCountCache);
