@@ -30,7 +30,7 @@ const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
       <List style={{display: (albums.length > 0) ? 'none' : 'block'}}>
         {placeholderItems(10).map((num) => (
           <List.Item key={num}>
-            <Placeholder.Paragraph style={{marginLeft: 20, marginTop: 10}} graph="square"/>
+            <Placeholder.Paragraph active style={{marginLeft: 20, marginTop: 10}} graph="square"/>
           </List.Item>
         ))}
       </List>

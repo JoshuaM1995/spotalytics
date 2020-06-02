@@ -26,13 +26,14 @@ const RelatedArtists = ({ active, artistId }: RelatedArtistsProps) => {
 
   return (
     <>
-      <List style={{display: (artists.length > 0) ? 'none' : 'block'}}>
+      {artists.length === 0 &&
+      <List>
         {placeholderItems(10).map((num) => (
           <List.Item key={num}>
-            <Placeholder.Paragraph style={{marginLeft: 20, marginTop: 10}} graph="square"/>
+            <Placeholder.Paragraph active style={{marginLeft: 20, marginTop: 10}} graph="square"/>
           </List.Item>
         ))}
-      </List>
+      </List>}
       <List hover>
         {artists.map((artist: any, index: number) => (
           <Link to={`/artist/${artist.id}`}>

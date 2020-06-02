@@ -14,7 +14,7 @@ const getArtistInfoMarkup = (html: string) => {
 
 const lastFMApi = new LastFMApi();
 
-const ArtistBio = ({ artistName, active }: ArtistBioProps) => {
+const ArtistBiography = ({ artistName, active }: ArtistBioProps) => {
   const [artistInfo, setArtistInfo] = useState<any>(null);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const ArtistBio = ({ artistName, active }: ArtistBioProps) => {
   return (
     <>
       {!artistInfo && placeholderItems(10).map((num) => {
-        return <Placeholder.Paragraph key={num} />
+        return <Placeholder.Paragraph active key={num} />
       })}
       <div dangerouslySetInnerHTML={getArtistInfoMarkup(artistInfo?.bio.content ?? '')} />
       <br />
@@ -37,4 +37,4 @@ const ArtistBio = ({ artistName, active }: ArtistBioProps) => {
   );
 };
 
-export default ArtistBio;
+export default ArtistBiography;

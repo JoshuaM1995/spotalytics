@@ -1,13 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {getIsoCountries} from "../../../utils/global";
-import {FlexboxGrid, List, PanelGroup, Progress} from "rsuite";
+import {FlexboxGrid, List, PanelGroup, Placeholder, Progress} from "rsuite";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import {Link} from "react-router-dom";
 import axios, {AxiosResponse} from 'axios';
 import {getProgressLineProps} from "../../../utils/progress";
-
-const isoCountries = getIsoCountries();
+import {placeholderItems} from "../../../utils/global";
 
 interface TopTracksProps {
   artistId: string;
@@ -21,11 +19,14 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
-    // Get the top tracks based on the user's country code
-    axios.get('https://geolocation-db.com/json/').then((response: AxiosResponse) => {
-      getTopTracks(response.data.country_code);
-    });
-  }, []);
+    // Only load the related artists when the tab becomes active, and if they haven't already been loaded
+    if(active && topTracks.length === 0) {
+      // Get the top tracks based on the user's country code
+      axios.get('https://geolocation-db.com/json/').then((response: AxiosResponse) => {
+        getTopTracks(response.data.country_code);
+      });
+    }
+  }, [active]);
 
   const getTopTracks = (countryCode: string) => {
     const topTracksFetchedSet: Set<string> = topTracksFetched;
@@ -49,6 +50,14 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
   if (active) {
     return (
       <PanelGroup accordion bordered>
+        {topTracks.length === 0 &&
+        <List>
+          {placeholderItems(10).map((num) => (
+            <List.Item key={num}>
+              <Placeholder.Paragraph active style={{marginLeft: 20, marginTop: 10}} graph="square"/>
+            </List.Item>
+          ))}
+        </List>}
         <List hover>
           {topTracks?.map((track: any, index: number) => (
                 <List.Item key={track.name} index={index}>

@@ -3,11 +3,11 @@ import Page from "../../Page/Page";
 import {useParams} from "react-router";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
-import {Col, Content, Icon, Nav, Panel, Row} from "rsuite";
+import {Col, Content, Icon, Nav, Panel, Row, Placeholder} from "rsuite";
 import './ArtistDetails.scss';
 import ArtistAlbums from "./ArtistAlbums";
 import RelatedArtists from "./RelatedArtists";
-import ArtistBio from "./ArtistBio";
+import ArtistBiography from "./ArtistBiography";
 import {numberWithCommas} from "../../../utils/global";
 import ArtistTopTracks from "./ArtistTopTracks";
 import FollowArtistButton from "./FollowArtistButton";
@@ -44,28 +44,35 @@ const ArtistDetails = () => {
       <Panel shaded bordered bodyFill className="panel-light">
         <br/>
         <div style={{display: 'flex', justifyContent: 'center',}}>
+          {!artistInfo &&
+          <Placeholder.Graph active style={{width: '400px', height: '400px', position: 'relative'}} />}
+          {artistInfo &&
           <img
-            src={artistInfo?.images[0].url}
-            alt={artistInfo?.name}
-            title={artistInfo?.name}
+            src={artistInfo.images[0].url}
+            alt={artistInfo.name}
+            title={artistInfo.name}
             style={{width: '400px', height: '400px', position: 'relative'}}
-          />
+          />}
         </div>
         <br/>
         <div style={{width: '400px', margin: '0 auto'}}>
-          <h1 style={{textAlign: 'center'}}>{artistInfo?.name}</h1>
-          <br />
-          <Row style={{ display: 'flex', alignItems: 'center' }}>
-            <Col xs={24} md={12}>
-              <h5 className="text-slim" style={{textAlign: 'center'}}>
-                {numberWithCommas(followers)} Followers
-              </h5>
-            </Col>
+          {!artistInfo && <Placeholder.Paragraph active rows={3} /> }
+          {artistInfo &&
+          <>
+            <h1 style={{textAlign: 'center'}}>{artistInfo?.name}</h1>
+            <br />
+            <Row style={{ display: 'flex', alignItems: 'center' }}>
+              <Col xs={24} md={12}>
+                <h5 className="text-slim" style={{textAlign: 'center'}}>
+                  {numberWithCommas(followers)} Followers
+                </h5>
+              </Col>
 
-            <Col xs={24} md={12}>
-              <FollowArtistButton artistId={artistId} setFollowers={setFollowers} />
-            </Col>
-          </Row>
+              <Col xs={24} md={12}>
+                <FollowArtistButton artistId={artistId} setFollowers={setFollowers} />
+              </Col>
+            </Row>
+          </>}
         </div>
         <br/><br/>
 
@@ -116,7 +123,7 @@ const ArtistDetails = () => {
           </Content>
 
           <Content style={{display: (activeTab === Tab.BIOGRAPHY) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistBio artistName={artistInfo?.name} active={activeTab === Tab.BIOGRAPHY}/>
+            <ArtistBiography artistName={artistInfo?.name} active={activeTab === Tab.BIOGRAPHY}/>
           </Content>
         </div>
       </Panel>
