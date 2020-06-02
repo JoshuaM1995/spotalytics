@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {getIsoCountries} from "../../../utils/global";
-import {FlexboxGrid, List, Panel, PanelGroup, Placeholder, Progress} from "rsuite";
+import {FlexboxGrid, List, PanelGroup, Progress} from "rsuite";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import {Link} from "react-router-dom";
+import axios, {AxiosResponse} from 'axios';
+import {getProgressLineProps} from "../../../utils/progress";
 
 const isoCountries = getIsoCountries();
 
@@ -12,10 +14,6 @@ interface TopTracksProps {
   active: boolean;
 }
 
-// function filterByCountryCode(item: any) {
-//   return item.country_code === this;
-// }
-
 const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
   const [topTracks, setTopTracks] = useState([]);
   const [topTracksFetched, setTopTracksFetched] = useState<Set<string>>(new Set([]));
@@ -23,8 +21,11 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
-    console.log('top tracks', topTracks);
-  }, [topTracks]);
+    // Get the top tracks based on the user's country code
+    axios.get('https://geolocation-db.com/json/').then((response: AxiosResponse) => {
+      getTopTracks(response.data.country_code);
+    });
+  }, []);
 
   const getTopTracks = (countryCode: string) => {
     const topTracksFetchedSet: Set<string> = topTracksFetched;
@@ -48,57 +49,47 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
   if (active) {
     return (
       <PanelGroup accordion bordered>
-        {Object.keys(isoCountries).map((countryCode, index) => {
-          const countryName = getIsoCountries()[countryCode];
-
-          return (
-            <Panel
-              key={countryCode}
-              header={countryName}
-              eventKey={index + 1}
-              onClick={() => getTopTracks(countryCode)}
-            >
-              <List hover>
-                {topTracks?.filter((item: any) => item.country_code === countryCode)
-                  .map((track: any, index: number) => (
-                      <List.Item key={track.name} index={index}>
-                        <FlexboxGrid>
-                          <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
-                            <Link to={`/album/${track.album.id}`}>
-                              <img src={track.album.images[0].url} height={50} width={50} alt={track.album.name}/>
-                            </Link>
-                          </FlexboxGrid.Item>
-                          <FlexboxGrid.Item
-                            colspan={6}
-                            className="center"
-                            style={{
-                              height: '60px',
-                              flexDirection: 'column',
-                              alignItems: 'flex-start',
-                              overflow: 'hidden',
-                            }}
-                          >
-                            <div className="track-name">
-                              <a href={track.uri}>{track.name}</a>
-                            </div>
-                            <div>
-                              {track.album.name}
-                            </div>
-                          </FlexboxGrid.Item>
-                          <FlexboxGrid.Item colspan={6} className="center" style={{height: '60px'}}>
-                            <div style={{textAlign: 'right'}}>
-                              <div className="text-slim">Popularity</div>
-                              <Progress.Line percent={track.popularity} showInfo={false}/>
-                            </div>
-                          </FlexboxGrid.Item>
-                        </FlexboxGrid>
-                      </List.Item>
-                    )
-                  )}
-              </List>
-            </Panel>
-          );
-        })}
+        <List hover>
+          {topTracks?.map((track: any, index: number) => (
+                <List.Item key={track.name} index={index}>
+                  <FlexboxGrid>
+                    <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
+                      <Link to={`/album/${track.album.id}`}>
+                        <img src={track.album.images[0].url} height={50} width={50} alt={track.album.name}/>
+                      </Link>
+                    </FlexboxGrid.Item>
+                    <FlexboxGrid.Item
+                      colspan={6}
+                      className="center"
+                      style={{
+                        height: '60px',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <div className="track-name">
+                        <a href={track.uri}>{track.name}</a>
+                      </div>
+                      <div>
+                        {track.album.name}
+                      </div>
+                    </FlexboxGrid.Item>
+                    <FlexboxGrid.Item colspan={6} className="center" style={{height: '60px'}}>
+                      <div style={{textAlign: 'right'}}>
+                        <div className="text-slim">Popularity</div>
+                        <Progress.Line
+                          percent={track.popularity}
+                          showInfo={false}
+                          {...getProgressLineProps(track.popularity)}
+                        />
+                      </div>
+                    </FlexboxGrid.Item>
+                  </FlexboxGrid>
+                </List.Item>
+              )
+            )}
+        </List>
       </PanelGroup>
     );
   } else {

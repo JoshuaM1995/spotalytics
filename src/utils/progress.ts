@@ -1,12 +1,15 @@
-export const getLineStatus = (percentage: number) => {
+export const getProgressLineProps = (percentage: number) => {
   const low = 30;
   const medium = 60;
+  let props = {};
 
   if(percentage >= 0 && percentage <= low) {
-    return 'fail';
+    props = { ...props, status: 'fail' };
   } else if(percentage > low && percentage <= medium) {
-    return 'active';
+    props = { ...props, strokeColor: '#ffc107' };
   } else if(percentage > medium) {
-    return 'success';
+    props = { ...props, status: 'success' };
   }
+
+  return props;
 };

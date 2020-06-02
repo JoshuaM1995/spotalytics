@@ -1,4 +1,3 @@
-import LastFMApi from "./LastFMApi";
 import moment from "moment";
 
 const Spotify = require('spotify-web-api-js');
@@ -11,7 +10,13 @@ export default class SpotifyApi {
   }
 
   public static getAuthorizeURL(): string {
-    const scopes = ['user-library-read', 'user-follow-read', 'user-top-read'];
+    const scopes = [
+      'user-library-read',
+      // 'user-library-modify',
+      'user-follow-read',
+      'user-top-read',
+      'user-follow-modify',
+    ];
     return 'https://accounts.spotify.com/authorize' +
       '?response_type=token' +
       '&client_id=' + process.env.REACT_APP_SPOTIFY_CLIENT_ID +
@@ -169,6 +174,33 @@ export default class SpotifyApi {
       this.spotify.getArtistTopTracks(artistId, countryCode, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);
         resolve(response.tracks);
+      });
+    });
+  }
+
+  public getIsCurrentUserFollowingArtists(artistIds: string[]) {
+    return new Promise((resolve, reject) => {
+      this.spotify.isFollowingArtists(artistIds, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response);
+      });
+    });
+  }
+
+  public putFollowArtists(artistIds: string[]) {
+    return new Promise((resolve, reject) => {
+      this.spotify.followArtists(artistIds, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response);
+      });
+    });
+  }
+
+  public putUnFollowArtists(artistIds: string[]) {
+    return new Promise((resolve, reject) => {
+      this.spotify.unfollowArtists(artistIds, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response);
       });
     });
   }

@@ -3,13 +3,14 @@ import Page from "../../Page/Page";
 import {useParams} from "react-router";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
-import {Content, Icon, Nav, Panel, Progress} from "rsuite";
+import {Col, Content, Icon, Nav, Panel, Row} from "rsuite";
 import './ArtistDetails.scss';
 import ArtistAlbums from "./ArtistAlbums";
 import RelatedArtists from "./RelatedArtists";
 import ArtistBio from "./ArtistBio";
 import {numberWithCommas} from "../../../utils/global";
 import ArtistTopTracks from "./ArtistTopTracks";
+import FollowArtistButton from "./FollowArtistButton";
 
 enum Tab {
   ALBUMS = 'ALBUMS',
@@ -26,6 +27,7 @@ const ArtistDetails = () => {
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+
     spotifyApi.getArtistInfo(artistId).then((artist: any) => {
       setArtistInfo(artist);
     });
@@ -49,13 +51,21 @@ const ArtistDetails = () => {
         </div>
         <br/>
         <div style={{width: '400px', margin: '0 auto'}}>
-          <h1 style={{textAlign: 'center'}}>{ artistInfo?.name }</h1>
-          <h5 className="text-slim" style={{ textAlign: 'center' }}>
-            <Icon icon="user-plus" />{' '}
-            { numberWithCommas(artistInfo?.followers.total ?? 0) } Followers
-          </h5>
+          <h1 style={{textAlign: 'center'}}>{artistInfo?.name}</h1>
+          <br />
+          <Row style={{ display: 'flex', alignItems: 'center' }}>
+            <Col xs={24} md={12}>
+              <h5 className="text-slim" style={{textAlign: 'center'}}>
+                {numberWithCommas(artistInfo?.followers.total ?? 0)} Followers
+              </h5>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <FollowArtistButton artistId={artistId} />
+            </Col>
+          </Row>
         </div>
-        <br/>
+        <br/><br/>
 
         <div style={{padding: '0 20px'}}>
           <Nav appearance="subtle" justified>
@@ -67,18 +77,18 @@ const ArtistDetails = () => {
               Albums
             </Nav.Item>
             <Nav.Item
-              active={activeTab === Tab.RELATED_ARTISTS}
-              icon={<Icon icon="user"/>}
-              onClick={() => handleSelect(Tab.RELATED_ARTISTS)}
-            >
-              Related Artists
-            </Nav.Item>
-            <Nav.Item
               active={activeTab === Tab.TOP_TRACKS}
               icon={<Icon icon="music"/>}
               onClick={() => handleSelect(Tab.TOP_TRACKS)}
             >
               Top Tracks
+            </Nav.Item>
+            <Nav.Item
+              active={activeTab === Tab.RELATED_ARTISTS}
+              icon={<Icon icon="user"/>}
+              onClick={() => handleSelect(Tab.RELATED_ARTISTS)}
+            >
+              Related Artists
             </Nav.Item>
             <Nav.Item
               active={activeTab === Tab.BIOGRAPHY}
@@ -90,21 +100,21 @@ const ArtistDetails = () => {
           </Nav>
 
           <Content style={{display: (activeTab === Tab.ALBUMS) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistAlbums artistId={artistId} active />
-            <br />
+            <ArtistAlbums artistId={artistId} active/>
+            <br/>
           </Content>
 
           <Content style={{display: (activeTab === Tab.TOP_TRACKS) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistTopTracks artistId={artistId} active={activeTab === Tab.TOP_TRACKS} />
+            <ArtistTopTracks artistId={artistId} active={activeTab === Tab.TOP_TRACKS}/>
           </Content>
 
           <Content style={{display: (activeTab === Tab.RELATED_ARTISTS) ? 'block' : 'none', marginTop: '20px'}}>
-            <RelatedArtists artistId={artistId} active={activeTab === Tab.RELATED_ARTISTS} />
-            <br />
+            <RelatedArtists artistId={artistId} active={activeTab === Tab.RELATED_ARTISTS}/>
+            <br/>
           </Content>
 
           <Content style={{display: (activeTab === Tab.BIOGRAPHY) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistBio artistName={artistInfo?.name} active={activeTab === Tab.BIOGRAPHY} />
+            <ArtistBio artistName={artistInfo?.name} active={activeTab === Tab.BIOGRAPHY}/>
           </Content>
         </div>
       </Panel>

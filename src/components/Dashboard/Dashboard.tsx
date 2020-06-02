@@ -9,6 +9,7 @@ import SpotifyContext from "../../context/spotify";
 import {Link} from "react-router-dom";
 import {numberWithCommas} from "../../utils/global";
 import {CacheKey} from "../../constants";
+import {getProgressLineProps} from "../../utils/progress";
 const ls = require('localstorage-ttl');
 
 interface TopTrack {
@@ -193,7 +194,11 @@ const Dashboard = () => {
                 <FlexboxGrid.Item colspan={6} className="center" style={{ height: '60px' }}>
                   <div style={{ textAlign: 'right' }}>
                     <div className="text-slim">Popularity</div>
-                    <Progress.Line percent={track.popularity} showInfo={false} />
+                    <Progress.Line
+                      percent={track.popularity}
+                      showInfo={false}
+                      {...getProgressLineProps(track.popularity)}
+                    />
                   </div>
                 </FlexboxGrid.Item>
               </FlexboxGrid>

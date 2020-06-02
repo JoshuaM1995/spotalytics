@@ -34,14 +34,14 @@ const TrackNumberCell = ({rowData, dataKey, ...props}: any) => {
   );
 };
 
-const DurationCell = ({rowData, dataKey, ...props}: any) => (
-  <Cell {...props}>{getLength(rowData[dataKey])}</Cell>
-);
-
 const ExplicitCell = ({rowData, dataKey, ...props}: any) => (
   <Cell {...props}>
     {rowData[dataKey] ? <Badge content="Explicit"/> : ''}
   </Cell>
+);
+
+const DurationCell = ({rowData, dataKey, ...props}: any) => (
+  <Cell {...props}>{getLength(rowData[dataKey])}</Cell>
 );
 
 const AlbumDetails = () => {
@@ -94,15 +94,17 @@ const AlbumDetails = () => {
                 </Column>
 
                 <Column align="right">
-                  <HeaderCell>Length</HeaderCell>
-                  <DurationCell dataKey="duration_ms"/>
+                  <HeaderCell/>
+                  <ExplicitCell dataKey="explicit"/>
                 </Column>
 
                 <Column align="right">
-                  <HeaderCell>Explicit</HeaderCell>
-                  <ExplicitCell dataKey="explicit"/>
+                  <HeaderCell>Length</HeaderCell>
+                  <DurationCell dataKey="duration_ms"/>
                 </Column>
               </Table>
+              <br />
+              { albumInfo?.copyrights[0].text }
             </Panel>
           </Panel>
         </Col>
