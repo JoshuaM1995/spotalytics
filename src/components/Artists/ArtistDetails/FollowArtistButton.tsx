@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useReducer, useState} from "react";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import {IconButton} from "rsuite";
-import {FollowingButtonActions} from "../../../actions/followingButtonActions";
+import {FollowingButtonAction} from "../../../actions/followingButtonAction";
 import followingButtonReducer, { initialFollowingButtonState } from "../../../reducers/followingButtonReducer";
 
 interface FollowingArtistButtonProps {
@@ -23,7 +23,7 @@ const FollowArtistButton = ({ artistId }: FollowingArtistButtonProps) => {
 
   useEffect(() => {
     if(isUserFollowing) {
-      buttonDispatch({ type: FollowingButtonActions.FOLLOWING });
+      buttonDispatch({ type: FollowingButtonAction.FOLLOWING });
     }
   }, [isUserFollowing]);
 
@@ -41,13 +41,13 @@ const FollowArtistButton = ({ artistId }: FollowingArtistButtonProps) => {
 
   const onMouseEnter = () => {
     if(isUserFollowing) {
-      buttonDispatch({ type: FollowingButtonActions.FOLLOWING_HOVER });
+      buttonDispatch({ type: FollowingButtonAction.FOLLOWING_HOVER });
     }
   };
 
   const onMouseLeave = () => {
     buttonDispatch({
-      type: isUserFollowing ? FollowingButtonActions.FOLLOWING : FollowingButtonActions.NOT_FOLLOWING,
+      type: isUserFollowing ? FollowingButtonAction.FOLLOWING : FollowingButtonAction.NOT_FOLLOWING,
     });
   };
 
