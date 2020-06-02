@@ -7,9 +7,10 @@ import followingButtonReducer, { initialFollowingButtonState } from "../../../re
 
 interface FollowingArtistButtonProps {
   artistId: string;
+  setFollowers: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const FollowArtistButton = ({ artistId }: FollowingArtistButtonProps) => {
+const FollowArtistButton = ({ artistId, setFollowers }: FollowingArtistButtonProps) => {
   const [ isUserFollowing, setIsUserFollowing ] = useState(false);
   const [ buttonState, buttonDispatch ] = useReducer(followingButtonReducer, initialFollowingButtonState);
   const { spotifyContext } = useContext(SpotifyContext);
@@ -31,12 +32,14 @@ const FollowArtistButton = ({ artistId }: FollowingArtistButtonProps) => {
     spotifyApi.putFollowArtists([artistId]).then(() => {
       setIsUserFollowing(true);
     });
+    setFollowers((followers) => followers + 1);
   };
 
   const unFollowArtist = () => {
     spotifyApi.putUnFollowArtists([artistId]).then(() => {
       setIsUserFollowing(false);
     });
+    setFollowers((followers) => followers - 1);
   }
 
   const onMouseEnter = () => {

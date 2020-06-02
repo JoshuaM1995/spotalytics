@@ -24,12 +24,14 @@ const ArtistDetails = () => {
   const {spotifyContext} = useContext(SpotifyContext);
   const [artistInfo, setArtistInfo] = useState<any>();
   const [activeTab, setActiveTab] = useState(Tab.ALBUMS);
+  const [followers, setFollowers] = useState(0);
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     spotifyApi.getArtistInfo(artistId).then((artist: any) => {
       setArtistInfo(artist);
+      setFollowers(artist.followers.total);
     });
   }, []);
 
@@ -56,12 +58,12 @@ const ArtistDetails = () => {
           <Row style={{ display: 'flex', alignItems: 'center' }}>
             <Col xs={24} md={12}>
               <h5 className="text-slim" style={{textAlign: 'center'}}>
-                {numberWithCommas(artistInfo?.followers.total ?? 0)} Followers
+                {numberWithCommas(followers)} Followers
               </h5>
             </Col>
 
             <Col xs={24} md={12}>
-              <FollowArtistButton artistId={artistId} />
+              <FollowArtistButton artistId={artistId} setFollowers={setFollowers} />
             </Col>
           </Row>
         </div>
