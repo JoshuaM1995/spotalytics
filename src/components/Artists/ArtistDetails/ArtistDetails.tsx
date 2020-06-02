@@ -59,7 +59,7 @@ const ArtistDetails = () => {
           {!artistInfo && <Placeholder.Paragraph active rows={3} /> }
           {artistInfo &&
           <>
-            <h1 style={{textAlign: 'center'}}>{artistInfo?.name}</h1>
+            <h1 style={{textAlign: 'center'}}>{artistInfo.name}</h1>
             <br />
             <Row style={{ display: 'flex', alignItems: 'center' }}>
               <Col xs={24} md={12}>

@@ -54,7 +54,7 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
         <List>
           {placeholderItems(10).map((num) => (
             <List.Item key={num}>
-              <Placeholder.Paragraph active style={{marginLeft: 20, marginTop: 10}} graph="square"/>
+              <Placeholder.Paragraph active style={{marginLeft: 20, marginTop: 10}} graph="image"/>
             </List.Item>
           ))}
         </List>}

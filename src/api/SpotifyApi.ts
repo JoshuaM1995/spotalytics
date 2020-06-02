@@ -125,13 +125,25 @@ export default class SpotifyApi {
     return new Promise((resolve, reject) => {
       this.spotify.getArtistAlbums(artistId, (error: any, artistsAlbums: any) => {
         SpotifyApi.processError(error, reject);
+
+        const albums = artistsAlbums.items;
+
         // Sort albums by release date, with the latest release at the top
-        artistsAlbums.items.sort((a: any, b: any) => {
+        albums.sort((a: any, b: any) => {
           const releaseDateOne = moment(a.release_date);
           const releaseDateTwo = moment(b.release_date);
           return releaseDateTwo.isAfter(releaseDateOne) ? 1 : -1;
         });
-        resolve(artistsAlbums.items);
+
+        // Add visible property to each album in the array
+        const albumsWithVisibility = albums.map((album: any) => {
+          return {
+            ...album,
+            visible: true,
+          };
+        });
+
+        resolve(albumsWithVisibility);
       });
     });
   }
