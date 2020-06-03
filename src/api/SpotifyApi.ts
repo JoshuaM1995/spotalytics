@@ -12,7 +12,7 @@ export default class SpotifyApi {
   public static getAuthorizeURL(): string {
     const scopes = [
       'user-library-read',
-      // 'user-library-modify',
+      'user-library-modify',
       'user-follow-read',
       'user-top-read',
       'user-follow-modify',
