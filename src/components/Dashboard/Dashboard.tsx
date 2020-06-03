@@ -116,7 +116,7 @@ const Dashboard = () => {
       <Row>
         <Col xs={24} sm={24} md={8}>
             <StatisticCardLink
-              to="/artists/all"
+              to="/artists/followed"
               background={'#429321'}
               icon="user-plus"
               statisticValue={totalArtists}

@@ -65,8 +65,8 @@ const SideNavigation = () => {
                 Recently Followed
               </DropdownItemLink>
               <DropdownItemLink
-                to="/artists/all"
-                path="/artists/all"
+                to="/artists/followed"
+                path="/artists/followed"
                 eventKey="2-3"
               >
                 <Icon icon="list-ol" />

@@ -12,10 +12,10 @@ export default class SpotifyApi {
   public static getAuthorizeURL(): string {
     const scopes = [
       'user-library-read',
-      'user-library-modify',
       'user-follow-read',
       'user-top-read',
       'user-follow-modify',
+      // 'user-library-modify',
     ];
     return 'https://accounts.spotify.com/authorize' +
       '?response_type=token' +
@@ -194,6 +194,21 @@ export default class SpotifyApi {
     return new Promise((resolve, reject) => {
       this.spotify.isFollowingArtists(artistIds, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);
+        resolve(response);
+      });
+    });
+  }
+
+  public getCurrentUserFollowedArtists() {
+    return new Promise((resolve, reject) => {
+      this.spotify.getFollowedArtists({ limit: 10 }, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+
+        // Sort followed artists by the most followers at the top
+        response.artists.items.sort((a: any, b: any) => {
+          return b.followers.total > a.followers.total ? 1 : -1;
+        });
+
         resolve(response);
       });
     });

@@ -1,9 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Badge, FlexboxGrid, List, Placeholder} from "rsuite";
-import {Link} from "react-router-dom";
-import {numberWithCommas, placeholderItems} from "../../../utils/global";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
+import ArtistList from "../../shared/ArtistList";
 
 interface RelatedArtistsProps {
   active: boolean;
@@ -11,7 +9,7 @@ interface RelatedArtistsProps {
 }
 
 const RelatedArtists = ({ active, artistId }: RelatedArtistsProps) => {
-  const [artists, setArtists] = useState([]);
+  const [artists, setArtists] = useState<any[]>([]);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
@@ -24,60 +22,7 @@ const RelatedArtists = ({ active, artistId }: RelatedArtistsProps) => {
     }
   }, [active]);
 
-  return (
-    <>
-      {artists.length === 0 &&
-      <List>
-        {placeholderItems(10).map((num) => (
-          <List.Item key={num}>
-            <Placeholder.Paragraph active style={{marginLeft: 20, marginTop: 10}} graph="image"/>
-          </List.Item>
-        ))}
-      </List>}
-      <List hover>
-        {artists.map((artist: any, index: number) => (
-          <Link to={`/artist/${artist.id}`}>
-            <List.Item key={artist.uri} index={index}>
-              <FlexboxGrid>
-                <FlexboxGrid.Item
-                  colspan={2}
-                  className="center"
-                  style={{height: '100px', marginLeft: '30px',}}
-                >
-                  <img src={artist.images[0].url} height={100} width={100} alt={artist.name}/>
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item
-                  colspan={16}
-                  className="center"
-                  style={{
-                    height: '100px',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    overflow: 'hidden',
-                    marginLeft: '40px',
-                  }}
-                >
-                  <div>
-                    <div>
-                      <h5 style={{marginBottom: '10px'}}>{artist.name}</h5>
-                      {artist.genres.map((genre: any) => {
-                        return (
-                          <Badge content={genre} className="related-artist-badge"/>
-                        );
-                      })}
-                      <div className="text-slim" style={{marginTop: '10px'}}>
-                        {numberWithCommas(artist.followers.total)} Followers
-                      </div>
-                    </div>
-                  </div>
-                </FlexboxGrid.Item>
-              </FlexboxGrid>
-            </List.Item>
-          </Link>
-        ))}
-      </List>
-    </>
-  );
+  return <ArtistList artists={artists} />
 };
 
 export default RelatedArtists;
