@@ -9,8 +9,7 @@ import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import moment from 'moment';
 import './RecentlyPlayedTracks.scss';
-
-const Chance = require('chance');
+import {Link} from "react-router-dom";
 
 interface RecentlyPlayedTrack {
   track: string;
@@ -18,7 +17,6 @@ interface RecentlyPlayedTrack {
   playedAt: any;
 }
 
-const chance = new Chance();
 const { Column, HeaderCell, Cell } = Table;
 const initialTableState: TableState<RecentlyPlayedTrack> = {
   data: [],
@@ -43,36 +41,40 @@ const RecentlyPlayedTracks = () => {
       const tracksToAdd: any[] = [];
 
       recentlyPlayedTracks.forEach((recentlyPlayedTrack: any) => {
-        const artists: string[] = [];
+        const artists: ReactElement[] = [];
         let trackToAdd: {
           isPlaying: ReactElement|string;
-          artists: string;
+          artists: ReactElement[]|string[];
           playedAt: string;
           trackName: ReactElement|string
         };
 
         if(recentlyPlayedTrack.item) {
-          recentlyPlayedTrack.item.artists.forEach((artist: any) => artists.push(artist.name));
+          recentlyPlayedTrack.item.artists.forEach((artist: any) => {
+            artists.push(<><Link to={`/artist/${artist.id}`}>{ artist.name }</Link>{', '}</>);
+          });
 
           trackToAdd = {
             isPlaying: recentlyPlayedTrack.is_playing ? <Badge content="Playing" className="badge-playing" />
                                                       : <Badge content="Not Playing" className="badge-not-playing" />,
             trackName: <a href={recentlyPlayedTrack.item.uri}>{ recentlyPlayedTrack.item.name }</a>,
-            artists: '',
+            artists: [],
             playedAt: moment(recentlyPlayedTrack.timestamp).format('MMMM Do, YYYY [at] h:mm A'),
           };
         } else {
-          recentlyPlayedTrack.track.artists.forEach((artist: any) => artists.push(artist.name));
+          recentlyPlayedTrack.track.artists.forEach((artist: any) => {
+            artists.push(<><Link to={`/artist/${artist.id}`}>{ artist.name }</Link>{', '}</>);
+          });
 
           trackToAdd = {
             isPlaying: '',
             trackName: <a href={recentlyPlayedTrack.track.uri}>{ recentlyPlayedTrack.track.name }</a>,
-            artists: '',
+            artists: [],
             playedAt: moment(recentlyPlayedTrack.played_at).format('MMMM Do, YYYY [at] h:mm A'),
           };
         }
 
-        trackToAdd.artists = artists.join(', ');
+        trackToAdd.artists = artists;
         tracksToAdd.push(trackToAdd);
       });
 
@@ -101,7 +103,7 @@ const RecentlyPlayedTracks = () => {
           <Cell dataKey="isPlaying" />
         </Column>
 
-        <Column width={400} align="center">
+        <Column width={400}>
           <HeaderCell>Track Name</HeaderCell>
           <Cell dataKey="trackName" />
         </Column>
@@ -111,7 +113,7 @@ const RecentlyPlayedTracks = () => {
           <Cell dataKey="artists" />
         </Column>
 
-        <Column width={200}>
+        <Column width={200} align="right">
           <HeaderCell>Played At</HeaderCell>
           <Cell dataKey="playedAt" />
         </Column>
@@ -126,12 +128,8 @@ const RecentlyPlayedTracks = () => {
         activePage={page}
         displayLength={displayLength}
         total={recentlyPlayedTracks.length}
-        onChangePage={(dataKey) => {
-          tableStateDispatch({ type: UPDATE_PAGE, value: dataKey })
-        }}
-        onChangeLength={(dataKey) => {
-          tableStateDispatch({ type: UPDATE_DISPLAY_LENGTH, value: dataKey })
-        }}
+        onChangePage={(dataKey) => tableStateDispatch({ type: UPDATE_PAGE, value: dataKey })}
+        onChangeLength={(dataKey) => tableStateDispatch({ type: UPDATE_DISPLAY_LENGTH, value: dataKey })}
       />
     </Page>
   );
