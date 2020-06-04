@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Panel, Row, List, FlexboxGrid, Progress} from "rsuite";
+import {Col, Panel, Row, List, FlexboxGrid, Progress, SelectPicker} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
 import './Dashboard.scss';
@@ -22,6 +22,12 @@ interface TopTrack {
   uri: string;
 }
 
+const topTracksTimeRanges = [
+  { value: 'short_term', label: 'Last 4 Weeks',  },
+  { value: 'medium_term', label: 'Last 6 Months',  },
+  { value: 'long_term', label: 'All-Time',  },
+];
+
 const Dashboard = () => {
   const [totalArtists, setTotalArtists] = useState(0);
   const [totalAlbums, setTotalAlbums] = useState(0);
@@ -29,6 +35,7 @@ const Dashboard = () => {
   const [topArtistsImages, setTopArtistsImages] = useState<ImageBlockImage[]>([]);
   const [topAlbumsImages, setTopAlbumsImages] = useState<ImageBlockImage[]>([]);
   const [topTracks, setTopTracks] = useState<TopTrack[]>([]);
+  const [topTracksTimeRange, setTopTracksTimeRange] = useState('short_term');
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
@@ -92,24 +99,40 @@ const Dashboard = () => {
       setTopAlbumsImages(images);
     });
 
-    spotifyApi.getTopTracks().then(tracks => {
-      const topTrackValues: TopTrack[] = [];
-
-      tracks.forEach((track: any) => {
-        topTrackValues.push({
-          track_name: track.name,
-          artist: track.artists[0].name,
-          album_id: track.album.id,
-          album_name: track.album.name,
-          album_image_url: track.album.images[0].url,
-          popularity: track.popularity,
-          uri: track.uri,
-        });
-      });
-
-      setTopTracks(topTrackValues);
+    spotifyApi.getTopTracks(topTracksTimeRange).then(tracks => {
+      setTopTracks(getTopTracksValues(tracks));
     });
   }, []);
+
+  const getTopTracksValues = (tracks: any[]) => {
+    const topTrackValues: TopTrack[] = [];
+
+    tracks.forEach((track: any) => {
+      topTrackValues.push({
+        track_name: track.name,
+        artist: track.artists[0].name,
+        album_id: track.album.id,
+        album_name: track.album.name,
+        album_image_url: track.album.images[0].url,
+        popularity: track.popularity,
+        uri: track.uri,
+      });
+    });
+
+    return topTrackValues;
+  }
+
+  useEffect(() => {
+    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+
+    spotifyApi.getTopTracks(topTracksTimeRange).then(tracks => {
+      setTopTracks(getTopTracksValues(tracks));
+    });
+  }, [topTracksTimeRange]);
+
+  const changeTopTracksTimeRange = (value: string) => {
+    setTopTracksTimeRange(value);
+  }
 
   return (
     <Page title="Dashboard">
@@ -161,7 +184,15 @@ const Dashboard = () => {
       <br />
 
       <Panel className="panel-light">
-        <h3>Top Tracks</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3>Top Tracks</h3>
+          <SelectPicker
+            value={topTracksTimeRange}
+            data={topTracksTimeRanges}
+            style={{ width: 250 }}
+            onChange={changeTopTracksTimeRange}
+          />
+        </div>
         <br />
         <List hover>
           {topTracks.map((track: any, index: number) => (

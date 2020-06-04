@@ -102,9 +102,9 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopTracks(limit: number = 10): Promise<any[]> {
+  public getTopTracks(time_range: string = 'short_term', limit: number = 10): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMyTopTracks({limit, time_range: 'long_term'}, (error: any, response: any) => {
+      this.spotify.getMyTopTracks({limit, time_range}, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
