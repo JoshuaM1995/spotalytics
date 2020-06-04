@@ -1,8 +1,8 @@
 import React from 'react';
 import {useRouteMatch} from 'react-router';
 import {Route} from 'react-router-dom';
-import AllTracks from "../../components/Songs/AllSongs/AllTracks";
-import RecentlyPlayedTracks from "../../components/Songs/AllSongs/RecentlyPlayedTracks";
+import AllTracks from "../../components/Tracks/AllTracks/AllTracks";
+import RecentlyPlayedTracks from "../../components/Tracks/RecentlyPlayedTracks/RecentlyPlayedTracks";
 
 const TracksRoutes = () => {
   const match = useRouteMatch();

@@ -1,0 +1,10 @@
+@import '../../../scss/variables';
+
+.badge-playing, .badge-not-playing {
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.badge-playing {
+  background: $spotify-green;
+}

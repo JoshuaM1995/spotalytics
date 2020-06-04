@@ -16,6 +16,7 @@ export default class SpotifyApi {
       'user-top-read',
       'user-follow-modify',
       'user-read-recently-played',
+      'user-read-playback-state',
       // 'user-library-modify',
     ];
     return 'https://accounts.spotify.com/authorize' +
@@ -217,15 +218,42 @@ export default class SpotifyApi {
     });
   }
 
-  public getRecentlyPlayedTracks() {
-    return new Promise((resolve, reject) => {
-      this.spotify.getMyRecentlyPlayedTracks({}, (error: any, response: any) => {
+  public getRecentlyPlayedTracks(
+    trackLimit?: number,
+    includeCurrentlyPlaying?: boolean
+  ): Promise<any[]> {
+    const getRecentlyPlayedTracks = (resolve: any, reject: any, currentlyPlayingTrack?: any) => {
+      let limit = trackLimit ?? 10;
+
+      // If we are including the song that's currently playing, we decrement the limit by one since we'll be
+      // prepending the currently played track to the array of recently played tracks
+      if(trackLimit && includeCurrentlyPlaying && currentlyPlayingTrack) {
+        limit--;
+      }
+
+      const options = (limit) ? { limit } : {};
+
+      this.spotify.getMyRecentlyPlayedTracks(options, (error: any, recentlyPlayedTracks: any) => {
         SpotifyApi.processError(error, reject);
 
-        console.log('recently played tracks', response);
+        // If we are including the track that's currently playing, prepend it to the array of recently played tracks
+        if(includeCurrentlyPlaying && currentlyPlayingTrack) {
+          recentlyPlayedTracks.items.unshift(currentlyPlayingTrack);
+        }
 
-        resolve(response);
+        resolve(recentlyPlayedTracks.items);
       });
+    };
+
+    return new Promise((resolve, reject) => {
+      if(includeCurrentlyPlaying) {
+        this.spotify.getMyCurrentPlayingTrack({}, (error: any, response: any) => {
+          SpotifyApi.processError(error, reject);
+          getRecentlyPlayedTracks(resolve, reject, response);
+        });
+      } else {
+        getRecentlyPlayedTracks(resolve, reject);
+      }
     });
   }
 
