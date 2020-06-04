@@ -57,20 +57,12 @@ const SideNavigation = () => {
                 Top Artists
               </DropdownItemLink>
               <DropdownItemLink
-                to="/artists/recently-followed"
-                path="/artists/recently-followed"
-                eventKey="2-2"
-              >
-                <Icon icon="user-plus" />
-                Recently Followed
-              </DropdownItemLink>
-              <DropdownItemLink
                 to="/artists/followed"
                 path="/artists/followed"
-                eventKey="2-3"
+                eventKey="2-2"
               >
                 <Icon icon="list-ol" />
-                All Artists
+                Followed Artists
               </DropdownItemLink>
             </DropdownItem>
             <Dropdown
@@ -84,14 +76,6 @@ const SideNavigation = () => {
               <Dropdown.Item eventKey="3-2" icon={<Icon icon="heart"/>}>
                 Favorite Albums
               </Dropdown.Item>
-              <DropdownItemLink
-                to="/albums/all"
-                path="/albums/all"
-                eventKey="3-3"
-              >
-                <Icon icon="list-ol" />
-                All Albums
-              </DropdownItemLink>
             </Dropdown>
             <Dropdown
               eventKey="4"
