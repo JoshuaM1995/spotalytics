@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
-import ArtistList from "../../shared/ArtistList";
+import ArtistList from "../../shared/ArtistList/ArtistList";
 
 interface RelatedArtistsProps {
   active: boolean;

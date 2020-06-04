@@ -199,9 +199,11 @@ export default class SpotifyApi {
     });
   }
 
-  public getCurrentUserFollowedArtists() {
+  public getCurrentUserFollowedArtists(after?: string) {
     return new Promise((resolve, reject) => {
-      this.spotify.getFollowedArtists({ limit: 10 }, (error: any, response: any) => {
+      const options = after ? { limit: 10, after } : { limit: 10 };
+
+      this.spotify.getFollowedArtists(options, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);
 
         // Sort followed artists by the most followers at the top
