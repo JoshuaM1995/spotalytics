@@ -15,6 +15,7 @@ export default class SpotifyApi {
       'user-follow-read',
       'user-top-read',
       'user-follow-modify',
+      'user-read-recently-played',
       // 'user-library-modify',
     ];
     return 'https://accounts.spotify.com/authorize' +
@@ -210,6 +211,18 @@ export default class SpotifyApi {
         response.artists.items.sort((a: any, b: any) => {
           return b.followers.total > a.followers.total ? 1 : -1;
         });
+
+        resolve(response);
+      });
+    });
+  }
+
+  public getRecentlyPlayedTracks() {
+    return new Promise((resolve, reject) => {
+      this.spotify.getMyRecentlyPlayedTracks({}, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+
+        console.log('recently played tracks', response);
 
         resolve(response);
       });
