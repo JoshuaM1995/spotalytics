@@ -1,0 +1,22 @@
+@import '../../../scss/variables';
+
+.album-card {
+  display: inline-block;
+  width: 200px;
+
+  .album-info {
+    .rs-panel-body {
+      padding: 10px 20px 20px 0;
+    }
+  }
+
+  a {
+    &.artist-name {
+      color: $gray-light;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

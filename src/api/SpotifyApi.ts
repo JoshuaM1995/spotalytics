@@ -201,7 +201,7 @@ export default class SpotifyApi {
     });
   }
 
-  public getCurrentUserFollowedArtists(after?: string) {
+  public getCurrentUserFollowedArtists(after?: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const options = after ? { limit: 10, after } : { limit: 10 };
 
@@ -212,6 +212,16 @@ export default class SpotifyApi {
         response.artists.items.sort((a: any, b: any) => {
           return b.followers.total > a.followers.total ? 1 : -1;
         });
+
+        resolve(response);
+      });
+    });
+  }
+
+  public getCurrentUserSavedAlbums(limit: number = 10, offset: number = 0): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getMySavedAlbums({ limit, offset }, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
 
         resolve(response);
       });

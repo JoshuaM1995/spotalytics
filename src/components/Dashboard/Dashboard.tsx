@@ -96,7 +96,7 @@ const Dashboard = () => {
         </Col>
         <Col xs={24} sm={24} md={8}>
           <StatisticCardLink
-            to="albums/all"
+            to="albums/saved"
             background={'#4a148c'}
             icon="play-circle"
             statisticValue={totalAlbums}
