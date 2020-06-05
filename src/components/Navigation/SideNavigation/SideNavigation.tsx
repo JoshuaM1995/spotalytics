@@ -61,7 +61,7 @@ const SideNavigation = () => {
                 path="/artists/followed"
                 eventKey="2-2"
               >
-                <Icon icon="list-ol" />
+                <Icon icon="user-plus" />
                 Followed Artists
               </DropdownItemLink>
             </DropdownItem>
@@ -73,9 +73,14 @@ const SideNavigation = () => {
               <Dropdown.Item eventKey="3-1" icon={<Icon icon="bar-chart-ranking" flip="horizontal"/>}>
                 Top Albums
               </Dropdown.Item>
-              <Dropdown.Item eventKey="3-2" icon={<Icon icon="heart"/>}>
-                Favorite Albums
-              </Dropdown.Item>
+              <DropdownItemLink
+                to="/albums/saved"
+                path="/albums/saved"
+                eventKey="3-2"
+              >
+                <Icon icon="heart" />
+                Saved Albums
+              </DropdownItemLink>
             </Dropdown>
             <Dropdown
               eventKey="4"
@@ -93,17 +98,9 @@ const SideNavigation = () => {
                 <Icon icon="play" />
                 Recently Played
               </DropdownItemLink>
-              <Dropdown.Item eventKey="4-3" icon={<Icon icon="thumbs-up"/>}>
-                Liked Tracks
+              <Dropdown.Item eventKey="4-3" icon={<Icon icon="heart"/>}>
+                Saved Tracks
               </Dropdown.Item>
-              <DropdownItemLink
-                to="/tracks/all"
-                path="/tracks/all"
-                eventKey="4-4"
-              >
-                <Icon icon="list-ol" />
-                All Tracks
-              </DropdownItemLink>
             </Dropdown>
           </Nav>
         </Sidenav.Body>
