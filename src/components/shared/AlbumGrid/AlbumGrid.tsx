@@ -1,5 +1,5 @@
 import React, {ComponentProps, ReactElement} from 'react';
-import {Col, Grid, Panel, Row} from "rsuite";
+import {Col, FlexboxGrid, Panel} from "rsuite";
 import './AlbumGrid.scss';
 import InfiniteScroll from "react-infinite-scroller";
 import ConditionalWrapper from "../ConditionalWrapper";
@@ -17,13 +17,12 @@ const AlbumGrid = ({ albums, infiniteScroll, infiniteScrollProps }: AlbumGridPro
       condition={infiniteScroll}
       wrapper={(children: ReactElement) => <InfiniteScroll {...infiniteScrollProps}>{ children }</InfiniteScroll>}
     >
-      <Grid fluid>
-        <Row>
+      <FlexboxGrid justify="center">
           {albums.map((album: any, index: number) => (
-            <Col xs={24} sm={12} md={6} key={index}>
+            <FlexboxGrid.Item componentClass={Col} xs={24} sm={12} md={6} key={index} className="album-card-container">
               <Panel bodyFill className="album-card">
                 <Link to={`/album/${album.album.id}`}>
-                  <img src={album.album.images[0].url} height="200" alt="" />
+                  <img src={album.album.images[0].url} alt="" />
                 </Link>
                 <Panel className="album-info">
                   <h6>
@@ -36,10 +35,9 @@ const AlbumGrid = ({ albums, infiniteScroll, infiniteScrollProps }: AlbumGridPro
                   </Link>
                 </Panel>
               </Panel>
-            </Col>
+            </FlexboxGrid.Item>
           ))}
-        </Row>
-      </Grid>
+      </FlexboxGrid>
     </ConditionalWrapper>
   );
 };

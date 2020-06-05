@@ -5,7 +5,7 @@ import AlbumGrid from "../../shared/AlbumGrid/AlbumGrid";
 import SpotifyApi from "../../../api/SpotifyApi";
 import {Loader} from "rsuite";
 
-const itemsPerPage = 10;
+const itemsPerPage = 50;
 
 const SavedAlbums = () => {
   const [pageTitle, setPageTitle] = useState("Saved Albums");
@@ -21,10 +21,6 @@ const SavedAlbums = () => {
       setPageTitle(`${pageTitle} (${response.total})`);
     });
   }, []);
-
-  useEffect(() => {
-    console.log('albums', albums);
-  }, [albums]);
 
   const loadItems = (page: number) => {
     const offset = itemsPerPage * (page - 1);
