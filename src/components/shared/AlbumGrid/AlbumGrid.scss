@@ -17,15 +17,5 @@
         padding: 10px 20px 20px 0;
       }
     }
-
-    a {
-      &.artist-name {
-        color: $gray-light;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
   }
 }

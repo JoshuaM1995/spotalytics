@@ -8,6 +8,14 @@ a {
   &:hover {
     color: $spotify-light-green;
   }
+
+  &.link-slim {
+    color: $gray-light;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .page-header {

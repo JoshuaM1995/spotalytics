@@ -30,7 +30,7 @@ const AlbumGrid = ({ albums, infiniteScroll, infiniteScrollProps }: AlbumGridPro
                       { album.album.name }
                     </Link>
                   </h6>
-                  <Link to={`/artist/${album.album.artists[0].id}`} className="artist-name">
+                  <Link to={`/artist/${album.album.artists[0].id}`} className="link-slim">
                     { album.album.artists[0].name }
                   </Link>
                 </Panel>

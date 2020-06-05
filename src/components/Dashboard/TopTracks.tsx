@@ -14,6 +14,7 @@ interface TopTracksProps {
 interface TopTrack {
   track_name: string;
   artist: string;
+  artist_id: string;
   album_id: string;
   album_name: string;
   album_image_url: string;
@@ -45,7 +46,6 @@ const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: Top
     spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
       setTopTracks(getTopTracksValues(tracks));
     });
-    console.log('topTracksTimeRange', topTracksTimeRange);
   }, [topTracksTimeRange]);
 
   const getTopTracksValues = (tracks: any[]) => {
@@ -55,6 +55,7 @@ const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: Top
       topTrackValues.push({
         track_name: track.name,
         artist: track.artists[0].name,
+        artist_id: track.artists[0].id,
         album_id: track.album.id,
         album_name: track.album.name,
         album_image_url: track.album.images[0].url,
@@ -108,7 +109,9 @@ const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: Top
                 </div>
                 <div>
                   <div>
-                    {track.artist}
+                    <Link to={`/artist/${track.artist_id}`} className="link-slim">
+                      {track.artist}
+                    </Link>
                   </div>
                 </div>
               </FlexboxGrid.Item>
