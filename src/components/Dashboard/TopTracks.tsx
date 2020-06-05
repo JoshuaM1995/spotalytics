@@ -27,12 +27,9 @@ const topTracksTimeRanges = [
   { value: TopTrackTimeRange.LONG_TERM, label: 'All-Time',  },
 ];
 
-const TopTracks = ({
-  timeRange = TopTrackTimeRange.SHORT_TERM,
-  limit = 10
-}: TopTracksProps) => {
+const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: TopTracksProps) => {
   const [topTracks, setTopTracks] = useState<TopTrack[]>([]);
-  const [topTracksTimeRange, setTopTracksTimeRange] = useState('short_term');
+  const [topTracksTimeRange, setTopTracksTimeRange] = useState(timeRange);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
@@ -48,6 +45,7 @@ const TopTracks = ({
     spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
       setTopTracks(getTopTracksValues(tracks));
     });
+    console.log('topTracksTimeRange', topTracksTimeRange);
   }, [topTracksTimeRange]);
 
   const getTopTracksValues = (tracks: any[]) => {
@@ -68,7 +66,7 @@ const TopTracks = ({
     return topTrackValues;
   }
 
-  const changeTopTracksTimeRange = (value: string) => {
+  const changeTopTracksTimeRange = (value: TopTrackTimeRange) => {
     setTopTracksTimeRange(value);
   }
 
@@ -78,7 +76,7 @@ const TopTracks = ({
         <h3>Top Tracks</h3>
         <SelectPicker
           defaultValue={timeRange}
-          value={timeRange}
+          value={topTracksTimeRange}
           data={topTracksTimeRanges}
           style={{ width: 250 }}
           cleanable={false}
