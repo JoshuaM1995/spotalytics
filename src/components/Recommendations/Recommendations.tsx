@@ -1,51 +1,23 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Page from "../Page/Page";
-import {Button, ControlLabel, DatePicker, Form, FormGroup, HelpBlock, SelectPicker, Slider} from "rsuite";
+import {Button, ControlLabel, Form, FormGroup, HelpBlock, SelectPicker, Slider} from "rsuite";
 import './Recommendations.scss';
 import {Field, Formik, FormikProps} from "formik";
 import RecommendationInputNumber from "./RecommendationInputNumber";
 import moment from 'moment';
+import SpotifyRecommendationOptions from "../../api/interfaces/requests/spotify/spotifyRecommendationOptions";
+import SpotifyApi from "../../api/SpotifyApi";
+import SpotifyContext from "../../context/spotify";
 
-interface FormValues {
-  min_instrumentalness: number;
-  max_instrumentalness: number;
-  min_acousticness: number;
-  max_acousticness: number;
-  min_danceability: number;
-  max_danceability: number;
-  min_energy: number;
-  max_energy: number;
-  min_liveness: number;
-  max_liveness: number;
-  min_loudness: number;
-  max_loudness: number;
-  min_mode: number;
-  max_mode: number;
-  min_key: number;
-  max_key: number;
-  min_popularity: number;
-  max_popularity: number;
-  min_speechiness: number;
-  max_speechiness: number;
-  min_tempo: number;
-  max_tempo: number;
-  min_valence: number;
-  max_valence: number;
-  min_time_signature: number;
-  max_time_signature: number;
-  min_duration: Date;
-  max_duration: Date;
-}
-
-const initialValues: FormValues = {
+const initialValues: SpotifyRecommendationOptions = {
   min_instrumentalness: 0,
   max_instrumentalness: 1,
   min_acousticness: 0,
   max_acousticness: 1,
   min_danceability: 0,
   max_danceability: 1,
-  min_duration: new Date(`${moment().format('YYYY-MM-DD')} 00:00:00`),
-  max_duration: new Date(`${moment().format('YYYY-MM-DD')} 00:59:59`),
+  min_duration: 0,
+  max_duration: 60,
   min_energy: 0,
   max_energy: 1,
   min_key: 0,
@@ -97,8 +69,17 @@ const timeSignatureOptions = [
 ];
 
 const Recommendations = () => {
-  const getRecommendations = (values: FormValues) => {
-    console.log('form values', values);
+  const { spotifyContext } = useContext(SpotifyContext);
+
+  const getRecommendations = (options: SpotifyRecommendationOptions) => {
+    options.min_duration = moment.duration(options.min_duration, 'minutes').asMilliseconds();
+    options.max_duration = moment.duration(options.max_duration, 'minutes').asMilliseconds();
+    console.log('form values', options);
+
+    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+    spotifyApi.getFilteredRecommendations(options).then((response) => {
+      console.log('response', response);
+    });
   };
 
   return (
@@ -106,7 +87,7 @@ const Recommendations = () => {
       <h3>Advanced Recommendation Filters</h3>
       <br />
       <Formik initialValues={initialValues} onSubmit={getRecommendations}>
-        {(props: FormikProps<FormValues>) => (
+        {(props: FormikProps<SpotifyRecommendationOptions>) => (
           <Form
             layout="inline"
             onSubmit={(checkStatus, event) => props.handleSubmit(event)}
@@ -386,36 +367,22 @@ const Recommendations = () => {
             </FormGroup>
 
             <FormGroup>
-              <ControlLabel style={{ marginBottom: 8 }}>Minimum Duration</ControlLabel>
-              <br />
-              <Field
-                name="min_duration"
-                render={({field, form}: any) => (
-                  <DatePicker
-                    {...field}
-                    format="mm:ss"
-                    cleanable={false}
-                    style={{ width: 200 }}
-                    onChange={(value) => form.setFieldValue('min_duration', value)}
-                  />
-                )}
+              <RecommendationInputNumber
+                label="Minimum Duration (Minutes)"
+                inputName="min_duration"
+                min={0}
+                max={60}
+                step={1}
               />
             </FormGroup>
 
             <FormGroup>
-              <ControlLabel style={{ marginBottom: 8 }}>Maximum Duration</ControlLabel>
-              <br />
-              <Field
-                name="max_duration"
-                render={({field, form}: any) => (
-                  <DatePicker
-                    {...field}
-                    format="mm:ss"
-                    cleanable={false}
-                    style={{ width: 200 }}
-                    onChange={(value) => form.setFieldValue('max_duration', value)}
-                  />
-                )}
+              <RecommendationInputNumber
+                label="Maximum Duration (Minutes)"
+                inputName="max_duration"
+                min={0}
+                max={60}
+                step={1}
               />
             </FormGroup>
 

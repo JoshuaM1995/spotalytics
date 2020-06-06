@@ -1,4 +1,5 @@
 import moment from "moment";
+import SpotifyRecommendationOptions from "./interfaces/requests/spotify/spotifyRecommendationOptions";
 
 const Spotify = require('spotify-web-api-js');
 
@@ -264,6 +265,17 @@ export default class SpotifyApi {
       } else {
         getRecentlyPlayedTracks(resolve, reject);
       }
+    });
+  }
+
+  public getFilteredRecommendations(
+    options: SpotifyRecommendationOptions
+  ): Promise<SpotifyApi.RecommendationsFromSeedsResponse> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getRecommendations(options, (error: any, response: any) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response);
+      });
     });
   }
 
