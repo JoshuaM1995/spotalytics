@@ -19,6 +19,7 @@ import {SPOTIFY_CONTEXT} from "./constants";
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
 import ArtistRoutes from "./router/routes/ArtistRoutes";
 import AlbumRoutes from "./router/routes/AlbumRoutes";
+import Recommendations from "./components/Recommendations/Recommendations";
 
 const App = () => {
   const [spotifyContext, setSpotifyContext] = useState(spotifyContextDefaultValue);
@@ -55,7 +56,8 @@ const App = () => {
           <GuardProvider guards={[authenticateGuard]} loading={Loading} error={SomethingWentWrong}>
             <Switch>
               <Route exact path="/" component={Home} />
-              <GuardedRoute path={'/dashboard'} component={Dashboard} />
+              <GuardedRoute path="/dashboard" component={Dashboard} />
+              <GuardedRoute path="/recommendations" component={Recommendations} />
               <GuardedRoute path="/artist" render={() => <ArtistRoutes/>} />
               <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>} />
               <GuardedRoute path="/album" render={() => <AlbumRoutes/>} />

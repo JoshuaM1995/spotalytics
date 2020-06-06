@@ -42,6 +42,10 @@ const SideNavigation = () => {
               <Icon icon="dashboard"/>
               Dashboard
             </NavigationItem>
+            <NavigationItem to="/recommendations" path="/recommendations">
+              <Icon icon="creative"/>
+              Recommendations
+            </NavigationItem>
             <DropdownItem
               eventKey="2"
               title="Artists"
