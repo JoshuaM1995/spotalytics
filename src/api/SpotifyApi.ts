@@ -279,6 +279,15 @@ export default class SpotifyApi {
     });
   }
 
+  public getAvailableGenres(): Promise<SpotifyApi.AvailableGenreSeedsResponse> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getAvailableGenreSeeds((error: any, response: SpotifyApi.AvailableGenreSeedsResponse) => {
+        SpotifyApi.processError(error, reject);
+        resolve(response);
+      });
+    });
+  }
+
   public putFollowArtists(artistIds: string[]) {
     return new Promise((resolve, reject) => {
       this.spotify.followArtists(artistIds, (error: any, response: any) => {

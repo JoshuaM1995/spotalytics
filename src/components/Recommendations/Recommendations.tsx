@@ -1,6 +1,17 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Page from "../Page/Page";
-import {Button, ControlLabel, Form, FormGroup, HelpBlock, SelectPicker, Slider} from "rsuite";
+import {
+  AutoComplete,
+  Button, Col,
+  ControlLabel,
+  Form,
+  FormGroup,
+  HelpBlock,
+  Icon,
+  InputGroup, Row,
+  SelectPicker,
+  Slider, TagPicker
+} from "rsuite";
 import './Recommendations.scss';
 import {Field, Formik, FormikProps} from "formik";
 import RecommendationInputNumber from "./RecommendationInputNumber";
@@ -16,8 +27,8 @@ const initialValues: SpotifyRecommendationOptions = {
   max_acousticness: 1,
   min_danceability: 0,
   max_danceability: 1,
-  min_duration: 0,
-  max_duration: 60,
+  min_duration_ms: 0,
+  max_duration_ms: 60,
   min_energy: 0,
   max_energy: 1,
   min_key: 0,
@@ -69,11 +80,21 @@ const timeSignatureOptions = [
 ];
 
 const Recommendations = () => {
+  const [genreOptions, setGenreOptions] = useState<any[]>([]);
   const { spotifyContext } = useContext(SpotifyContext);
 
+  useEffect(() => {
+    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+
+    spotifyApi.getAvailableGenres().then((response: SpotifyApi.AvailableGenreSeedsResponse) => {
+      const genres = response.genres.map((genre) => { return { value: genre, label: genre } });
+      setGenreOptions(genres);
+    });
+  }, []);
+
   const getRecommendations = (options: SpotifyRecommendationOptions) => {
-    options.min_duration = moment.duration(options.min_duration, 'minutes').asMilliseconds();
-    options.max_duration = moment.duration(options.max_duration, 'minutes').asMilliseconds();
+    options.min_duration_ms = moment.duration(options.min_duration_ms, 'minutes').asMilliseconds();
+    options.max_duration_ms = moment.duration(options.max_duration_ms, 'minutes').asMilliseconds();
     console.log('form values', options);
 
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
@@ -369,7 +390,7 @@ const Recommendations = () => {
             <FormGroup>
               <RecommendationInputNumber
                 label="Minimum Duration (Minutes)"
-                inputName="min_duration"
+                inputName="min_duration_ms"
                 min={0}
                 max={60}
                 step={1}
@@ -379,7 +400,7 @@ const Recommendations = () => {
             <FormGroup>
               <RecommendationInputNumber
                 label="Maximum Duration (Minutes)"
-                inputName="max_duration"
+                inputName="max_duration_ms"
                 min={0}
                 max={60}
                 step={1}
@@ -477,8 +498,41 @@ const Recommendations = () => {
                 )}
               />
             </FormGroup>
-
             <br />
+            <br />
+
+            <h3>Seed Data</h3>
+
+            <Row>
+              <Col xs={24} md={8}>
+                <ControlLabel style={{ marginBottom: 8 }}>Seed Artists</ControlLabel>
+                <InputGroup inside style={{}}>
+                  <InputGroup.Addon>
+                    <Icon icon="user" />
+                  </InputGroup.Addon>
+                  <AutoComplete data={[]} placeholder="Search Artists..." />
+                </InputGroup>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <ControlLabel style={{ marginBottom: 8 }}>Seed Tracks</ControlLabel>
+                <InputGroup inside style={{}}>
+                  <InputGroup.Addon>
+                    <Icon icon="music" />
+                  </InputGroup.Addon>
+                  <AutoComplete data={[]} placeholder="Search Tracks..." />
+                </InputGroup>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <ControlLabel style={{ marginBottom: 8 }}>Seed Genres</ControlLabel>
+                <TagPicker
+                  data={genreOptions}
+                  placeholder="Select Genre(s)"
+                  style={{ width: '100%' }}
+                />
+              </Col>
+            </Row>
 
             <Button color="green" style={{marginTop: 35}} type="submit">
               Get Recommendations

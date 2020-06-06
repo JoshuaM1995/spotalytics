@@ -25,6 +25,6 @@ export default interface SpotifyRecommendationOptions {
   max_valence: number;
   min_time_signature: number;
   max_time_signature: number;
-  min_duration: number;
-  max_duration: number;
+  min_duration_ms: number;
+  max_duration_ms: number;
 }
