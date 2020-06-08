@@ -1,5 +1,5 @@
 import React from 'react';
-import {ControlLabel, FormGroup, HelpBlock, InputNumber} from "rsuite";
+import {ControlLabel, HelpBlock, InputNumber} from "rsuite";
 import {Field} from "formik";
 
 interface RecommendationInputNumber {
@@ -14,7 +14,7 @@ interface RecommendationInputNumber {
 const RecommendationInputNumber = ({ label, inputName, helpText, min, max, step }: RecommendationInputNumber) => {
   return (
     <>
-      <ControlLabel>
+      <ControlLabel style={helpText ? {} : { marginBottom: 8 }}>
         { label }
         {helpText &&
         <HelpBlock tooltip>{ helpText }</HelpBlock>}
@@ -28,7 +28,6 @@ const RecommendationInputNumber = ({ label, inputName, helpText, min, max, step 
             min={min ?? 0}
             max={max ?? 1}
             onChange={(value) => form.setFieldValue(inputName, value)}
-            style={{width: 200}}
           />
         )}
       />
