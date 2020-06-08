@@ -1,5 +1,7 @@
 import moment from "moment";
-import SpotifyRecommendationOptions from "./interfaces/requests/spotify/spotifyRecommendationOptions";
+import {
+  SpotifyAdvancedRecommendationOptions
+} from "./interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
 
 const Spotify = require('spotify-web-api-js');
 
@@ -269,7 +271,7 @@ export default class SpotifyApi {
   }
 
   public getFilteredRecommendations(
-    options: SpotifyRecommendationOptions
+    options: SpotifyAdvancedRecommendationOptions
   ): Promise<SpotifyApi.RecommendationsFromSeedsResponse> {
     return new Promise((resolve, reject) => {
       this.spotify.getRecommendations(options, (error: any, response: any) => {

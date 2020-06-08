@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Panel, Row, List, FlexboxGrid, Progress, SelectPicker, Button, Icon} from "rsuite";
+import {Col, Panel, Row, List, FlexboxGrid, Progress, SelectPicker, Button, Icon, Message} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
 import './Dashboard.scss';
@@ -84,6 +84,14 @@ const Dashboard = () => {
 
   return (
     <Page title="Dashboard">
+      <Message
+        type="info"
+        description="All the values on this page are only updated once every hour."
+        closable
+        showIcon
+      />
+      <br />
+
       <Row>
         <Col xs={24} sm={24} md={8}>
             <StatisticCardLink
