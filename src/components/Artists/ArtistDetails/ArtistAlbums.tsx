@@ -23,6 +23,10 @@ const albumTypes: AlbumType[] = [
   { label: 'Compilation', value: 'compilation' },
 ];
 
+const getHiddenAlbums = (albums: any[]) => {
+  return albums.filter((album: any) => album.visible === false);
+};
+
 const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [albums, setAlbums] = useState<any[]>([]);
@@ -38,6 +42,10 @@ const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
       });
     }
   }, [active]);
+
+  useEffect(() => {
+    console.log('albums', albums);
+  }, [albums]);
 
   const onChangeAlbumType = (selectedAlbumType: string|null): void => {
     setAlbums(albums.map((album: any) => {
@@ -76,6 +84,9 @@ const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
           </List.Item>
         ))}
       </List>}
+      {!isLoading && getHiddenAlbums(albums).length > 0 &&
+        <h4 style={{ textAlign: 'center' }}>No albums could be found with the current filters...</h4>
+      }
       {!isLoading && albums.length > 0 &&
       <>
         <List hover>
