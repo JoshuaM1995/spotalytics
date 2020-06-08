@@ -35,7 +35,7 @@ const ArtistDetails = () => {
     });
   }, []);
 
-  const handleSelect = (activeKey: Tab) => {
+  const changeTab = (activeKey: Tab) => {
     setActiveTab(activeKey);
   };
 
@@ -81,28 +81,28 @@ const ArtistDetails = () => {
             <Nav.Item
               active={activeTab === Tab.ALBUMS}
               icon={<Icon icon="play-circle"/>}
-              onClick={() => handleSelect(Tab.ALBUMS)}
+              onClick={() => changeTab(Tab.ALBUMS)}
             >
               Albums
             </Nav.Item>
             <Nav.Item
               active={activeTab === Tab.TOP_TRACKS}
               icon={<Icon icon="music"/>}
-              onClick={() => handleSelect(Tab.TOP_TRACKS)}
+              onClick={() => changeTab(Tab.TOP_TRACKS)}
             >
               Top Tracks
             </Nav.Item>
             <Nav.Item
               active={activeTab === Tab.RELATED_ARTISTS}
               icon={<Icon icon="user"/>}
-              onClick={() => handleSelect(Tab.RELATED_ARTISTS)}
+              onClick={() => changeTab(Tab.RELATED_ARTISTS)}
             >
               Related Artists
             </Nav.Item>
             <Nav.Item
               active={activeTab === Tab.BIOGRAPHY}
               icon={<Icon icon="info-circle"/>}
-              onClick={() => handleSelect(Tab.BIOGRAPHY)}
+              onClick={() => changeTab(Tab.BIOGRAPHY)}
             >
               Biography
             </Nav.Item>

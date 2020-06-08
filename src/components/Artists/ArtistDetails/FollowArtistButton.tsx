@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useReducer, useState} from "react";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
-import {IconButton} from "rsuite";
+import {Alert, IconButton} from "rsuite";
 import {FollowingButtonAction} from "../../../actions/followingButtonAction";
 import followingButtonReducer, { initialFollowingButtonState } from "../../../reducers/followingButtonReducer";
 
@@ -31,6 +31,8 @@ const FollowArtistButton = ({ artistId, setFollowers }: FollowingArtistButtonPro
   const followArtist = () => {
     spotifyApi.putFollowArtists([artistId]).then(() => {
       setIsUserFollowing(true);
+    }).catch(() => {
+      Alert.error('Error following artist', 5000);
     });
     setFollowers((followers) => followers + 1);
   };
@@ -38,6 +40,8 @@ const FollowArtistButton = ({ artistId, setFollowers }: FollowingArtistButtonPro
   const unFollowArtist = () => {
     spotifyApi.putUnFollowArtists([artistId]).then(() => {
       setIsUserFollowing(false);
+    }).catch(() => {
+      Alert.error('Error un-following artist', 5000);
     });
     setFollowers((followers) => followers - 1);
   }
