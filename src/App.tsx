@@ -27,15 +27,15 @@ const App = () => {
 
   const authenticateGuard = (to: any, from: any, next: any) => {
     if(!spotifyContext.isAuthenticated) {
-      let sessionStorageSpotify: any = sessionStorage.getItem(SPOTIFY_CONTEXT);
+      let localStorageSpotifyContext: any = localStorage.getItem(SPOTIFY_CONTEXT);
 
-      if(sessionStorageSpotify !== null) {
-        sessionStorageSpotify = JSON.parse(sessionStorageSpotify ?? '');
+      if(localStorageSpotifyContext !== null) {
+        localStorageSpotifyContext = JSON.parse(localStorageSpotifyContext ?? '');
 
         // If the spotify context is in session storage set the spotify context to
-        // the value of what's in session storage
-        if(sessionStorageSpotify) {
-          setSpotifyContext({ ...spotifyContext, ...sessionStorageSpotify });
+        // the value of what's in local storage
+        if(localStorageSpotifyContext) {
+          setSpotifyContext({ ...spotifyContext, ...localStorageSpotifyContext });
         } else {
           next.redirect('/authenticate-spotify');
         }

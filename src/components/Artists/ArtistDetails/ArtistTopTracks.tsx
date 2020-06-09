@@ -23,10 +23,8 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
     // Only load the related artists when the tab becomes active, and if they haven't already been loaded
     if(active && topTracks.length === 0) {
       // Get the top tracks based on the user's country code
-      axios.get('https://geolocation-db.com/json/').then((response: AxiosResponse) => {
-        getTopTracks(response.data.country_code);
-        setCountryCode(response.data.country_code);
-      });
+      getTopTracks(spotifyContext.currentUser?.country ?? 'US');
+      setCountryCode(spotifyContext.currentUser?.country ?? 'US');
     }
   }, [active]);
 

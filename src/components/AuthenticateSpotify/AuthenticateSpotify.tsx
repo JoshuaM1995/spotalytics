@@ -16,14 +16,19 @@ const AuthenticateSpotify = () => {
 
   useEffect(() => {
     if (accessToken) {
-      const context: SpotifyContextValues = {
-        ...spotifyContext,
-        isAuthenticated: true,
-        accessToken: accessToken,
-      };
-      setSpotifyContext(context);
-      sessionStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(context));
-      setRedirect(true);
+      const spotifyApi = new SpotifyApi(accessToken);
+      spotifyApi.getCurrentUserProfile().then((currentUser: SpotifyApi.CurrentUsersProfileResponse) => {
+        const context: SpotifyContextValues = {
+          ...spotifyContext,
+          isAuthenticated: true,
+          accessToken,
+          currentUser,
+        };
+
+        setSpotifyContext(context);
+        localStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(context));
+        setRedirect(true);
+      });
     }
 
     // We need to re-authenticate, so remove the spotify context authentication values and session storage values
@@ -33,7 +38,7 @@ const AuthenticateSpotify = () => {
         isAuthenticated: false,
         accessToken: '',
       });
-      sessionStorage.removeItem(SPOTIFY_CONTEXT);
+      localStorage.removeItem(SPOTIFY_CONTEXT);
     }
   }, []);
 

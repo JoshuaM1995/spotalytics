@@ -7,15 +7,9 @@ import SpotifyContext from "../../../context/spotify";
 import moment from "moment";
 import './AlbumDetails.scss';
 import {Link} from "react-router-dom";
+import {getTrackLength} from "../../../utils/track";
 
 const {Column, HeaderCell, Cell} = Table;
-const getLength = (durationInMs: number) => {
-  const duration = moment.duration(durationInMs);
-  const zero = duration.seconds() < 10 ? '0' : '';
-
-  return `${duration.minutes()}:${zero}${duration.seconds()}`;
-}
-
 const TrackNumberCell = ({rowData, dataKey, ...props}: any) => {
   const [hovered, setHovered] = useState(false);
 
@@ -41,7 +35,7 @@ const ExplicitCell = ({rowData, dataKey, ...props}: any) => (
 );
 
 const DurationCell = ({rowData, dataKey, ...props}: any) => (
-  <Cell {...props}>{getLength(rowData[dataKey])}</Cell>
+  <Cell {...props}>{getTrackLength(rowData[dataKey])}</Cell>
 );
 
 const AlbumDetails = () => {

@@ -1,5 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Alert, Button, Col, ControlLabel, Form, HelpBlock, Message, Row, SelectPicker, TagPicker} from "rsuite";
+import React, {ReactNode, useContext, useEffect, useReducer, useState} from 'react';
+import {
+  Alert,
+  Button,
+  Col,
+  ControlLabel,
+  Form,
+  HelpBlock,
+  Icon, IconButton,
+  Message,
+  Row,
+  SelectPicker,
+  Table,
+  TagPicker
+} from "rsuite";
 import {Field, Formik, FormikProps} from "formik";
 import {
   AcousticnessOption,
@@ -28,6 +41,12 @@ import {
 } from "../../utils/recommendations";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
+import TablePagination from "rsuite/es/Table/TablePagination";
+import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA, UPDATE_DISPLAY_LENGTH, UPDATE_PAGE} from "../../actions/tableActions";
+import tableReducer, {TableState} from "../../reducers/tableReducer";
+import {getTrackLength} from "../../utils/track";
+import {Link} from "react-router-dom";
+import moment from 'moment';
 
 const initialValues: SpotifySimpleRecommendationOptions = {
   recommendation_data: SeedTypeOption.BOTH,
@@ -46,71 +65,118 @@ const initialValues: SpotifySimpleRecommendationOptions = {
 };
 
 const seedTypesOptions = [
-  { value: SeedTypeOption.NONE, label: SeedTypeOption.NONE },
-  { value: SeedTypeOption.BOTH, label: SeedTypeOption.BOTH },
-  { value: SeedTypeOption.ARTISTS, label: SeedTypeOption.ARTISTS },
-  { value: SeedTypeOption.ALBUMS, label: SeedTypeOption.ALBUMS },
+  {value: SeedTypeOption.NONE, label: SeedTypeOption.NONE},
+  {value: SeedTypeOption.BOTH, label: SeedTypeOption.BOTH},
+  {value: SeedTypeOption.ARTISTS, label: SeedTypeOption.ARTISTS},
+  {value: SeedTypeOption.ALBUMS, label: SeedTypeOption.ALBUMS},
 ];
 
 const instrumentalTracksOptions = [
-  { value: InstrumentalTrackOption.ANY, label: InstrumentalTrackOption.ANY },
-  { value: InstrumentalTrackOption.INSTRUMENTAL_ONLY, label: InstrumentalTrackOption.INSTRUMENTAL_ONLY },
-  { value: InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY, label: InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY },
+  {value: InstrumentalTrackOption.ANY, label: InstrumentalTrackOption.ANY},
+  {value: InstrumentalTrackOption.INSTRUMENTAL_ONLY, label: InstrumentalTrackOption.INSTRUMENTAL_ONLY},
+  {value: InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY, label: InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY},
 ];
 
 const acousticnessOptions = [
-  { value: AcousticnessOption.ANY, label: AcousticnessOption.ANY, },
-  { value: AcousticnessOption.ACOUSTIC_ONLY, label: AcousticnessOption.ACOUSTIC_ONLY, },
-  { value: AcousticnessOption.NON_ACOUSTIC_ONLY, label: AcousticnessOption.NON_ACOUSTIC_ONLY, },
+  {value: AcousticnessOption.ANY, label: AcousticnessOption.ANY,},
+  {value: AcousticnessOption.ACOUSTIC_ONLY, label: AcousticnessOption.ACOUSTIC_ONLY,},
+  {value: AcousticnessOption.NON_ACOUSTIC_ONLY, label: AcousticnessOption.NON_ACOUSTIC_ONLY,},
 ];
 
 const genericRangeOptions = [
-  { value: GenericRangeOption.ANY, label: GenericRangeOption.ANY },
-  { value: GenericRangeOption.LOW, label: GenericRangeOption.LOW },
-  { value: GenericRangeOption.MEDIUM, label: GenericRangeOption.MEDIUM },
-  { value: GenericRangeOption.HIGH, label: GenericRangeOption.HIGH },
+  {value: GenericRangeOption.ANY, label: GenericRangeOption.ANY},
+  {value: GenericRangeOption.LOW, label: GenericRangeOption.LOW},
+  {value: GenericRangeOption.MEDIUM, label: GenericRangeOption.MEDIUM},
+  {value: GenericRangeOption.HIGH, label: GenericRangeOption.HIGH},
 ];
 
 const liveTrackOptions = [
-  { value: LiveTrackOption.ANY, label: LiveTrackOption.ANY },
-  { value: LiveTrackOption.LIVE_ONLY, label: LiveTrackOption.LIVE_ONLY },
-  { value: LiveTrackOption.STUDIO_ONLY, label: LiveTrackOption.STUDIO_ONLY },
+  {value: LiveTrackOption.ANY, label: LiveTrackOption.ANY},
+  {value: LiveTrackOption.LIVE_ONLY, label: LiveTrackOption.LIVE_ONLY},
+  {value: LiveTrackOption.STUDIO_ONLY, label: LiveTrackOption.STUDIO_ONLY},
 ];
 
 const spokenWordOptions = [
-  { value: SpokenWordOption.ANY, label: SpokenWordOption.ANY },
-  { value: SpokenWordOption.SPOKEN_WORD_ONLY, label: SpokenWordOption.SPOKEN_WORD_ONLY },
-  { value: SpokenWordOption.SPOKEN_AND_MUSIC, label: SpokenWordOption.SPOKEN_AND_MUSIC },
-  { value: SpokenWordOption.MUSIC_ONLY, label: SpokenWordOption.MUSIC_ONLY },
+  {value: SpokenWordOption.ANY, label: SpokenWordOption.ANY},
+  {value: SpokenWordOption.SPOKEN_WORD_ONLY, label: SpokenWordOption.SPOKEN_WORD_ONLY},
+  {value: SpokenWordOption.SPOKEN_AND_MUSIC, label: SpokenWordOption.SPOKEN_AND_MUSIC},
+  {value: SpokenWordOption.MUSIC_ONLY, label: SpokenWordOption.MUSIC_ONLY},
 ];
 
 const loudnessOptions = [
-  { value: LoudnessOption.ANY, label: LoudnessOption.ANY },
-  { value: LoudnessOption.QUIET, label: LoudnessOption.QUIET },
-  { value: LoudnessOption.MEDIUM, label: LoudnessOption.MEDIUM },
-  { value: LoudnessOption.LOUD, label: LoudnessOption.LOUD },
+  {value: LoudnessOption.ANY, label: LoudnessOption.ANY},
+  {value: LoudnessOption.QUIET, label: LoudnessOption.QUIET},
+  {value: LoudnessOption.MEDIUM, label: LoudnessOption.MEDIUM},
+  {value: LoudnessOption.LOUD, label: LoudnessOption.LOUD},
 ];
 
 const durationOptions = [
-  { value: DurationOption.ANY, label: DurationOption.ANY },
-  { value: DurationOption.SHORT, label: DurationOption.SHORT },
-  { value: DurationOption.MEDIUM, label: DurationOption.MEDIUM },
-  { value: DurationOption.LONG, label: DurationOption.LONG },
+  {value: DurationOption.ANY, label: DurationOption.ANY},
+  {value: DurationOption.SHORT, label: DurationOption.SHORT},
+  {value: DurationOption.MEDIUM, label: DurationOption.MEDIUM},
+  {value: DurationOption.LONG, label: DurationOption.LONG},
 ];
 
 const tempoOptions = [
-  { value: TempoOption.ANY, label: TempoOption.ANY },
-  { value: TempoOption.SLOW, label: TempoOption.SLOW },
-  { value: TempoOption.MEDIUM, label: TempoOption.MEDIUM },
-  { value: TempoOption.FAST, label: TempoOption.FAST },
+  {value: TempoOption.ANY, label: TempoOption.ANY},
+  {value: TempoOption.SLOW, label: TempoOption.SLOW},
+  {value: TempoOption.MEDIUM, label: TempoOption.MEDIUM},
+  {value: TempoOption.FAST, label: TempoOption.FAST},
 ];
+
+interface RecommendedTrack {
+  id: string;
+  trackUri: string;
+  trackName: string|ReactNode;
+  artistId: string;
+  artistName: string|ReactNode;
+  albumId: string;
+  albumName: string|ReactNode;
+  duration: string|ReactNode;
+}
+
+const {Column, HeaderCell, Cell} = Table;
+
+const DurationCell = ({rowData, dataKey, ...props}: any) => (
+  <Cell {...props}>{getTrackLength(rowData[dataKey])}</Cell>
+);
+
+const TrackNameCell = ({rowData, dataKey, ...props}: any) => (
+  <Cell {...props}>
+    <a href={rowData.trackUri}>{ rowData[dataKey] }</a>
+  </Cell>
+);
+
+const ArtistNameCell = ({rowData, dataKey, ...props}: any) => (
+  <Cell {...props}>
+    <Link to={`/artist/${rowData.artistId}`}>{ rowData[dataKey] }</Link>
+  </Cell>
+);
+
+const AlbumNameCell = ({rowData, dataKey, ...props}: any) => (
+  <Cell {...props}>
+    <Link to={`/album/${rowData.albumId}`}>{ rowData[dataKey] }</Link>
+  </Cell>
+);
+
+const initialTableState: TableState<RecommendedTrack> = {
+  data: [],
+  page: 1,
+  displayLength: 100,
+  isLoading: true,
+};
 
 const SimpleRecommendations = () => {
   const [genreOptions, setGenreOptions] = useState<any[]>([]);
+  const [recommendations, setRecommendations] = useState<RecommendedTrack[]>([]);
+  const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const {spotifyContext} = useContext(SpotifyContext);
+  const {data: recentlyPlayedTracks, page, displayLength, isLoading} = tableState;
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
+    tableStateDispatch({ type: IS_LOADING });
+
     spotifyApi.getAvailableGenres().then((response: SpotifyApi.AvailableGenreSeedsResponse) => {
       const genres = response.genres.map((genre) => {
         return {value: genre, label: genre}
@@ -119,7 +185,13 @@ const SimpleRecommendations = () => {
     });
   }, []);
 
+  useEffect(() => {
+    tableStateDispatch({ type: UPDATE_DATA, value: recommendations });
+  }, [recommendations]);
+
   const getRecommendations = (formValues: SpotifySimpleRecommendationOptions) => {
+    tableStateDispatch({ type: IS_LOADING });
+
     // Build the options based on what the user selected
     const options = {
       ...getInstrumentalnessRecommendationOptions(formValues.instrumental_tracks),
@@ -134,18 +206,77 @@ const SimpleRecommendations = () => {
       ...getPopularityRecommendationOptions(formValues.popularity),
       ...getTempoRecommendationOptions(formValues.tempo),
       ...getSeedGenreOptions(formValues.seed_genres),
-      ...{ limit: 100 },
+      ...{limit: 100},
     };
 
     // Get the recommendations from the api based on the options and the seed data
     spotifyApi.getFilteredRecommendations(options).then((response: any) => {
-      console.log('response', response);
+      // setRecommendations(response.tracks);
+      const tracksToAdd: RecommendedTrack[] = [];
+
+      response.tracks.forEach((track: any) => {
+        tracksToAdd.push({
+          id: track.id,
+          trackUri: track.uri,
+          trackName: track.name,
+          artistId: track.artists[0].id,
+          artistName: track.artists[0].name,
+          albumId: track.album.id,
+          albumName: track.album.name,
+          duration: track.duration_ms,
+        });
+      });
+
+      tableStateDispatch({ type: IS_NOT_LOADING });
+      setRecommendations(tracksToAdd);
     }).catch(() => {
       Alert.error(
         'No recommendations were returned by Spotify. You may have forgot to select recommendation genres.',
         5000
       );
     });
+  };
+
+  const saveRecommendationsToPlaylist = () => {
+    if(spotifyContext.currentUser) {
+      spotifyApi.postPlaylist(
+        spotifyContext.currentUser.id,
+        `Spotalytics Recommendations Playlist (${moment().format('YYYY-MM-DD')})`,
+        `Automatically generated playlist by Spotalytics on ${moment().format('MMMM Do, YYYY [at] h:mm')}`,
+      ).then((playlist: SpotifyApi.CreatePlaylistResponse) => {
+        const trackUris: string[] = [];
+        recommendations.forEach((recommendation) => {
+          trackUris.push(recommendation.trackUri);
+        });
+
+        spotifyApi.postItemsToPlaylist(playlist.id, trackUris).then(() => {
+          spotifyApi.getPlaylistById(playlist.id).then((singlePlaylistResponse: SpotifyApi.SinglePlaylistResponse) => {
+            // Alert.success(
+            //   `Playlist successfully saved! <a href="${singlePlaylistResponse.uri}">Click here</a> to view it.`,
+            //   0,
+            // );
+            // @ts-ignore
+            Notification.open({
+              title: 'Success',
+              description: <span>
+                               Playlist successfully saved! <a href={singlePlaylistResponse.uri}>Click here</a> to view it.
+                           </span>,
+            });
+          }).catch((error) => {
+            console.log('error', error);
+            Alert.success('Playlist successfully saved!', 5000);
+          });
+        }).catch((error: any) => {
+          console.log('error', error);
+          Alert.error('Error creating playlist. Please try again.', 5000);
+        });
+      }).catch((error: any) => {
+        console.log('error', error);
+        Alert.error('Error creating playlist. Please try again.', 5000)
+      });
+    } else {
+      Alert.error('Could not create playlist. Try logging out then back in.', 5000);
+    }
   };
 
   return (
@@ -158,7 +289,7 @@ const SimpleRecommendations = () => {
                    choose. Spotify's algorithm may not return anything if your top artists
                    have recently been added to Spotify or if they're too obscure."
       />
-      <br />
+      <br/>
 
       <Formik initialValues={initialValues} onSubmit={getRecommendations}>
         {(props: FormikProps<any>) => (
@@ -454,7 +585,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                       onChange={(value) => {
                         // if(field.value.length < 2) {
-                          form.setFieldValue('seed_genres', value)
+                        form.setFieldValue('seed_genres', value)
                         // } else {
                         //   Alert.error('Please only select 2 genres', 5000);
                         // }
@@ -473,6 +604,58 @@ const SimpleRecommendations = () => {
           </Form>
         )}
       </Formik>
+
+      {isLoading || recommendations.length > 0 &&
+      <>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <IconButton
+            icon={<Icon icon="export"/>}
+            placement="left"
+            color="blue"
+            onClick={saveRecommendationsToPlaylist}
+          >
+            Save Playlist
+          </IconButton>
+        </div>
+        <Table
+          height={800}
+          data={recommendations}
+          loading={isLoading}
+        >
+          <Column width={300}>
+            <HeaderCell>Track Name</HeaderCell>
+            <TrackNameCell dataKey="trackName"/>
+          </Column>
+
+          <Column width={200}>
+            <HeaderCell>Artist</HeaderCell>
+            <ArtistNameCell dataKey="artistName"/>
+          </Column>
+
+          <Column width={200}>
+            <HeaderCell>Album</HeaderCell>
+            <AlbumNameCell dataKey="albumName"/>
+          </Column>
+
+          <Column width={100} align="right">
+            <HeaderCell>Duration</HeaderCell>
+            <DurationCell dataKey="duration"/>
+          </Column>
+        </Table>
+
+        <TablePagination
+          lengthMenu={[
+            {value: 10, label: 10},
+            {value: 25, label: 25},
+            {value: 50, label: 50},
+          ]}
+          activePage={page}
+          displayLength={displayLength}
+          total={recentlyPlayedTracks.length}
+          onChangePage={(dataKey) => tableStateDispatch({type: UPDATE_PAGE, value: dataKey})}
+          onChangeLength={(dataKey) => tableStateDispatch({type: UPDATE_DISPLAY_LENGTH, value: dataKey})}
+        />
+      </>}
     </>
   );
 };

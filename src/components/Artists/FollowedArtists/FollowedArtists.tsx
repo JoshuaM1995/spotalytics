@@ -24,7 +24,7 @@ const FollowedArtists = () => {
     // Only make API requests if there are items to load
     if(hasMoreItems) {
       const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
-      const after = artists[artists.length - 1].id;
+      const after = artists[artists.length - 1] ? artists[artists.length - 1].id : undefined;
 
       spotifyApi.getCurrentUserFollowedArtists(after).then((response: any) => {
         setArtists([

@@ -1,7 +1,4 @@
 import moment from "moment";
-import {
-  SpotifyAdvancedRecommendationOptions
-} from "./interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
 
 const Spotify = require('spotify-web-api-js');
 
@@ -20,6 +17,8 @@ export default class SpotifyApi {
       'user-follow-modify',
       'user-read-recently-played',
       'user-read-playback-state',
+      'playlist-modify-public',
+      'playlist-modify-private',
     ];
     return 'https://accounts.spotify.com/authorize' +
       '?response_type=token' +
@@ -285,6 +284,26 @@ export default class SpotifyApi {
         resolve(response);
       });
     });
+  }
+
+  public getCurrentUserProfile(): Promise<SpotifyApi.CurrentUsersProfileResponse> {
+      return this.spotify.getMe();
+  }
+
+  public getPlaylistById(playlistId: string): Promise<SpotifyApi.SinglePlaylistResponse> {
+    return this.spotify.getPlaylist(playlistId);
+  }
+
+  public postPlaylist(userId: string, name: string, description: string, isPublic = false) {
+    return this.spotify.createPlaylist(userId, {
+      name,
+      description,
+      public: isPublic,
+    });
+  }
+
+  public postItemsToPlaylist(playlistId: string, uris: string[]) {
+    return this.spotify.addTracksToPlaylist(playlistId, uris);
   }
 
   public putFollowArtists(artistIds: string[]) {
