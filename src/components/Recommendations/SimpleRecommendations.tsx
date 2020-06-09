@@ -1,5 +1,5 @@
-import React from 'react';
-import {Button, Col, ControlLabel, Form, HelpBlock, Message, Row, SelectPicker} from "rsuite";
+import React, {useContext, useEffect, useState} from 'react';
+import {Alert, Button, Col, ControlLabel, Form, HelpBlock, Message, Row, SelectPicker, TagPicker} from "rsuite";
 import {Field, Formik, FormikProps} from "formik";
 import {
   AcousticnessOption,
@@ -15,8 +15,19 @@ import {
 } from "../../api/interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
 import {
   getAcousticnessRecommendationOptions,
-  getInstrumentalnessRecommendationOptions
+  getDanceabilityRecommendationOptions,
+  getDurationRecommendationOptions,
+  getEnergyRecommendationOptions,
+  getInstrumentalnessRecommendationOptions,
+  getLiveTrackRecommendationOptions,
+  getLoudnessRecommendationOptions,
+  getPopularityRecommendationOptions,
+  getPositivityRecommendationOptions,
+  getSeedGenreOptions,
+  getSpeechinessRecommendationOptions, getTempoRecommendationOptions
 } from "../../utils/recommendations";
+import SpotifyApi from "../../api/SpotifyApi";
+import SpotifyContext from "../../context/spotify";
 
 const initialValues: SpotifySimpleRecommendationOptions = {
   recommendation_data: SeedTypeOption.BOTH,
@@ -31,12 +42,14 @@ const initialValues: SpotifySimpleRecommendationOptions = {
   duration: DurationOption.ANY,
   popularity: GenericRangeOption.ANY,
   tempo: TempoOption.ANY,
+  seed_genres: [],
 };
 
 const seedTypesOptions = [
+  { value: SeedTypeOption.NONE, label: SeedTypeOption.NONE },
   { value: SeedTypeOption.BOTH, label: SeedTypeOption.BOTH },
-  { value: SeedTypeOption.ARTIST, label: SeedTypeOption.ARTIST },
-  { value: SeedTypeOption.ALBUM, label: SeedTypeOption.ALBUM },
+  { value: SeedTypeOption.ARTISTS, label: SeedTypeOption.ARTISTS },
+  { value: SeedTypeOption.ALBUMS, label: SeedTypeOption.ALBUMS },
 ];
 
 const instrumentalTracksOptions = [
@@ -93,15 +106,46 @@ const tempoOptions = [
 ];
 
 const SimpleRecommendations = () => {
+  const [genreOptions, setGenreOptions] = useState<any[]>([]);
+  const {spotifyContext} = useContext(SpotifyContext);
+  const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+
+  useEffect(() => {
+    spotifyApi.getAvailableGenres().then((response: SpotifyApi.AvailableGenreSeedsResponse) => {
+      const genres = response.genres.map((genre) => {
+        return {value: genre, label: genre}
+      });
+      setGenreOptions(genres);
+    });
+  }, []);
+
   const getRecommendations = (formValues: SpotifySimpleRecommendationOptions) => {
     // Build the options based on what the user selected
     const options = {
       ...getInstrumentalnessRecommendationOptions(formValues.instrumental_tracks),
       ...getAcousticnessRecommendationOptions(formValues.acousticness),
+      ...getLiveTrackRecommendationOptions(formValues.live_tracks),
+      ...getDanceabilityRecommendationOptions(formValues.danceability),
+      ...getEnergyRecommendationOptions(formValues.energy),
+      ...getSpeechinessRecommendationOptions(formValues.spoken_word),
+      ...getPositivityRecommendationOptions(formValues.positivity),
+      ...getLoudnessRecommendationOptions(formValues.loudness),
+      ...getDurationRecommendationOptions(formValues.duration),
+      ...getPopularityRecommendationOptions(formValues.popularity),
+      ...getTempoRecommendationOptions(formValues.tempo),
+      ...getSeedGenreOptions(formValues.seed_genres),
+      ...{ limit: 100 },
     };
 
-    // TODO: Get the recommendations from the api based on the options and the seed data
-    console.log('options', options);
+    // Get the recommendations from the api based on the options and the seed data
+    spotifyApi.getFilteredRecommendations(options).then((response: any) => {
+      console.log('response', response);
+    }).catch(() => {
+      Alert.error(
+        'No recommendations were returned by Spotify. You may have forgot to select recommendation genres.',
+        5000
+      );
+    });
   };
 
   return (
@@ -130,7 +174,8 @@ const SimpleRecommendations = () => {
                   <HelpBlock tooltip>
                     "Artist" will randomly select 3 of your top artists, and "Album" will randomly
                     select 3 top albums. Both will either randomly select 2 top artists and 1 top
-                    album, or 1 top artist and 2 top albums.
+                    album, or 1 top artist and 2 top albums, while None will allow you to use only
+                    genres to find recommendations.
                   </HelpBlock>
                 </ControlLabel>
                 <br/>
@@ -384,6 +429,36 @@ const SimpleRecommendations = () => {
                       cleanable={false}
                       onChange={(value) => form.setFieldValue('tempo', value)}
                       style={{width: '100%'}}
+                    />
+                  )}
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col xs={24} sm={12}>
+                <ControlLabel style={{marginBottom: 8}}>
+                  Recommendation Genres
+                  <HelpBlock tooltip>
+                    1-2 genres to find recommendations for. If you chose "none" for recommendation
+                    data, you can choose up to 5 genres.
+                  </HelpBlock>
+                </ControlLabel>
+                <Field
+                  name="seed_genres"
+                  render={({field, form}: any) => (
+                    <TagPicker
+                      {...field}
+                      data={genreOptions}
+                      placeholder="Select Genre(s)"
+                      style={{width: '100%'}}
+                      onChange={(value) => {
+                        // if(field.value.length < 2) {
+                          form.setFieldValue('seed_genres', value)
+                        // } else {
+                        //   Alert.error('Please only select 2 genres', 5000);
+                        // }
+                      }}
                     />
                   )}
                 />

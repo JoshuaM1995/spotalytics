@@ -269,9 +269,7 @@ export default class SpotifyApi {
     });
   }
 
-  public getFilteredRecommendations(
-    options: SpotifyAdvancedRecommendationOptions
-  ): Promise<SpotifyApi.RecommendationsFromSeedsResponse> {
+  public getFilteredRecommendations(options: any): Promise<SpotifyApi.RecommendationsFromSeedsResponse> {
     return new Promise((resolve, reject) => {
       this.spotify.getRecommendations(options, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);

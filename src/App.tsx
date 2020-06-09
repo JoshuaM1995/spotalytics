@@ -9,16 +9,16 @@ import AuthenticateSpotify from "./components/AuthenticateSpotify/AuthenticateSp
 import {GuardProvider, GuardedRoute} from 'react-router-guards';
 import NotFound from "./components/Error/NotFound";
 import Loading from "./components/Loading/Loading";
-import ArtistsRoutes from "./router/routes/ArtistsRoutes";
-import AlbumsRoutes from "./router/routes/AlbumsRoutes";
-import TracksRoutes from "./router/routes/TracksRoutes";
+import ArtistsRoutes from "./router/ArtistsRoutes";
+import AlbumsRoutes from "./router/AlbumsRoutes";
+import TracksRoutes from "./router/TracksRoutes";
 import Home from "./components/Home/Home";
 import UnauthenticatedSpotify from "./components/AuthenticateSpotify/UnauthenticatedSpotify";
 import './App.scss';
 import {SPOTIFY_CONTEXT} from "./constants";
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
-import ArtistRoutes from "./router/routes/ArtistRoutes";
-import AlbumRoutes from "./router/routes/AlbumRoutes";
+import ArtistRoutes from "./router/ArtistRoutes";
+import AlbumRoutes from "./router/AlbumRoutes";
 import Recommendations from "./components/Recommendations/Recommendations";
 
 const App = () => {

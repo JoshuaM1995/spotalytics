@@ -1,7 +1,8 @@
 export enum SeedTypeOption {
+  NONE = 'None (Only Genres)',
   BOTH = 'Both',
-  ARTIST = 'Artist',
-  ALBUM = 'Album',
+  ARTISTS = 'Artists',
+  ALBUMS = 'Albums',
 }
 
 export enum InstrumentalTrackOption {
@@ -70,6 +71,7 @@ export interface SpotifySimpleRecommendationOptions {
   duration: DurationOption;
   popularity: GenericRangeOption;
   tempo: TempoOption;
+  seed_genres: string[];
 }
 
 export interface SpotifyAdvancedRecommendationOptions {
