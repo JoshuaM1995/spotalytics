@@ -20,7 +20,6 @@ export default class SpotifyApi {
       'user-follow-modify',
       'user-read-recently-played',
       'user-read-playback-state',
-      // 'user-library-modify',
     ];
     return 'https://accounts.spotify.com/authorize' +
       '?response_type=token' +

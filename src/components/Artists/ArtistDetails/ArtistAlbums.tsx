@@ -84,9 +84,9 @@ const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
           </List.Item>
         ))}
       </List>}
-      {!isLoading && getHiddenAlbums(albums).length > 0 &&
-        <h4 style={{ textAlign: 'center' }}>No albums could be found with the current filters...</h4>
-      }
+      {/*{!isLoading && getHiddenAlbums(albums).length > 0 &&*/}
+      {/*  <h4 style={{ textAlign: 'center' }}>No albums could be found with the current filters...</h4>*/}
+      {/*}*/}
       {!isLoading && albums.length > 0 &&
       <>
         <List hover>
