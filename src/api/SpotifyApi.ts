@@ -294,6 +294,14 @@ export default class SpotifyApi {
     return this.spotify.getPlaylist(playlistId);
   }
 
+  public searchData(
+    query: string,
+    types: ('album' | 'artist' | 'playlist' | 'track')[],
+    limit = 20,
+  ): Promise<SpotifyApi.ArtistSearchResponse> {
+    return this.spotify.search(query, types, { limit });
+  }
+
   public postPlaylist(userId: string, name: string, description: string, isPublic = false) {
     return this.spotify.createPlaylist(userId, {
       name,

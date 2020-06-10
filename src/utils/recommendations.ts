@@ -146,6 +146,14 @@ export const getTempoRecommendationOptions = (value: TempoOption) => {
   }
 };
 
+export const getSeedArtistOptions = (value: string[]): any => {
+  return { seed_artists: value.join(',') };
+};
+
+export const getSeedTrackOptions = (value: string[]): any => {
+  return { seed_tracks: value.join(',') };
+};
+
 export const getSeedGenreOptions = (value: string[]): any => {
   return { seed_genres: value.join(',') };
 };
