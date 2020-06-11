@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FlexboxGrid, List, Progress, SelectPicker} from "rsuite";
+import {Button, FlexboxGrid, Icon, List, Panel, Progress, SelectPicker} from "rsuite";
 import {Link} from "react-router-dom";
 import {getProgressLineProps} from "../../utils/progress";
-import {TopTrackTimeRange} from "../../utils/constants";
+import {TimeRange} from "../../utils/constants";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
 
 interface TopTracksProps {
-  timeRange?: TopTrackTimeRange;
+  timeRange?: TimeRange;
   limit?: number;
 }
 
@@ -23,12 +23,12 @@ interface TopTrack {
 }
 
 const topTracksTimeRanges = [
-  { value: TopTrackTimeRange.SHORT_TERM, label: 'Last 4 Weeks',  },
-  { value: TopTrackTimeRange.MEDIUM_TERM, label: 'Last 6 Months',  },
-  { value: TopTrackTimeRange.LONG_TERM, label: 'All-Time',  },
+  { value: TimeRange.SHORT_TERM, label: 'Last 4 Weeks',  },
+  { value: TimeRange.MEDIUM_TERM, label: 'Last 6 Months',  },
+  { value: TimeRange.LONG_TERM, label: 'All-Time',  },
 ];
 
-const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: TopTracksProps) => {
+const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksProps) => {
   const [topTracks, setTopTracks] = useState<TopTrack[]>([]);
   const [topTracksTimeRange, setTopTracksTimeRange] = useState(timeRange);
   const { spotifyContext } = useContext(SpotifyContext);
@@ -67,10 +67,6 @@ const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: Top
     return topTrackValues;
   }
 
-  const changeTopTracksTimeRange = (value: TopTrackTimeRange) => {
-    setTopTracksTimeRange(value);
-  }
-
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -81,7 +77,8 @@ const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: Top
           data={topTracksTimeRanges}
           style={{ width: 250 }}
           cleanable={false}
-          onChange={changeTopTracksTimeRange}
+          searchable={false}
+          onChange={(value) => setTopTracksTimeRange(value)}
         />
       </div>
       <br />
@@ -129,6 +126,14 @@ const TopTracks = ({ timeRange = TopTrackTimeRange.SHORT_TERM, limit = 10 }: Top
           </List.Item>
         ))}
       </List>
+      <br />
+
+      <div className="btn-more">
+        <Button appearance="primary" size="lg">
+          More Tracks{' '}
+          <Icon icon="long-arrow-right" />
+        </Button>
+      </div>
     </>
   );
 };

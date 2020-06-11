@@ -1,4 +1,5 @@
 import moment from "moment";
+import {TimeRange} from "../utils/constants";
 
 const Spotify = require('spotify-web-api-js');
 
@@ -60,9 +61,9 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopArtists(limit: number = 5): Promise<any[]> {
+  public getTopArtists(limit: number = 5, time_range = TimeRange.SHORT_TERM): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMyTopArtists({limit, time_range: 'long_term'}, (error: any, response: any) => {
+      this.spotify.getMyTopArtists({limit, time_range}, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
@@ -79,9 +80,9 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopAlbums(limit: number = 5): Promise<any[]> {
+  public getTopAlbums(limit: number = 5, time_range = TimeRange.SHORT_TERM): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMyTopTracks({limit, time_range: 'long_term'}, (error: any, response: any) => {
+      this.spotify.getMyTopTracks({limit, time_range}, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
