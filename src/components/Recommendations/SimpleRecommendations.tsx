@@ -171,7 +171,7 @@ const initialTableState: TableState<RecommendedTrack> = {
 
 const SimpleRecommendations = () => {
   const [recommendations, setRecommendations] = useState<RecommendedTrack[]>([]);
-  const [recommendationData, setRecommendationData] = useState(RecommendationDataOption.MANUAL);
+  const [recommendationData, setRecommendationData] = useState(initialValues.recommendation_data);
   const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const {spotifyContext} = useContext(SpotifyContext);
   const {data: recentlyPlayedTracks, page, displayLength, isLoading} = tableState;
@@ -202,8 +202,6 @@ const SimpleRecommendations = () => {
       ...getSeedGenreOptions(formValues.seed_genres),
       ...{limit: 100},
     };
-
-    console.log('options', options);
 
     // Get the recommendations from the api based on the options and the seed data
     spotifyApi.getFilteredRecommendations(options).then((response: any) => {
@@ -270,16 +268,6 @@ const SimpleRecommendations = () => {
 
   return (
     <>
-      <Message
-        type="info"
-        showIcon
-        description="Recommendations are generated based on the selected filter values,
-                   your top artists/albums (randomly chosen), and one or two genres you
-                   choose. Spotify's algorithm may not return anything if your top artists
-                   have recently been added to Spotify or if they're too obscure."
-      />
-      <br />
-
       <h3 style={{marginLeft: 10}}>Filters</h3>
       <br />
 
@@ -295,9 +283,9 @@ const SimpleRecommendations = () => {
                 <ControlLabel style={{marginBottom: 8}}>
                   Recommendation Data
                   <HelpBlock tooltip>
-                    "Automatic" will choose either two artists and one album, or two albums and one artist
-                    from your top played artists/albums. "Manual" will allow you to enter artists and/or
-                    albums alongside genres at the bottom.
+                    "Automatic" will automatically choose one of your top artists and one of your top
+                    tracks to use as seed data; you may then enter up to three genres. "Manual" will
+                    allow you to add any combination of artists, tracks and genres.
                   </HelpBlock>
                 </ControlLabel>
                 <br/>
@@ -562,7 +550,7 @@ const SimpleRecommendations = () => {
             <br />
 
             <RecommendationSeedData
-              title={`Seed Data (Up to ${(recommendationData === RecommendationDataOption.MANUAL) ? 5 : 2} Values)`}
+              title="Seed Data"
               showArtists={recommendationData === RecommendationDataOption.MANUAL}
               showTracks={recommendationData === RecommendationDataOption.MANUAL}
             />

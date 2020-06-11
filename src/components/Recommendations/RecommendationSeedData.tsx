@@ -1,9 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, ControlLabel, Row, TagPicker} from "rsuite";
+import {Col, ControlLabel, Message, Row, TagPicker} from "rsuite";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
 import {Field} from "formik";
 import _ from "lodash";
+import {RecommendationDataOption} from "../../api/interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
 
 interface RecommendationSeedDataProps {
   title: string;
@@ -112,7 +113,27 @@ const RecommendationSeedData = ({
   return (
     <Row>
       <Col><h3>{title}</h3></Col>
-      <br/>
+      <br />
+
+      {(showArtists || showTracks) &&
+      <Message
+        type="info"
+        showIcon
+        description={`Up to 5 seed values may be provided in any combination of artists,
+                      tracks and genres. Spotify's algorithm may not return anything if
+                      your selected data has recently been added to Spotify or if it's
+                      too obscure, or if you have too many filters selected.`}
+      />}
+      {(!showArtists || !showTracks) &&
+      <Message
+        type="info"
+        showIcon
+        description={`Up to 3 seed values may be provided in any combination of artists,
+                      tracks and genres. Spotify's algorithm may not return anything if
+                      your top artists/albums have recently been added to Spotify, if
+                      they're too obscure, or if you have too many filters selected.`}
+      />}
+      <br />
 
       {showArtists &&
       <Col xs={24} md={8}>
