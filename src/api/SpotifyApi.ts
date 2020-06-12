@@ -106,7 +106,7 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopTracks(time_range: string = 'short_term', limit: number = 10): Promise<any[]> {
+  public getTopTracks(time_range: string = 'short_term', limit: number = 10): Promise<SpotifyApi.TrackObjectFull[]> {
     return new Promise((resolve, reject) => {
       this.spotify.getMyTopTracks({limit, time_range}, (error: any, response: any) => {
         if (error) {
@@ -172,6 +172,16 @@ export default class SpotifyApi {
       this.spotify.getArtist(artistId, (error: any, artistInfo: any) => {
         SpotifyApi.processError(error, reject);
           resolve(artistInfo);
+      });
+    });
+  }
+
+  public getArtistsInfo(artistIds: string[]): Promise<SpotifyApi.ArtistObjectFull[]> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getArtists(artistIds).then((artistsInfo: SpotifyApi.MultipleArtistsResponse) => {
+        resolve(artistsInfo.artists);
+      }).catch((error: any) => {
+        SpotifyApi.processError(error, reject);
       });
     });
   }
@@ -301,6 +311,17 @@ export default class SpotifyApi {
     limit = 20,
   ): Promise<SpotifyApi.ArtistSearchResponse> {
     return this.spotify.search(query, types, { limit });
+  }
+
+  public getTracksFeatures(trackIds: string[]): Promise<SpotifyApi.AudioFeaturesObject[]> {
+    return new Promise((resolve, reject) => {
+      this.spotify.getAudioFeaturesForTracks(trackIds).then((response: SpotifyApi.MultipleAudioFeaturesResponse) => {
+        resolve(response.audio_features);
+      }).catch((error: any) => {
+        SpotifyApi.processError(error, reject);
+        reject(error);
+      });
+    });
   }
 
   public postPlaylist(userId: string, name: string, description: string, isPublic = false) {

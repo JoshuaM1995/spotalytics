@@ -43,11 +43,17 @@ const Recommendations = () => {
       </Nav>
       <br />
 
-      {activeTab === Tab.AUTOMATIC_RECOMMENDATIONS && <AutomaticRecommendations />}
+      <div style={{ display: (activeTab === Tab.AUTOMATIC_RECOMMENDATIONS) ? 'block' : 'none' }}>
+        <AutomaticRecommendations />
+      </div>
 
-      {activeTab === Tab.SIMPLE_FILTERS && <SimpleRecommendations />}
+      <div style={{ display: (activeTab === Tab.SIMPLE_FILTERS) ? 'block' : 'none' }}>
+        <SimpleRecommendations />
+      </div>
 
-      {activeTab === Tab.ADVANCED_FILTERS && <AdvancedRecommendations />}
+      <div style={{ display: (activeTab === Tab.ADVANCED_FILTERS) ? 'block' : 'none' }}>
+        <AdvancedRecommendations />
+      </div>
     </Page>
   );
 };
