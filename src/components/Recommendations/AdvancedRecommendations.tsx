@@ -1,16 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  AutoComplete, Button,
+  Button,
   Col,
   ControlLabel,
   Form,
   HelpBlock,
-  Icon,
-  InputGroup,
   Message,
   Row,
   SelectPicker,
-  Slider, TagPicker
+  Slider,
 } from "rsuite";
 import {Field, Formik, FormikProps} from "formik";
 import RecommendationInputNumber from "./RecommendationInputNumber";
@@ -20,6 +18,7 @@ import SpotifyContext from "../../context/spotify";
 import {
   SpotifyAdvancedRecommendationOptions
 } from "../../api/interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
+import RecommendationSeedData from "./RecommendationSeedData";
 
 const initialValues: SpotifyAdvancedRecommendationOptions = {
   min_instrumentalness: 0,
@@ -85,7 +84,6 @@ const AdvancedRecommendations = () => {
   const {spotifyContext} = useContext(SpotifyContext);
 
   useEffect(() => {
-    console.log('advanced');
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     spotifyApi.getAvailableGenres().then((response: SpotifyApi.AvailableGenreSeedsResponse) => {
@@ -118,6 +116,9 @@ const AdvancedRecommendations = () => {
                     be returned. For artists and tracks that are very new or obscure there
                     might not be enough data to generate a list of tracks."
       />
+      <br />
+
+      <h3 style={{ marginLeft: 8 }}>Filters</h3>
       <br />
 
       <Formik initialValues={initialValues} onSubmit={getRecommendations}>
@@ -522,49 +523,9 @@ const AdvancedRecommendations = () => {
                 />
               </Col>
             </Row>
-
-            <br/>
             <br/>
 
-            <h3>Seed Data</h3>
-
-            <Message
-              type="info"
-              showIcon
-              description="Up to 5 seed values may be provided in any combination of artists,
-                           tracks and genres."
-            />
-
-            <Row>
-              <Col xs={24} md={8}>
-                <ControlLabel style={{marginBottom: 8}}>Seed Artists</ControlLabel>
-                <InputGroup inside style={{}}>
-                  <InputGroup.Addon>
-                    <Icon icon="user"/>
-                  </InputGroup.Addon>
-                  <AutoComplete data={[]} placeholder="Search Artists..."/>
-                </InputGroup>
-              </Col>
-
-              <Col xs={24} md={8}>
-                <ControlLabel style={{marginBottom: 8}}>Seed Tracks</ControlLabel>
-                <InputGroup inside style={{}}>
-                  <InputGroup.Addon>
-                    <Icon icon="music"/>
-                  </InputGroup.Addon>
-                  <AutoComplete data={[]} placeholder="Search Tracks..."/>
-                </InputGroup>
-              </Col>
-
-              <Col xs={24} md={8}>
-                <ControlLabel style={{marginBottom: 8}}>Seed Genres</ControlLabel>
-                <TagPicker
-                  data={genreOptions}
-                  placeholder="Select Genre(s)"
-                  style={{width: '100%'}}
-                />
-              </Col>
-            </Row>
+            <RecommendationSeedData title="Seed Data" showArtists showTracks showGenres />
 
             <Button color="green" style={{marginTop: 35}} type="submit">
               Get Recommendations

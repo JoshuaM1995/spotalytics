@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useReducer, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {
   Alert,
   Button,
@@ -6,13 +6,8 @@ import {
   ControlLabel,
   Form,
   HelpBlock,
-  Icon,
-  IconButton,
-  Message,
-  Notification,
   Row,
   SelectPicker,
-  Table
 } from "rsuite";
 import {Field, Formik, FormikProps} from "formik";
 import {
@@ -43,13 +38,11 @@ import {
 } from "../../utils/recommendations";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
-import TablePagination from "rsuite/es/Table/TablePagination";
-import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA, UPDATE_DISPLAY_LENGTH, UPDATE_PAGE} from "../../actions/tableActions";
+import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA} from "../../actions/tableActions";
 import tableReducer, {TableState} from "../../reducers/tableReducer";
-import {getTrackLength} from "../../utils/track";
-import {Link} from "react-router-dom";
-import moment from 'moment';
 import RecommendationSeedData from "./RecommendationSeedData";
+import RecommendationTable from "./RecommendationTable";
+import {RecommendedTrack} from "../../utils/types";
 
 const initialValues: SpotifySimpleRecommendationOptions = {
   recommendation_data: RecommendationDataOption.AUTO,
@@ -127,41 +120,6 @@ const tempoOptions = [
   {value: TempoOption.FAST, label: TempoOption.FAST},
 ];
 
-interface RecommendedTrack {
-  id: string;
-  trackUri: string;
-  trackName: string|ReactNode;
-  artistId: string;
-  artistName: string|ReactNode;
-  albumId: string;
-  albumName: string|ReactNode;
-  duration: string|ReactNode;
-}
-
-const {Column, HeaderCell, Cell} = Table;
-
-const DurationCell = ({rowData, dataKey, ...props}: any) => (
-  <Cell {...props}>{getTrackLength(rowData[dataKey])}</Cell>
-);
-
-const TrackNameCell = ({rowData, dataKey, ...props}: any) => (
-  <Cell {...props}>
-    <a href={rowData.trackUri}>{ rowData[dataKey] }</a>
-  </Cell>
-);
-
-const ArtistNameCell = ({rowData, dataKey, ...props}: any) => (
-  <Cell {...props}>
-    <Link to={`/artist/${rowData.artistId}`}>{ rowData[dataKey] }</Link>
-  </Cell>
-);
-
-const AlbumNameCell = ({rowData, dataKey, ...props}: any) => (
-  <Cell {...props}>
-    <Link to={`/album/${rowData.albumId}`}>{ rowData[dataKey] }</Link>
-  </Cell>
-);
-
 const initialTableState: TableState<RecommendedTrack> = {
   data: [],
   page: 1,
@@ -174,7 +132,6 @@ const SimpleRecommendations = () => {
   const [recommendationData, setRecommendationData] = useState(initialValues.recommendation_data);
   const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const {spotifyContext} = useContext(SpotifyContext);
-  const {data: recentlyPlayedTracks, page, displayLength, isLoading} = tableState;
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
@@ -231,44 +188,9 @@ const SimpleRecommendations = () => {
     });
   };
 
-  const saveRecommendationsToPlaylist = () => {
-    if(spotifyContext.currentUser) {
-      spotifyApi.postPlaylist(
-        spotifyContext.currentUser.id,
-        `Spotalytics Recommendations Playlist (${moment().format('YYYY-MM-DD')})`,
-        `Automatically generated playlist by Spotalytics on ${moment().format('MMMM Do, YYYY [at] h:mm')}`,
-      ).then((playlist: SpotifyApi.CreatePlaylistResponse) => {
-        const trackUris: string[] = [];
-        recommendations.forEach((recommendation) => {
-          trackUris.push(recommendation.trackUri);
-        });
-
-        spotifyApi.postItemsToPlaylist(playlist.id, trackUris).then(() => {
-          spotifyApi.getPlaylistById(playlist.id).then((singlePlaylistResponse: SpotifyApi.SinglePlaylistResponse) => {
-            Notification.success({
-              title: 'Success',
-              description: <span>
-                               Playlist successfully saved! <a href={singlePlaylistResponse.uri}>Click here</a> to view it.
-                           </span>,
-              duration: 0,
-            });
-          }).catch((error) => {
-            Alert.success('Playlist successfully saved!', 5000);
-          });
-        }).catch((error: any) => {
-          Alert.error('Error creating playlist. Please try again.', 5000);
-        });
-      }).catch((error: any) => {
-        Alert.error('Error creating playlist. Please try again.', 5000)
-      });
-    } else {
-      Alert.error('Could not create playlist. Try logging out then back in.', 5000);
-    }
-  };
-
   return (
     <>
-      <h3 style={{marginLeft: 10}}>Filters</h3>
+      <h3 style={{ marginLeft: 8 }}>Filters</h3>
       <br />
 
       <Formik initialValues={initialValues} onSubmit={getRecommendations}>
@@ -564,57 +486,11 @@ const SimpleRecommendations = () => {
         )}
       </Formik>
 
-      {isLoading || recommendations.length > 0 &&
-      <>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton
-            icon={<Icon icon="export"/>}
-            placement="left"
-            color="blue"
-            onClick={saveRecommendationsToPlaylist}
-          >
-            Save as Playlist
-          </IconButton>
-        </div>
-        <Table
-          height={800}
-          data={recommendations}
-          loading={isLoading}
-        >
-          <Column width={300}>
-            <HeaderCell>Track Name</HeaderCell>
-            <TrackNameCell dataKey="trackName"/>
-          </Column>
-
-          <Column width={200}>
-            <HeaderCell>Artist</HeaderCell>
-            <ArtistNameCell dataKey="artistName"/>
-          </Column>
-
-          <Column width={200}>
-            <HeaderCell>Album</HeaderCell>
-            <AlbumNameCell dataKey="albumName"/>
-          </Column>
-
-          <Column width={100} align="right">
-            <HeaderCell>Duration</HeaderCell>
-            <DurationCell dataKey="duration"/>
-          </Column>
-        </Table>
-
-        <TablePagination
-          lengthMenu={[
-            {value: 10, label: 10},
-            {value: 25, label: 25},
-            {value: 50, label: 50},
-          ]}
-          activePage={page}
-          displayLength={displayLength}
-          total={recentlyPlayedTracks.length}
-          onChangePage={(dataKey) => tableStateDispatch({type: UPDATE_PAGE, value: dataKey})}
-          onChangeLength={(dataKey) => tableStateDispatch({type: UPDATE_DISPLAY_LENGTH, value: dataKey})}
-        />
-      </>}
+      <RecommendationTable
+        recommendations={recommendations}
+        tableState={tableState}
+        tableStateDispatch={tableStateDispatch}
+      />
     </>
   );
 };
