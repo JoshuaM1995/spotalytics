@@ -14,7 +14,6 @@ import {
   AcousticnessOption,
   DurationOption,
   GenericRangeOption,
-  InstrumentalTrackOption,
   LiveTrackOption,
   LoudnessOption,
   RecommendationDataOption,
@@ -46,7 +45,7 @@ import {RecommendedTrack} from "../../utils/types";
 
 const initialValues: SpotifySimpleRecommendationOptions = {
   recommendation_data: RecommendationDataOption.AUTO,
-  instrumental_tracks: InstrumentalTrackOption.ANY,
+  instrumentalness: GenericRangeOption.ANY,
   acousticness: AcousticnessOption.ANY,
   live_tracks: LiveTrackOption.ANY,
   danceability: GenericRangeOption.ANY,
@@ -67,10 +66,11 @@ const seedTypesOptions = [
   {value: RecommendationDataOption.MANUAL, label: RecommendationDataOption.MANUAL},
 ];
 
-const instrumentalTracksOptions = [
-  {value: InstrumentalTrackOption.ANY, label: InstrumentalTrackOption.ANY},
-  {value: InstrumentalTrackOption.INSTRUMENTAL_ONLY, label: InstrumentalTrackOption.INSTRUMENTAL_ONLY},
-  {value: InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY, label: InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY},
+const instrumentalnessOptions = [
+  {value: GenericRangeOption.ANY, label: GenericRangeOption.ANY},
+  {value: GenericRangeOption.LOW, label: GenericRangeOption.LOW},
+  {value: GenericRangeOption.MEDIUM, label: GenericRangeOption.MEDIUM},
+  {value: GenericRangeOption.HIGH, label: GenericRangeOption.HIGH},
 ];
 
 const acousticnessOptions = [
@@ -143,7 +143,7 @@ const SimpleRecommendations = () => {
 
     // Build the options based on what the user selected
     const options = {
-      ...getInstrumentalnessRecommendationOptions(formValues.instrumental_tracks),
+      ...getInstrumentalnessRecommendationOptions(formValues.instrumentalness),
       ...getAcousticnessRecommendationOptions(formValues.acousticness),
       ...getLiveTrackRecommendationOptions(formValues.live_tracks),
       ...getDanceabilityRecommendationOptions(formValues.danceability),
@@ -230,19 +230,23 @@ const SimpleRecommendations = () => {
               </Col>
 
               <Col xs={24} sm={12} md={6}>
-                <ControlLabel style={{marginBottom: 15}}>
-                  Instrumental Tracks
+                <ControlLabel style={{marginBottom: 8}}>
+                  Instrumentalness
+                  <HelpBlock tooltip>
+                    Predicts whether a track contains no vocals. “Ooh” and “aah” sounds are
+                    treated as instrumental in this context.
+                  </HelpBlock>
                 </ControlLabel>
                 <br/>
                 <Field
-                  name="instrumental_tracks"
+                  name="instrumentalness"
                   render={({field, form}: any) => (
                     <SelectPicker
                       {...field}
-                      data={instrumentalTracksOptions}
+                      data={instrumentalnessOptions}
                       searchable={false}
                       cleanable={false}
-                      onChange={(value) => form.setFieldValue('instrumental_tracks', value)}
+                      onChange={(value) => form.setFieldValue('instrumentalness', value)}
                       style={{width: '100%'}}
                     />
                   )}

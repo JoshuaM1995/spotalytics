@@ -2,7 +2,6 @@ import {
   AcousticnessOption,
   DurationOption,
   GenericRangeOption,
-  InstrumentalTrackOption,
   LiveTrackOption,
   LoudnessOption,
   SpokenWordOption,
@@ -10,12 +9,14 @@ import {
 } from "../api/interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
 import moment from "moment";
 
-export const getInstrumentalnessRecommendationOptions = (value: InstrumentalTrackOption) => {
+export const getInstrumentalnessRecommendationOptions = (value: GenericRangeOption) => {
   switch(value) {
-    case InstrumentalTrackOption.INSTRUMENTAL_ONLY:
+    case GenericRangeOption.LOW:
+      return { min_instrumentalness: 0, max_instrumentalness: 0.3 };
+    case GenericRangeOption.MEDIUM:
+      return { min_instrumentalness: 0.3, max_instrumentalness: 0.6 };
+    case GenericRangeOption.HIGH:
       return { min_instrumentalness: 0.6, max_instrumentalness: 1 };
-    case InstrumentalTrackOption.NON_INSTRUMENTAL_ONLY:
-      return { min_instrumentalness: 0, max_instrumentalness: 0.5 };
     default: return {};
   }
 }

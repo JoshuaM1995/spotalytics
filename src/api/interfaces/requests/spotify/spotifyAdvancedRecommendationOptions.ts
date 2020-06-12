@@ -3,12 +3,6 @@ export enum RecommendationDataOption {
   MANUAL = 'Manual',
 }
 
-export enum InstrumentalTrackOption {
-  ANY = 'Any',
-  NON_INSTRUMENTAL_ONLY = 'Non-Instrumental Only',
-  INSTRUMENTAL_ONLY = 'Instrumental Only',
-}
-
 export enum AcousticnessOption {
   ANY = 'Any',
   ACOUSTIC_ONLY = 'Acoustic Only',
@@ -58,7 +52,7 @@ export enum TempoOption {
 
 export interface SpotifySimpleRecommendationOptions {
   recommendation_data: RecommendationDataOption;
-  instrumental_tracks: InstrumentalTrackOption;
+  instrumentalness: GenericRangeOption;
   acousticness: AcousticnessOption;
   live_tracks: LiveTrackOption;
   danceability: GenericRangeOption;
