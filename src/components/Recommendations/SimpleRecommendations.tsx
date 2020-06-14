@@ -162,7 +162,6 @@ const SimpleRecommendations = () => {
 
     // Get the recommendations from the api based on the options and the seed data
     spotifyApi.getFilteredRecommendations(options).then((response: any) => {
-      // setRecommendations(response.tracks);
       const tracksToAdd: RecommendedTrack[] = [];
 
       response.tracks.forEach((track: any) => {

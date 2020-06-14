@@ -1,10 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {ReactNode, useContext, useEffect, useReducer, useState} from 'react';
 import {Button, Tag} from "rsuite";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
 import {TimeRange} from "../../utils/constants";
 import moment from 'moment';
 import {topValueInArray} from "../../utils/global";
+import tableReducer, {TableState} from "../../reducers/tableReducer";
+import {RecommendedTrack} from "../../utils/types";
+import RecommendationTable from "./RecommendationTable";
+import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA} from "../../actions/tableActions";
 
 enum Feature {
   DANCEABILITY = 'DANCEABILITY',
@@ -48,7 +52,6 @@ const initialAverageFeatureValues: AverageFeatureValues = {
 const TRACKS_TO_ANALYZE = 50;
 
 const getFeatureDescription = (feature: Feature, average: number): string => {
-  console.log(feature + ' AVERAGE', average);
   switch(feature) {
     case Feature.DANCEABILITY:
       let danceability = 'high in';
@@ -118,14 +121,26 @@ const getFeatureDescription = (feature: Feature, average: number): string => {
   }
 }
 
+const initialTableState: TableState<RecommendedTrack> = {
+  data: [],
+  page: 1,
+  displayLength: 100,
+  isLoading: true,
+};
+
 const AutomaticRecommendations = () => {
-  const [topArtist, setTopArtist] = useState<string>('');
-  const [topGenre, setTopGenre] = useState<string>('');
+  const [topArtist, setTopArtist] = useState<{ id: string; name: string; }>({
+    id: '',
+    name: '',
+  });
+  const [topGenre, setTopGenre] = useState<string>();
+  const [recommendations, setRecommendations] = useState<RecommendedTrack[]>([]);
   const [ featureValues, setFeatureValues ] = useState<AverageFeatureValues>(
     initialAverageFeatureValues
   );
   const {spotifyContext} = useContext(SpotifyContext);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+  const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
 
   useEffect(() => {
     spotifyApi.getTopTracks(TimeRange.LONG_TERM, TRACKS_TO_ANALYZE).then((topTracks) => {
@@ -216,9 +231,48 @@ const AutomaticRecommendations = () => {
     });
 
     spotifyApi.getTopArtists(1, TimeRange.LONG_TERM).then((response) => {
-      setTopArtist(response[0].name);
+      setTopArtist({
+        id: response[0].id,
+        name: response[0].name,
+      });
     });
   }, []);
+
+  useEffect(() => {
+    console.log('recommendations', recommendations);
+    tableStateDispatch({ type: UPDATE_DATA, value: recommendations });
+  }, [recommendations]);
+
+  const getRecommendations = () => {
+    spotifyApi.getFilteredRecommendations({
+      target_danceability: featureValues.danceability.average.toFixed(2),
+      target_energy: featureValues.energy.average.toFixed(2),
+      target_positivity: featureValues.positivity.average.toFixed(2),
+      target_loudness: featureValues.loudness.average.toFixed(2),
+      target_tempo: featureValues.speed.average.toFixed(2),
+      seed_artists: topArtist.id,
+      seed_genres: topGenre,
+      limit: 50,
+    }).then((response: SpotifyApi.RecommendationsFromSeedsResponse) => {
+      const tracksToAdd: RecommendedTrack[] = [];
+
+      response.tracks.forEach((track: any) => {
+        tracksToAdd.push({
+          id: track.id,
+          trackUri: track.uri,
+          trackName: track.name,
+          artistId: track.artists[0].id,
+          artistName: track.artists[0].name,
+          albumId: track.album.id,
+          albumName: track.album.name,
+          duration: track.duration_ms,
+        });
+      });
+
+      tableStateDispatch({ type: IS_NOT_LOADING });
+      setRecommendations(tracksToAdd);
+    });
+  };
 
   return (
     <>
@@ -236,11 +290,18 @@ const AutomaticRecommendations = () => {
         <Tag>{featureValues.durationMs.description}</Tag> long on average.
         <br /><br />
 
-        Your top artist is <Tag>{topArtist}</Tag> and your top genre is<Tag>{topGenre}</Tag>.
+        Your top artist is <Tag>{topArtist.name}</Tag> and your top genre is<Tag>{topGenre}</Tag>.
       </h5>
       <br /><br />
 
-      <Button color="green">Get Recommendations</Button>
+      <Button color="green" onClick={getRecommendations}>Get Recommendations</Button>
+      <br />
+
+      <RecommendationTable
+        recommendations={recommendations}
+        tableState={tableState}
+        tableStateDispatch={tableStateDispatch}
+      />
     </>
   );
 };

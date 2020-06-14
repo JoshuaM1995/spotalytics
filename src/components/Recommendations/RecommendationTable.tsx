@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useReducer} from 'react';
+import React, {useContext} from 'react';
 import {Alert, Icon, IconButton, Notification, Table} from "rsuite";
 import TablePagination from "rsuite/es/Table/TablePagination";
 import {UPDATE_DISPLAY_LENGTH, UPDATE_PAGE} from "../../actions/tableActions";
@@ -13,7 +13,7 @@ import {TableState} from "../../reducers/tableReducer";
 interface RecommendationTableProps {
   recommendations: RecommendedTrack[];
   tableState: TableState;
-  tableStateDispatch: any;
+  tableStateDispatch: React.Dispatch<any>;
 }
 
 const {Column, HeaderCell, Cell} = Table;
@@ -58,7 +58,7 @@ const RecommendationTable = ({
       spotifyApi.postPlaylist(
         spotifyContext.currentUser.id,
         `Spotalytics Recommendations Playlist (${moment().format('YYYY-MM-DD')})`,
-        `Automatically generated playlist by Spotalytics on ${moment().format('MMMM Do, YYYY [at] h:mm')}`,
+        `Automatically generated playlist by Spotalytics on ${moment().format('MMMM Do, YYYY [at] h:mmA')}`,
       ).then((playlist: SpotifyApi.CreatePlaylistResponse) => {
         const trackUris: string[] = [];
         recommendations.forEach((recommendation) => {
