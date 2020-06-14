@@ -9,8 +9,8 @@ const ArtistsRoutes = () => {
 
   return (
       <>
-        <Route path={`${match.path}/top`} render={() => <TopArtists />} />
-        <Route path={`${match.path}/followed`} render={() => <FollowedArtists />} />
+        <Route exact path={`${match.path}/top`} render={() => <TopArtists />} />
+        <Route exact path={`${match.path}/followed`} render={() => <FollowedArtists />} />
       </>
   );
 };

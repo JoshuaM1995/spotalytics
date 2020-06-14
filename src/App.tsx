@@ -56,8 +56,8 @@ const App = () => {
           <GuardProvider guards={[authenticateGuard]} loading={Loading} error={SomethingWentWrong}>
             <Switch>
               <Route exact path="/" component={Home} />
-              <GuardedRoute path="/dashboard" component={Dashboard} />
-              <GuardedRoute path="/recommendations" component={Recommendations} />
+              <GuardedRoute exact path="/dashboard" component={Dashboard} />
+              <GuardedRoute exact path="/recommendations" component={Recommendations} />
               <GuardedRoute path="/artist" render={() => <ArtistRoutes/>} />
               <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>} />
               <GuardedRoute path="/album" render={() => <AlbumRoutes/>} />
@@ -65,7 +65,7 @@ const App = () => {
               <GuardedRoute path="/tracks" render={() => <TracksRoutes/>} />
               <GuardedRoute exact path="/authenticate-spotify" component={AuthenticateSpotify} />
               <GuardedRoute exact path="/authenticate-spotify/:action" component={AuthenticateSpotify} />
-              <GuardedRoute path="/unauthenticated-spotify" component={UnauthenticatedSpotify} />
+              <GuardedRoute exact path="/unauthenticated-spotify" component={UnauthenticatedSpotify} />
               <Route path="*">
                 <NotFound/>
               </Route>

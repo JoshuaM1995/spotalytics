@@ -23,7 +23,11 @@ const TopAlbums = ({ limit = 5, timeRange = TimeRange.SHORT_TERM }: TopAlbumsPro
   const { spotifyContext } = useContext(SpotifyContext);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
-  const getTopAlbums = () => {
+  useEffect(() => {
+    console.log('update top albums');
+  });
+
+  useEffect(() => {
     spotifyApi.getTopAlbums(limit, topAlbumsTimeRange).then(albums => {
       const images: ImageBlockImage[] = [];
 
@@ -37,14 +41,6 @@ const TopAlbums = ({ limit = 5, timeRange = TimeRange.SHORT_TERM }: TopAlbumsPro
 
       setTopAlbumsImages(images);
     });
-  }
-
-  useEffect(() => {
-    getTopAlbums();
-  }, []);
-
-  useEffect(() => {
-    getTopAlbums();
   }, [topAlbumsTimeRange]);
 
   return (

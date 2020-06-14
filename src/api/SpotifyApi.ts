@@ -68,14 +68,7 @@ export default class SpotifyApi {
           reject(error);
         }
 
-        const artists = response.items;
-
-        // Sort artists by highest number of followers
-        artists.sort((a: any, b: any) => {
-          return (a.followers.total > b.followers.total) ? -1 : 1;
-        });
-
-        resolve(artists);
+        resolve(response.items);
       });
     });
   }
@@ -87,12 +80,7 @@ export default class SpotifyApi {
           reject(error);
         }
 
-        let albums = response.items;
-
-        // Sort albums by highest popularity
-        albums.sort((a: any, b: any) => {
-          return (a.popularity > b.popularity) ? -1 : 1;
-        });
+        let albums: any;
 
         albums = response.items.map((item: any) => {
           return {
@@ -106,7 +94,10 @@ export default class SpotifyApi {
     });
   }
 
-  public getTopTracks(time_range: string = 'short_term', limit: number = 10): Promise<SpotifyApi.TrackObjectFull[]> {
+  public getTopTracks(
+    time_range: string = 'short_term',
+    limit: number = 10,
+  ): Promise<SpotifyApi.TrackObjectFull[]> {
     return new Promise((resolve, reject) => {
       this.spotify.getMyTopTracks({limit, time_range}, (error: any, response: any) => {
         if (error) {
@@ -114,12 +105,6 @@ export default class SpotifyApi {
         }
 
         let tracks = response.items;
-
-        // Sort tracks by highest popularity
-        tracks.sort((a: any, b: any) => {
-          return (a.popularity > b.popularity) ? -1 : 1;
-        });
-
         resolve(tracks);
       });
     });

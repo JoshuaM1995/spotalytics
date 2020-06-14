@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, FlexboxGrid, Icon, List, Panel, Progress, SelectPicker} from "rsuite";
+import {Button, FlexboxGrid, Icon, List, Progress, SelectPicker} from "rsuite";
 import {Link} from "react-router-dom";
 import {getProgressLineProps} from "../../utils/progress";
 import {TimeRange} from "../../utils/constants";
@@ -32,13 +32,6 @@ const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksPr
   const [topTracks, setTopTracks] = useState<TopTrack[]>([]);
   const [topTracksTimeRange, setTopTracksTimeRange] = useState(timeRange);
   const { spotifyContext } = useContext(SpotifyContext);
-
-  useEffect(() => {
-    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
-    spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
-      setTopTracks(getTopTracksValues(tracks));
-    });
-  }, []);
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);

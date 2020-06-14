@@ -9,6 +9,7 @@ import {CacheKey} from "../../constants";
 import TopTracks from "./TopTracks";
 import TopArtists from "./TopArtists";
 import TopAlbums from "./TopAlbums";
+import {TimeRange} from "../../utils/constants";
 const ls = require('localstorage-ttl');
 
 const Dashboard = () => {
@@ -19,6 +20,7 @@ const Dashboard = () => {
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
+    console.log('mount dashboard');
     const totalArtistCountCache = ls.get(CacheKey.FOLLOWED_ARTISTS_COUNT);
     const totalAlbumCountCache = ls.get(CacheKey.ALBUMS_SAVED_COUNT);
     const totalTrackCountCache = ls.get(CacheKey.TRACKS_FAVORITED_COUNT);
@@ -50,6 +52,10 @@ const Dashboard = () => {
       setTotalTracks(totalTrackCountCache);
     }
   }, []);
+
+  useEffect(() => {
+    console.log('update dashboard');
+  });
 
   return (
     <Page title="Dashboard">
@@ -103,7 +109,7 @@ const Dashboard = () => {
       <br />
 
       <Panel className="panel-light">
-        <TopTracks />
+        <TopTracks timeRange={TimeRange.SHORT_TERM} limit={10} />
       </Panel>
     </Page>
   );

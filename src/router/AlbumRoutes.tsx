@@ -8,7 +8,7 @@ const AlbumRoutes = () => {
 
   return (
     <>
-      <Route path={`${match.path}/:albumId`} render={() => <AlbumDetails />} />
+      <Route exact path={`${match.path}/:albumId`} render={() => <AlbumDetails />} />
     </>
   );
 };

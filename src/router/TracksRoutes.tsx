@@ -8,7 +8,7 @@ const TracksRoutes = () => {
 
   return (
     <>
-      <Route path={`${match.path}/recently-played`} render={() => <RecentlyPlayedTracks />} />
+      <Route exact path={`${match.path}/recently-played`} render={() => <RecentlyPlayedTracks />} />
     </>
   );
 };
