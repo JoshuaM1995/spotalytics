@@ -1,5 +1,17 @@
-import React, {useContext} from 'react';
-import {Alert, Icon, IconButton, Notification, Table} from "rsuite";
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  Alert,
+  Button, Checkbox,
+  ControlLabel,
+  Form,
+  FormControl,
+  FormGroup,
+  Icon,
+  IconButton, Input,
+  Modal,
+  Notification,
+  Table
+} from "rsuite";
 import TablePagination from "rsuite/es/Table/TablePagination";
 import {UPDATE_DISPLAY_LENGTH, UPDATE_PAGE} from "../../actions/tableActions";
 import moment from "moment";
@@ -9,6 +21,7 @@ import {RecommendedTrack} from "../../utils/types";
 import {getTrackLength} from "../../utils/track";
 import {Link} from "react-router-dom";
 import {TableState} from "../../reducers/tableReducer";
+import _ from "lodash";
 
 interface RecommendationTableProps {
   recommendations: RecommendedTrack[];
@@ -40,6 +53,8 @@ const AlbumNameCell = ({rowData, dataKey, ...props}: any) => (
   </Cell>
 );
 
+const initialPlaylistName = `Spotalytics Recommendations Playlist (${moment().format('YYYY-MM-DD')})`;
+
 const RecommendationTable = ({
   recommendations,
    tableState,
@@ -48,6 +63,8 @@ const RecommendationTable = ({
   const {spotifyContext} = useContext(SpotifyContext);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
   const {data: recentlyPlayedTracks, page, displayLength, isLoading} = tableState;
+  const [showModal, setShowModal] = useState(false);
+  const [playlistName, setPlaylistName] = useState(initialPlaylistName);
 
   if(isLoading || recommendations.length === 0) {
     return <></>;
@@ -57,7 +74,7 @@ const RecommendationTable = ({
     if(spotifyContext.currentUser) {
       spotifyApi.postPlaylist(
         spotifyContext.currentUser.id,
-        `Spotalytics Recommendations Playlist (${moment().format('YYYY-MM-DD')})`,
+        playlistName,
         `Automatically generated playlist by Spotalytics on ${moment().format('MMMM Do, YYYY [at] h:mmA')}`,
       ).then((playlist: SpotifyApi.CreatePlaylistResponse) => {
         const trackUris: string[] = [];
@@ -74,8 +91,10 @@ const RecommendationTable = ({
                            </span>,
               duration: 0,
             });
+            setShowModal(false);
           }).catch(() => {
             Alert.success('Playlist successfully saved!', 5000);
+            setShowModal(false);
           });
         }).catch(() => {
           Alert.error('Error creating playlist. Please try again.', 5000);
@@ -88,6 +107,8 @@ const RecommendationTable = ({
     }
   };
 
+  const renamePlaylist = (name: string) => setPlaylistName(name);
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -95,7 +116,7 @@ const RecommendationTable = ({
           icon={<Icon icon="export"/>}
           placement="left"
           color="blue"
-          onClick={saveRecommendationsToPlaylist}
+          onClick={() => setShowModal(true)}
         >
           Save as Playlist
         </IconButton>
@@ -138,6 +159,32 @@ const RecommendationTable = ({
         onChangePage={(dataKey) => tableStateDispatch({type: UPDATE_PAGE, value: dataKey})}
         onChangeLength={(dataKey) => tableStateDispatch({type: UPDATE_DISPLAY_LENGTH, value: dataKey})}
       />
+
+      {showModal &&
+      <Modal backdrop show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Title>
+          <h3>Rename Playlist</h3>
+        </Modal.Title>
+        <Modal.Body>
+          <Form fluid>
+            <FormGroup>
+              <ControlLabel>Playlist Name</ControlLabel>
+              <Input
+                defaultValue={initialPlaylistName}
+                onChange={_.debounce(renamePlaylist, 150)}
+              />
+            </FormGroup>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={saveRecommendationsToPlaylist} color="green">
+            Save Playlist
+          </Button>
+          <Button onClick={() => setShowModal(false)} appearance="subtle">
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>}
     </>
   );
 };
