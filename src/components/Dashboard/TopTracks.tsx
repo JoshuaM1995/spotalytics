@@ -2,9 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Button, FlexboxGrid, Icon, List, Progress, SelectPicker} from "rsuite";
 import {Link} from "react-router-dom";
 import {getProgressLineProps} from "../../utils/progress";
-import {TimeRange} from "../../utils/constants";
+import {CacheKey, TimeRange} from "../../utils/constants";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
+const ls = require('localstorage-ttl');
 
 interface TopTracksProps {
   timeRange?: TimeRange;
@@ -34,11 +35,23 @@ const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksPr
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
-    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+    const topTracksCache = ls.get(CacheKey.DASHBOARD_TOP_TRACKS);
 
-    spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
-      setTopTracks(getTopTracksValues(tracks));
-    });
+    if(!topTracksCache || (topTracksCache && !topTracksCache[topTracksTimeRange])) {
+      const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+
+      spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
+        setTopTracks(getTopTracksValues(tracks));
+
+        // Cache the results for an hour so we don't make constant api requests
+        ls.set(CacheKey.DASHBOARD_TOP_TRACKS, {
+          ...topTracksCache,
+          [topTracksTimeRange]: getTopTracksValues(tracks),
+        }, 1000 * 60 * 60);
+      });
+    } else {
+      setTopTracks(topTracksCache[topTracksTimeRange]);
+    }
   }, [topTracksTimeRange]);
 
   const getTopTracksValues = (tracks: any[]) => {

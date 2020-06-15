@@ -25,10 +25,6 @@ const TopArtists = ({limit = 5, timeRange = TimeRange.SHORT_TERM}: TopArtistsPro
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
-   console.log('update top artists');
-  });
-
-  useEffect(() => {
     spotifyApi.getTopArtists(limit, topArtistsTimeRange).then(artists => {
       const images: ImageBlockImage[] = [];
 

@@ -3,8 +3,8 @@ import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext, {SpotifyContextValues} from "../../context/spotify";
-import {SPOTIFY_CONTEXT} from "../../constants";
 import {Redirect, useParams} from "react-router";
+import {SPOTIFY_CONTEXT} from "../../utils/constants";
 
 const urlParams = new URLSearchParams(window.location.hash);
 const accessToken = urlParams.get('#access_token') ?? '';

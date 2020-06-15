@@ -15,11 +15,11 @@ import TracksRoutes from "./router/TracksRoutes";
 import Home from "./components/Home/Home";
 import UnauthenticatedSpotify from "./components/AuthenticateSpotify/UnauthenticatedSpotify";
 import './App.scss';
-import {SPOTIFY_CONTEXT} from "./constants";
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
 import ArtistRoutes from "./router/ArtistRoutes";
 import AlbumRoutes from "./router/AlbumRoutes";
 import Recommendations from "./components/Recommendations/Recommendations";
+import {SPOTIFY_CONTEXT} from "./utils/constants";
 
 const App = () => {
   const [spotifyContext, setSpotifyContext] = useState(spotifyContextDefaultValue);
