@@ -2,9 +2,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Button, FlexboxGrid, Icon, List, Progress, SelectPicker} from "rsuite";
 import {Link} from "react-router-dom";
 import {getProgressLineProps} from "../../utils/progress";
-import {CacheKey, TimeRange} from "../../utils/constants";
+import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
 import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
+import apiRequest from "../../utils/apiRequest";
+
 const ls = require('localstorage-ttl');
 
 interface TopTracksProps {
@@ -24,31 +26,33 @@ interface TopTrack {
 }
 
 const topTracksTimeRanges = [
-  { value: TimeRange.SHORT_TERM, label: 'Last 4 Weeks',  },
-  { value: TimeRange.MEDIUM_TERM, label: 'Last 6 Months',  },
-  { value: TimeRange.LONG_TERM, label: 'All-Time',  },
+  {value: TimeRange.SHORT_TERM, label: 'Last 4 Weeks',},
+  {value: TimeRange.MEDIUM_TERM, label: 'Last 6 Months',},
+  {value: TimeRange.LONG_TERM, label: 'All-Time',},
 ];
 
-const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksProps) => {
+const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProps) => {
   const [topTracks, setTopTracks] = useState<TopTrack[]>([]);
   const [topTracksTimeRange, setTopTracksTimeRange] = useState(timeRange);
-  const { spotifyContext } = useContext(SpotifyContext);
+  const {spotifyContext} = useContext(SpotifyContext);
 
   useEffect(() => {
     const topTracksCache = ls.get(CacheKey.DASHBOARD_TOP_TRACKS);
 
-    if(!topTracksCache || (topTracksCache && !topTracksCache[topTracksTimeRange])) {
-      const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+    if (!topTracksCache || (topTracksCache && !topTracksCache[topTracksTimeRange])) {
+      const body = {
+        options: { time_range: topTracksTimeRange, limit },
+      };
+      apiRequest<any>('tracks/top/me', ApiMethod.GET, spotifyContext.accessToken, body)
+        .then((response) => {
+          setTopTracks(getTopTracksValues(response.data.items));
 
-      spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
-        setTopTracks(getTopTracksValues(tracks));
-
-        // Cache the results for an hour so we don't make constant api requests
-        ls.set(CacheKey.DASHBOARD_TOP_TRACKS, {
-          ...topTracksCache,
-          [topTracksTimeRange]: getTopTracksValues(tracks),
-        }, 1000 * 60 * 60);
-      });
+          // Cache the results for an hour so we don't make constant api requests
+          ls.set(CacheKey.DASHBOARD_TOP_TRACKS, {
+            ...topTracksCache,
+            [topTracksTimeRange]: getTopTracksValues(response.data.items),
+          }, 1000 * 60 * 60);
+        });
     } else {
       setTopTracks(topTracksCache[topTracksTimeRange]);
     }
@@ -75,26 +79,26 @@ const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksPr
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h3>Top Tracks</h3>
         <SelectPicker
           defaultValue={timeRange}
           value={topTracksTimeRange}
           data={topTracksTimeRanges}
-          style={{ width: 250 }}
+          style={{width: 250}}
           cleanable={false}
           searchable={false}
           onChange={(value) => setTopTracksTimeRange(value)}
         />
       </div>
-      <br />
+      <br/>
       <List hover>
         {topTracks.map((track: any, index: number) => (
           <List.Item key={track.track_name} index={index}>
             <FlexboxGrid>
-              <FlexboxGrid.Item colspan={2} className="center" style={{ height: '60px' }}>
+              <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
                 <Link to={`/album/${track.album_id}`}>
-                  <img src={track.album_image_url} height={50} width={50} alt={track.album_name} />
+                  <img src={track.album_image_url} height={50} width={50} alt={track.album_name}/>
                 </Link>
               </FlexboxGrid.Item>
               <FlexboxGrid.Item
@@ -118,8 +122,8 @@ const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksPr
                   </div>
                 </div>
               </FlexboxGrid.Item>
-              <FlexboxGrid.Item colspan={6} className="center" style={{ height: '60px' }}>
-                <div style={{ textAlign: 'right' }}>
+              <FlexboxGrid.Item colspan={6} className="center" style={{height: '60px'}}>
+                <div style={{textAlign: 'right'}}>
                   <div className="text-slim">Popularity</div>
                   <Progress.Line
                     percent={track.popularity}
@@ -132,12 +136,12 @@ const TopTracks = ({ timeRange = TimeRange.SHORT_TERM, limit = 10 }: TopTracksPr
           </List.Item>
         ))}
       </List>
-      <br />
+      <br/>
 
       <div className="btn-more">
         <Button appearance="primary" size="lg">
           More Tracks{' '}
-          <Icon icon="long-arrow-right" />
+          <Icon icon="long-arrow-right"/>
         </Button>
       </div>
     </>

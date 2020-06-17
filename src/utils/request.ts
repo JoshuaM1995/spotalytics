@@ -2,9 +2,6 @@ import {ApiMethod} from "./constants";
 import axios, {AxiosRequestConfig, CancelToken} from "axios";
 import jwt from "jsonwebtoken";
 
-const token = jwt.sign({}, process.env.REACT_APP_API_SERVER_JWT_TOKEN_SECRET ?? '');
-axios.defaults.headers.common = {'Authorization': `Bearer ${token}`};
-
 export default function getRequestBody<Response = any>(
   method: ApiMethod,
   spotifyAccessToken: string,
@@ -16,7 +13,6 @@ export default function getRequestBody<Response = any>(
     method,
     cancelToken,
   };
-
 
   if(method === ApiMethod.POST) {
     if(body) {

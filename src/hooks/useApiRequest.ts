@@ -1,5 +1,4 @@
 import axios, {AxiosResponse} from 'axios';
-import jwt from 'jsonwebtoken';
 import {useContext, useEffect, useState} from "react";
 import {ApiMethod} from "../utils/constants";
 import SpotifyContext from "../context/spotify";

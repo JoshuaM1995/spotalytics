@@ -2,6 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import jwt from "jsonwebtoken";
+import axios from "axios";
+
+const token = jwt.sign({}, process.env.REACT_APP_API_SERVER_JWT_TOKEN_SECRET ?? '');
+axios.defaults.headers.common = {'Authorization': `Bearer ${token}`};
 
 ReactDOM.render(
   <React.StrictMode>
