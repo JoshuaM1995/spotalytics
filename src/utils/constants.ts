@@ -14,3 +14,11 @@ export enum CacheKey {
   DASHBOARD_TOP_ALBUMS = 'DASHBOARD_TOP_ALBUMS',
   DASHBOARD_TOP_TRACKS = 'DASHBOARD_TOP_TRACKS',
 }
+
+export enum ApiMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+}

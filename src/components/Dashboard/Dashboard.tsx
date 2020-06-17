@@ -1,51 +1,54 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Panel, Row, Button, Icon, Message} from "rsuite";
+import {Col, Message, Panel, Row} from "rsuite";
 import Page from "../Page/Page";
 import StatisticCardLink from "../shared/StatisticCard/StatisticCardLink";
-import './Dashboard.scss';
-import SpotifyApi from '../../api/SpotifyApi';
 import SpotifyContext from "../../context/spotify";
 import TopTracks from "./TopTracks";
 import TopArtists from "./TopArtists";
 import TopAlbums from "./TopAlbums";
-import {CacheKey, TimeRange} from "../../utils/constants";
-const ls = require('localstorage-ttl');
+import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
+import apiRequest from "../../utils/apiRequest";
+import './Dashboard.scss';
+
+const cache = require('localstorage-ttl');
 
 const Dashboard = () => {
   const [totalArtists, setTotalArtists] = useState(0);
   const [totalAlbums, setTotalAlbums] = useState(0);
   const [totalTracks, setTotalTracks] = useState(0);
   const { spotifyContext } = useContext(SpotifyContext);
-  const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
-    const totalArtistCountCache = ls.get(CacheKey.FOLLOWED_ARTISTS_COUNT);
-    const totalAlbumCountCache = ls.get(CacheKey.ALBUMS_SAVED_COUNT);
-    const totalTrackCountCache = ls.get(CacheKey.TRACKS_FAVORITED_COUNT);
+    const totalArtistCountCache = cache.get(CacheKey.FOLLOWED_ARTISTS_COUNT);
+    const totalAlbumCountCache = cache.get(CacheKey.ALBUMS_SAVED_COUNT);
+    const totalTrackCountCache = cache.get(CacheKey.TRACKS_FAVORITED_COUNT);
 
     if(!totalArtistCountCache) {
-      spotifyApi.getTotalArtistCount().then(totalArtistCount => {
-        setTotalArtists(totalArtistCount);
-        ls.set(CacheKey.FOLLOWED_ARTISTS_COUNT, totalArtistCount, 300000);
-      });
+      apiRequest<number>('artists/total', ApiMethod.GET, spotifyContext.accessToken)
+        .then((response) => {
+          setTotalArtists(response.data);
+          cache.set(CacheKey.FOLLOWED_ARTISTS_COUNT, response.data, 300000);
+        });
     } else {
       setTotalArtists(totalArtistCountCache);
     }
 
     if(!totalAlbumCountCache) {
-      spotifyApi.getTotalAlbumCount().then(totalAlbumCount => {
-        setTotalAlbums(totalAlbumCount);
-        ls.set(CacheKey.ALBUMS_SAVED_COUNT, totalAlbumCount, 300000);
-      });
+      apiRequest<number>('albums/total', ApiMethod.GET, spotifyContext.accessToken)
+        .then((response) => {
+          setTotalAlbums(response.data);
+          cache.set(CacheKey.ALBUMS_SAVED_COUNT, response.data, 300000);
+        });
     } else {
       setTotalAlbums(totalAlbumCountCache);
     }
 
     if(!totalTrackCountCache) {
-      spotifyApi.getTotalTrackCount().then(totalTrackCount => {
-        setTotalTracks(totalTrackCount);
-        ls.set(CacheKey.TRACKS_FAVORITED_COUNT, totalTrackCount, 300000);
-      });
+      apiRequest<number>('tracks/total', ApiMethod.GET, spotifyContext.accessToken)
+        .then((response) => {
+          setTotalTracks(response.data);
+          cache.set(CacheKey.TRACKS_FAVORITED_COUNT, response.data, 300000);
+        });
     } else {
       setTotalTracks(totalTrackCountCache);
     }
