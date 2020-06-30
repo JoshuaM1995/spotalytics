@@ -3,10 +3,8 @@ import ImageBlockList, {ImageBlockImage} from "../shared/ImageBlock/ImageBlockLi
 import {Link} from "react-router-dom";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
-import {CacheKey, TimeRange} from "../../utils/constants";
+import {TimeRange} from "../../utils/constants";
 import {Button, Icon, SelectPicker} from "rsuite";
-
-const ls = require('localstorage-ttl');
 
 interface TopAlbumsProps {
   timeRange?: TimeRange;
@@ -39,7 +37,7 @@ const TopAlbums = ({limit = 5, timeRange = TimeRange.SHORT_TERM}: TopAlbumsProps
 
       setTopAlbumsImages(images);
     });
-  }, [topAlbumsTimeRange]);
+  }, [topAlbumsTimeRange, limit, spotifyApi]);
 
   return (
     <>

@@ -80,7 +80,7 @@ const timeSignatureOptions = [
 ];
 
 const AdvancedRecommendations = () => {
-  const [genreOptions, setGenreOptions] = useState<any[]>([]);
+  const [, setGenreOptions] = useState<any[]>([]);
   const {spotifyContext} = useContext(SpotifyContext);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const AdvancedRecommendations = () => {
       });
       setGenreOptions(genres);
     });
-  }, []);
+  }, [spotifyContext.accessToken]);
 
   const getRecommendations = (options: SpotifyAdvancedRecommendationOptions) => {
     options.min_duration_ms = moment.duration(options.min_duration_ms, 'minutes').asMilliseconds();

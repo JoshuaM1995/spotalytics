@@ -3,7 +3,6 @@ import {Button, FlexboxGrid, Icon, List, Progress, SelectPicker} from "rsuite";
 import {Link} from "react-router-dom";
 import {getProgressLineProps} from "../../utils/progress";
 import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
-import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
 import apiRequest from "../../utils/apiRequest";
 
@@ -56,7 +55,7 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
     } else {
       setTopTracks(topTracksCache[topTracksTimeRange]);
     }
-  }, [topTracksTimeRange]);
+  }, [topTracksTimeRange, limit, spotifyContext.accessToken]);
 
   const getTopTracksValues = (tracks: any[]) => {
     const topTrackValues: TopTrack[] = [];

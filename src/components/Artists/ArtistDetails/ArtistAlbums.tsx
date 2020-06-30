@@ -23,9 +23,9 @@ const albumTypes: AlbumType[] = [
   { label: 'Compilation', value: 'compilation' },
 ];
 
-const getHiddenAlbums = (albums: any[]) => {
-  return albums.filter((album: any) => album.visible === false);
-};
+// const getHiddenAlbums = (albums: any[]) => {
+//   return albums.filter((album: any) => album.visible === false);
+// };
 
 const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +41,7 @@ const ArtistAlbums = ({ active, artistId }: ArtistAlbumsProps) => {
         setIsLoading(false);
       });
     }
-  }, [active]);
+  }, [active, spotifyContext.accessToken, albums.length, artistId]);
 
   useEffect(() => {
     console.log('albums', albums);

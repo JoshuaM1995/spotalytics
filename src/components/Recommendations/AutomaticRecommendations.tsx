@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useReducer, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {Button, Tag} from "rsuite";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
@@ -8,7 +8,7 @@ import {topValueInArray} from "../../utils/global";
 import tableReducer, {TableState} from "../../reducers/tableReducer";
 import {RecommendedTrack} from "../../utils/types";
 import RecommendationTable from "./RecommendationTable";
-import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA} from "../../actions/tableActions";
+import {IS_NOT_LOADING, UPDATE_DATA} from "../../actions/tableActions";
 
 enum Feature {
   DANCEABILITY = 'DANCEABILITY',
@@ -184,48 +184,50 @@ const AutomaticRecommendations = () => {
           totalDurationMs += feature.duration_ms;
         });
 
-        setFeatureValues({
-          ...featureValues,
-          danceability: {
-            ...featureValues.danceability,
-            average: totalDanceability / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.DANCEABILITY, totalDanceability / TRACKS_TO_ANALYZE),
-          },
-          energy: {
-            ...featureValues.energy,
-            average: totalEnergy / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.ENERGY, totalEnergy / TRACKS_TO_ANALYZE),
-          },
-          loudness: {
-            ...featureValues.loudness,
-            average: totalLoudness / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.LOUDNESS, totalLoudness / TRACKS_TO_ANALYZE),
-          },
-          positivity: {
-            ...featureValues.positivity,
-            average: totalPositivity / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.POSITIVITY, totalPositivity / TRACKS_TO_ANALYZE),
-          },
-          speed: {
-            ...featureValues.speed,
-            average: totalSpeed / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.SPEED, totalSpeed / TRACKS_TO_ANALYZE),
-          },
-          instrumentalness: {
-            ...featureValues.instrumentalness,
-            average: totalInstrumentalness / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.INSTRUMENTALNESS, totalInstrumentalness / TRACKS_TO_ANALYZE),
-          },
-          liveness: {
-            ...featureValues.liveness,
-            average: totalLiveness / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.LIVENESS, totalLiveness / TRACKS_TO_ANALYZE),
-          },
-          durationMs: {
-            ...featureValues.durationMs,
-            average: totalDurationMs / TRACKS_TO_ANALYZE,
-            description: getFeatureDescription(Feature.DURATION, totalDurationMs / TRACKS_TO_ANALYZE),
-          },
+        setFeatureValues((featureValues) => {
+          return {
+            ...featureValues,
+            danceability: {
+              ...featureValues.danceability,
+              average: totalDanceability / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.DANCEABILITY, totalDanceability / TRACKS_TO_ANALYZE),
+            },
+            energy: {
+              ...featureValues.energy,
+              average: totalEnergy / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.ENERGY, totalEnergy / TRACKS_TO_ANALYZE),
+            },
+            loudness: {
+              ...featureValues.loudness,
+              average: totalLoudness / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.LOUDNESS, totalLoudness / TRACKS_TO_ANALYZE),
+            },
+            positivity: {
+              ...featureValues.positivity,
+              average: totalPositivity / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.POSITIVITY, totalPositivity / TRACKS_TO_ANALYZE),
+            },
+            speed: {
+              ...featureValues.speed,
+              average: totalSpeed / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.SPEED, totalSpeed / TRACKS_TO_ANALYZE),
+            },
+            instrumentalness: {
+              ...featureValues.instrumentalness,
+              average: totalInstrumentalness / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.INSTRUMENTALNESS, totalInstrumentalness / TRACKS_TO_ANALYZE),
+            },
+            liveness: {
+              ...featureValues.liveness,
+              average: totalLiveness / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.LIVENESS, totalLiveness / TRACKS_TO_ANALYZE),
+            },
+            durationMs: {
+              ...featureValues.durationMs,
+              average: totalDurationMs / TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.DURATION, totalDurationMs / TRACKS_TO_ANALYZE),
+            },
+          };
         });
       });
     });
@@ -236,7 +238,16 @@ const AutomaticRecommendations = () => {
         name: response[0].name,
       });
     });
-  }, []);
+  }, [
+    spotifyApi,
+    featureValues.danceability.average,
+    featureValues.energy.average,
+    featureValues.loudness.average,
+    featureValues.positivity.average,
+    featureValues.speed.average,
+    featureValues.instrumentalness.average,
+    featureValues.liveness.average,
+  ]);
 
   useEffect(() => {
     console.log('recommendations', recommendations);

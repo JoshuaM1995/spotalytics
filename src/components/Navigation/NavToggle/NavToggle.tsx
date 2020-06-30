@@ -58,13 +58,13 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
                   eventKey="5-2"
                   icon={<Icon icon="spotify"/>}
                   renderItem={() => (
-                    <a
+                    <span
                       className="rs-dropdown-item-content"
                       onClick={() => unlinkSpotifyAccount()}
                     >
                       <Icon icon={isUnlinkIconLoading ? 'spinner' : 'spotify'} pulse={isUnlinkIconLoading}/>
                       {isUnlinkIconLoading ? 'Unlinking Spotify...' : 'Unlink Application'}
-                    </a>
+                    </span>
                   )}
                 >
                 </Dropdown.Item>

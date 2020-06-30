@@ -20,7 +20,7 @@ const FollowArtistButton = ({ artistId, setFollowers }: FollowingArtistButtonPro
     spotifyApi.getIsCurrentUserFollowingArtists([artistId]).then((isFollowing: any) => {
       setIsUserFollowing(isFollowing[0]);
     });
-  }, []);
+  }, [spotifyApi, artistId]);
 
   useEffect(() => {
     if(isUserFollowing) {

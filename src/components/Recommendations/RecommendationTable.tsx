@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Alert,
-  Button, Checkbox,
+  Button,
   ControlLabel,
   Form,
-  FormControl,
   FormGroup,
   Icon,
   IconButton, Input,

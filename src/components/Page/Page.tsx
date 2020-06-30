@@ -14,7 +14,7 @@ const Page = ({ title, style, contentStyle, children }: PropsWithChildren<PagePr
     if(process.env.REACT_APP_SITE_NAME && title) {
       document.title = `${process.env.REACT_APP_SITE_NAME} - ${title}`;
     }
-  }, []);
+  }, [title]);
 
   return (
     <Container style={style}>

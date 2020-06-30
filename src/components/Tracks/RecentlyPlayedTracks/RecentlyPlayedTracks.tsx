@@ -80,7 +80,7 @@ const RecentlyPlayedTracks = () => {
 
       setTracks(tracksToAdd);
     });
-  }, []);
+  }, [spotifyContext.accessToken]);
 
   useEffect(() => {
     setData(getFilteredTableData<RecentlyPlayedTrack>(recentlyPlayedTracks, page, displayLength));

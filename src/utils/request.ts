@@ -1,6 +1,5 @@
 import {ApiMethod} from "./constants";
-import axios, {AxiosRequestConfig, CancelToken} from "axios";
-import jwt from "jsonwebtoken";
+import {AxiosRequestConfig, CancelToken} from "axios";
 
 export default function getRequestBody<Response = any>(
   method: ApiMethod,

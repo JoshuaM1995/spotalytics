@@ -16,9 +16,9 @@ const FollowedArtists = () => {
 
     spotifyApi.getCurrentUserFollowedArtists().then((response: any) => {
       setArtists(response.artists.items);
-      setPageTitle(`${pageTitle} (${response.artists.total})`);
+      setPageTitle((pageTitle) => `${pageTitle} (${response.artists.total})`);
     });
-  }, []);
+  }, [spotifyContext.accessToken]);
 
   const loadItems = () => {
     // Only make API requests if there are items to load

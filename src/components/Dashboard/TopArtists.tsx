@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {numberWithCommas} from "../../utils/global";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
-import {Button, Icon, Panel, SelectPicker} from "rsuite";
+import {Button, Icon, SelectPicker} from "rsuite";
 
 interface TopArtistsProps {
   timeRange?: TimeRange;
@@ -38,7 +38,7 @@ const TopArtists = ({limit = 5, timeRange = TimeRange.SHORT_TERM}: TopArtistsPro
 
       setTopArtistsImages(images);
     });
-  }, [topArtistsTimeRange]);
+  }, [topArtistsTimeRange, limit, spotifyApi]);
 
   return (
     <>

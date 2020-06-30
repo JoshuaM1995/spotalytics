@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import Page from '../Page/Page';
 import {Col, Icon, IconButton, Panel, Row} from "rsuite";
 import SpotifyApi from "../../api/SpotifyApi";
-import SpotifyContext, {SpotifyContextValues} from "../../context/spotify";
+import SpotifyContext from "../../context/spotify";
 import {Redirect, useParams} from "react-router";
 import {SPOTIFY_CONTEXT} from "../../utils/constants";
 
@@ -11,22 +11,22 @@ const accessToken = urlParams.get('#access_token') ?? '';
 
 const AuthenticateSpotify = () => {
   const { action } = useParams();
-  const {spotifyContext, setSpotifyContext} = useContext(SpotifyContext);
+  const {spotifyContext, setSpotifyContext} = useContext<SpotifyContext>(SpotifyContext);
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     if (accessToken) {
       const spotifyApi = new SpotifyApi(accessToken);
       spotifyApi.getCurrentUserProfile().then((currentUser: SpotifyApi.CurrentUsersProfileResponse) => {
-        const context: SpotifyContextValues = {
-          ...spotifyContext,
-          isAuthenticated: true,
-          accessToken,
-          currentUser,
-        };
-
-        setSpotifyContext(context);
-        localStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(context));
+        setSpotifyContext((spotifyContext: SpotifyContext) => {
+          return {
+            ...spotifyContext,
+            isAuthenticated: true,
+            accessToken,
+            currentUser,
+          };
+        });
+        localStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(spotifyContext));
         setRedirect(true);
       });
     }
@@ -40,7 +40,7 @@ const AuthenticateSpotify = () => {
       });
       localStorage.removeItem(SPOTIFY_CONTEXT);
     }
-  }, []);
+  }, [action, spotifyContext, setSpotifyContext]);
 
   return (
     <>

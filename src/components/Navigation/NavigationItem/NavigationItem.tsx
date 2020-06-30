@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, ReactChildren} from 'react';
+import React, {PropsWithChildren} from 'react';
 import {Nav} from "rsuite";
 import {Link, Route} from "react-router-dom";
 

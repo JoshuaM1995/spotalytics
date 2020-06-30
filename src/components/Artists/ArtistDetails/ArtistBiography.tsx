@@ -24,7 +24,7 @@ const ArtistBiography = ({ artistName, active }: ArtistBioProps) => {
         setArtistInfo(info.artist);
       });
     }
-  }, [active]);
+  }, [artistName, active, artistInfo]);
 
   return (
     <>

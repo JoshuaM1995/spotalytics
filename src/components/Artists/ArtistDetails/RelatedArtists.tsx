@@ -20,7 +20,7 @@ const RelatedArtists = ({ active, artistId }: RelatedArtistsProps) => {
         setArtists(relatedArtists);
       });
     }
-  }, [active]);
+  }, [active, artistId, artists.length, spotifyContext.accessToken]);
 
   return <ArtistList artists={artists} />
 };

@@ -1,10 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Page from "../../Page/Page";
 import {useParams} from "react-router";
-import {Badge, Col, Icon, List, Panel, Row, Table} from "rsuite";
+import {Badge, Col, Icon, Panel, Row, Table} from "rsuite";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
-import moment from "moment";
 import './AlbumDetails.scss';
 import {Link} from "react-router-dom";
 import {getTrackLength} from "../../../utils/track";
@@ -48,7 +47,7 @@ const AlbumDetails = () => {
     spotifyApi.getAlbumInfo(albumId).then((album: any) => {
       setAlbumInfo(album);
     });
-  }, []);
+  }, [albumId, spotifyContext.accessToken]);
 
   return (
     <Page>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
 import 'rsuite/dist/styles/rsuite-dark.min.css';

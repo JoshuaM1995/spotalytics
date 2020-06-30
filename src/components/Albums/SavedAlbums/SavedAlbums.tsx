@@ -20,7 +20,7 @@ const SavedAlbums = () => {
       setAlbums(response.items);
       setPageTitle(`${pageTitle} (${response.total})`);
     });
-  }, []);
+  }, [pageTitle, spotifyContext.accessToken]);
 
   const loadItems = (page: number) => {
     const offset = itemsPerPage * (page - 1);

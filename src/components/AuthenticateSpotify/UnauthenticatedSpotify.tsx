@@ -17,7 +17,11 @@ const UnauthenticatedSpotify = () => {
                 from your list of "approved applications"
               </h5>
               <br/>
-              <a href="https://www.spotify.com/ca-en/account/apps/" target="_blank">
+              <a
+                href="https://www.spotify.com/ca-en/account/apps/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <IconButton
                   icon={<Icon icon="spotify"/>}
                   placement="left"

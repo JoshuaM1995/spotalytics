@@ -4,7 +4,6 @@ import SpotifyApi from "../../api/SpotifyApi";
 import SpotifyContext from "../../context/spotify";
 import {Field} from "formik";
 import _ from "lodash";
-import {RecommendationDataOption} from "../../api/interfaces/requests/spotify/spotifyAdvancedRecommendationOptions";
 
 interface RecommendationSeedDataProps {
   title: string;
@@ -37,7 +36,7 @@ const RecommendationSeedData = ({
       });
       setGenreOptions(genres);
     });
-  }, []);
+  }, [spotifyApi]);
 
   const searchArtists = _.debounce((searchTerm: string) => {
     setAreArtistsLoading(true);

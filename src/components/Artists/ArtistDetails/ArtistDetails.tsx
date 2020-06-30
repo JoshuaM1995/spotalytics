@@ -33,7 +33,7 @@ const ArtistDetails = () => {
       setArtistInfo(artist);
       setFollowers(artist.followers.total);
     });
-  }, []);
+  }, [artistId, spotifyContext.accessToken]);
 
   const changeTab = (activeKey: Tab) => {
     setActiveTab(activeKey);

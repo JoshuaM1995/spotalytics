@@ -52,7 +52,7 @@ const Dashboard = () => {
     } else {
       setTotalTracks(totalTrackCountCache);
     }
-  }, []);
+  }, [spotifyContext.accessToken]);
 
   return (
     <Page title="Dashboard">

@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FlexboxGrid, List, PanelGroup, Placeholder, Progress, SelectPicker} from "rsuite";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import {Link} from "react-router-dom";
-import axios, {AxiosResponse} from 'axios';
 import {getProgressLineProps} from "../../../utils/progress";
 import {isoCountries, placeholderItems} from "../../../utils/global";
 
@@ -19,22 +18,7 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
   const {spotifyContext} = useContext(SpotifyContext);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
-  useEffect(() => {
-    // Only load the related artists when the tab becomes active, and if they haven't already been loaded
-    if(active && topTracks.length === 0) {
-      // Get the top tracks based on the user's country code
-      getTopTracks(spotifyContext.currentUser?.country ?? 'US');
-      setCountryCode(spotifyContext.currentUser?.country ?? 'US');
-    }
-  }, [active]);
-
-  useEffect(() => {
-    if(countryCode) {
-      getTopTracks(countryCode);
-    }
-  }, [countryCode]);
-
-  const getTopTracks = (countryCode: string) => {
+  const getTopTracks = useCallback((countryCode: string) => {
     let countryCodeExistsInFetchedTracks = false;
 
     for(let i = 0; i < topTracksFetched.length; i++) {
@@ -55,13 +39,16 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
     if (!countryCodeExistsInFetchedTracks) {
       spotifyApi.getTopTracksByCountry(artistId, countryCode).then((tracks) => {
         tracks.map((track: any) => {
-          track.country_code = countryCode;
+          return {
+            ...track,
+            'country_code': countryCode,
+          };
         });
         setTopTracks(tracks);
         setTopTracksFetched([ ...topTracksFetched, tracks ]);
       });
     } else {
-      topTracksFetched.map((tracks: any[]) => {
+      topTracksFetched.forEach((tracks: any[]) => {
         const topTracksByCountry = tracks.filter((track: any) => {
           return track.country_code === countryCode;
         });
@@ -73,7 +60,22 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
     }
 
     return topTracks;
-  };
+  }, [artistId, spotifyApi, topTracks, topTracksFetched]);
+
+  useEffect(() => {
+    // Only load the related artists when the tab becomes active, and if they haven't already been loaded
+    if(active && topTracks.length === 0) {
+      // Get the top tracks based on the user's country code
+      getTopTracks(spotifyContext.currentUser?.country ?? 'US');
+      setCountryCode(spotifyContext.currentUser?.country ?? 'US');
+    }
+  }, [active, spotifyContext.currentUser, topTracks.length, getTopTracks]);
+
+  useEffect(() => {
+    if(countryCode) {
+      getTopTracks(countryCode);
+    }
+  }, [countryCode, getTopTracks]);
 
   const changeCountry = (country: string) => {
     setCountryCode(country);
