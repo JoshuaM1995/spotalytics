@@ -25,7 +25,9 @@ export default class SpotifyApi {
       '?response_type=token' +
       '&client_id=' + process.env.REACT_APP_SPOTIFY_CLIENT_ID +
       (scopes ? '&scope=' + encodeURIComponent(scopes.join(' ')) : '') +
-      '&redirect_uri=' + encodeURIComponent('http://localhost:3000/authenticate-spotify');
+      '&redirect_uri=' + encodeURIComponent(
+        `${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}/authenticate-spotify`
+      );
   }
 
   public getTotalArtistCount(limit: number = 1): Promise<number> {
