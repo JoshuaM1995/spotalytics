@@ -38,7 +38,7 @@ const TopArtists = ({limit = 5, timeRange = TimeRange.SHORT_TERM}: TopArtistsPro
 
       setTopArtistsImages(images);
     });
-  }, [topArtistsTimeRange, limit, spotifyApi]);
+  }, [topArtistsTimeRange, limit]);
 
   return (
     <>

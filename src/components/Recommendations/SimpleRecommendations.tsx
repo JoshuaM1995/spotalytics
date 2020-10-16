@@ -136,7 +136,7 @@ const SimpleRecommendations = () => {
 
   useEffect(() => {
     tableStateDispatch({ type: UPDATE_DATA, value: recommendations });
-  }, [recommendations]);
+  }, []);
 
   const getRecommendations = (formValues: SpotifySimpleRecommendationOptions) => {
     tableStateDispatch({ type: IS_LOADING });

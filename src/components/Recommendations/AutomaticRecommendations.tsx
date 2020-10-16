@@ -238,21 +238,12 @@ const AutomaticRecommendations = () => {
         name: response[0].name,
       });
     });
-  }, [
-    spotifyApi,
-    featureValues.danceability.average,
-    featureValues.energy.average,
-    featureValues.loudness.average,
-    featureValues.positivity.average,
-    featureValues.speed.average,
-    featureValues.instrumentalness.average,
-    featureValues.liveness.average,
-  ]);
+  }, []);
 
   useEffect(() => {
     console.log('recommendations', recommendations);
     tableStateDispatch({ type: UPDATE_DATA, value: recommendations });
-  }, [recommendations]);
+  }, []);
 
   const getRecommendations = () => {
     spotifyApi.getFilteredRecommendations({

@@ -37,7 +37,7 @@ const TopAlbums = ({limit = 5, timeRange = TimeRange.SHORT_TERM}: TopAlbumsProps
 
       setTopAlbumsImages(images);
     });
-  }, [topAlbumsTimeRange, limit, spotifyApi]);
+  }, [topAlbumsTimeRange, limit]);
 
   return (
     <>

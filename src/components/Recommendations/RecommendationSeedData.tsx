@@ -36,7 +36,7 @@ const RecommendationSeedData = ({
       });
       setGenreOptions(genres);
     });
-  }, [spotifyApi]);
+  }, []);
 
   const searchArtists = _.debounce((searchTerm: string) => {
     setAreArtistsLoading(true);
