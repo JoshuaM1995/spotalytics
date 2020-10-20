@@ -75,7 +75,7 @@ const ArtistTopTracks = ({artistId, active}: TopTracksProps) => {
     if(countryCode) {
       getTopTracks(countryCode);
     }
-  }, [countryCode, getTopTracks]);
+  }, [countryCode]);
 
   const changeCountry = (country: string) => {
     setCountryCode(country);
