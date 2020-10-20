@@ -79,7 +79,7 @@ const SideNavigation = () => {
                 path="/albums/top"
                 eventKey="3-2"
               >
-                <Icon icon="heart" />
+                <Icon icon="bar-chart-ranking" flip="horizontal" />
                 Top Albums
               </DropdownItemLink>
               <DropdownItemLink
@@ -96,9 +96,14 @@ const SideNavigation = () => {
               title="Tracks"
               icon={<Icon icon="music"/>}
             >
-              <Dropdown.Item eventKey="4-1" icon={<Icon icon="bar-chart-ranking" flip="horizontal"/>}>
+              <DropdownItemLink
+                to="/tracks/top"
+                path="/tracks/top"
+                eventKey="3-2"
+              >
+                <Icon icon="bar-chart-ranking" flip="horizontal" />
                 Top Tracks
-              </Dropdown.Item>
+              </DropdownItemLink>
               <DropdownItemLink
                 to="/tracks/recently-played"
                 path="/tracks/recently-played"
@@ -107,9 +112,14 @@ const SideNavigation = () => {
                 <Icon icon="play" />
                 Recently Played
               </DropdownItemLink>
-              <Dropdown.Item eventKey="4-3" icon={<Icon icon="heart"/>}>
-                Saved Tracks
-              </Dropdown.Item>
+              <DropdownItemLink
+                to="/tracks/favorited"
+                path="/tracks/favorited"
+                eventKey="3-4"
+              >
+                <Icon icon="heart" />
+                Favorited Tracks
+              </DropdownItemLink>
             </Dropdown>
           </Nav>
         </Sidenav.Body>
