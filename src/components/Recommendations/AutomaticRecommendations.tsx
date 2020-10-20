@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useReducer, useState} from 'react';
-import {Button, Tag} from "rsuite";
+import {Button, Message, Tag} from "rsuite";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
 import {TimeRange} from "../../utils/constants";
@@ -39,26 +39,26 @@ interface AverageFeatureValues {
 }
 
 const initialAverageFeatureValues: AverageFeatureValues = {
-  danceability: { average: 0, description: '', color: 'violet' },
-  energy: { average: 0, description: '', color: 'orange' },
-  loudness: { average: 0, description: '', color: 'red', },
-  positivity: { average: 0, description: '', color: 'blue' },
-  speed: { average: 0, description: '', color: 'cyan' },
-  instrumentalness: { average: 0, description: '', color: 'cyan' },
-  liveness: { average: 0, description: '', color: 'cyan' },
-  durationMs: { average: 0, description: '' },
+  danceability: {average: 0, description: '', color: 'violet'},
+  energy: {average: 0, description: '', color: 'orange'},
+  loudness: {average: 0, description: '', color: 'red',},
+  positivity: {average: 0, description: '', color: 'blue'},
+  speed: {average: 0, description: '', color: 'cyan'},
+  instrumentalness: {average: 0, description: '', color: 'cyan'},
+  liveness: {average: 0, description: '', color: 'cyan'},
+  durationMs: {average: 0, description: ''},
 };
 
 const TRACKS_TO_ANALYZE = 50;
 
 const getFeatureDescription = (feature: Feature, average: number): string => {
-  switch(feature) {
+  switch (feature) {
     case Feature.DANCEABILITY:
       let danceability = 'high in';
 
-      if(average > 0 && average <= 0.5) {
+      if (average > 0 && average <= 0.5) {
         danceability = 'low in';
-      } else if(average > 0.5 && average < 0.7) {
+      } else if (average > 0.5 && average < 0.7) {
         danceability = 'medium in';
       }
 
@@ -66,9 +66,9 @@ const getFeatureDescription = (feature: Feature, average: number): string => {
     case Feature.ENERGY:
       let energy = 'high in';
 
-      if(average > 0 && average <= 0.5) {
+      if (average > 0 && average <= 0.5) {
         energy = 'low in';
-      } else if(average > 0.5 && average < 0.7) {
+      } else if (average > 0.5 && average < 0.7) {
         energy = 'medium in';
       }
 
@@ -76,9 +76,9 @@ const getFeatureDescription = (feature: Feature, average: number): string => {
     case Feature.LOUDNESS:
       let loudness = 'very';
 
-      if(average > -60 && average <= -30) {
+      if (average > -60 && average <= -30) {
         loudness = 'not very';
-      } else if(average > -30 && average < -10) {
+      } else if (average > -30 && average < -10) {
         loudness = 'somewhat';
       }
 
@@ -86,9 +86,9 @@ const getFeatureDescription = (feature: Feature, average: number): string => {
     case Feature.POSITIVITY:
       let positivity = 'high in';
 
-      if(average > 0 && average <= 0.5) {
+      if (average > 0 && average <= 0.5) {
         positivity = 'low in';
-      } else if(average > 0.5 && average < 0.7) {
+      } else if (average > 0.5 && average < 0.7) {
         positivity = 'medium in';
       }
 
@@ -96,28 +96,29 @@ const getFeatureDescription = (feature: Feature, average: number): string => {
     case Feature.SPEED:
       let speed = 'very';
 
-      if(average > 0 && average <= 60) {
+      if (average > 0 && average <= 60) {
         speed = 'not very';
-      } else if(average > 60 && average < 120) {
+      } else if (average > 60 && average < 120) {
         speed = 'somewhat';
       }
 
       return speed;
     case Feature.INSTRUMENTALNESS:
-      if(average <= 0.5) {
+      if (average <= 0.5) {
         return 'non-instrumental';
       } else {
         return 'instrumental';
       }
     case Feature.LIVENESS:
-      if(average <= 0.5) {
+      if (average <= 0.5) {
         return 'in the studio';
       } else {
         return 'live';
       }
     case Feature.DURATION:
       return moment.duration(average).asMinutes().toFixed(1).toString() + ' minutes';
-    default: return '';
+    default:
+      return '';
   }
 }
 
@@ -135,7 +136,7 @@ const AutomaticRecommendations = () => {
   });
   const [topGenre, setTopGenre] = useState<string>();
   const [recommendations, setRecommendations] = useState<RecommendedTrack[]>([]);
-  const [ featureValues, setFeatureValues ] = useState<AverageFeatureValues>(
+  const [featureValues, setFeatureValues] = useState<AverageFeatureValues>(
     initialAverageFeatureValues
   );
   const {spotifyContext} = useContext(SpotifyContext);
@@ -152,16 +153,18 @@ const AutomaticRecommendations = () => {
         artistIds.push(track.artists[0].id);
       });
 
-      spotifyApi.getArtistsInfo(artistIds).then((artistsInfo) => {
-        let genres: any[] = [];
+      if (artistIds.length > 0) {
+        spotifyApi.getArtistsInfo(artistIds).then((artistsInfo) => {
+          let genres: any[] = [];
 
-        artistsInfo.forEach((artist) => {
-          genres = [ ...genres, artist.genres ];
+          artistsInfo.forEach((artist) => {
+            genres = [...genres, artist.genres];
+          });
+
+          genres = genres.flat();
+          setTopGenre(topValueInArray(genres));
         });
-
-        genres = genres.flat();
-        setTopGenre(topValueInArray(genres));
-      });
+      }
 
       spotifyApi.getTracksFeatures(trackIds).then((trackFeatures: SpotifyApi.AudioFeaturesObject[]) => {
         let totalDanceability = featureValues.danceability.average;
@@ -174,14 +177,16 @@ const AutomaticRecommendations = () => {
         let totalDurationMs = 0;
 
         trackFeatures.forEach((feature) => {
-          totalDanceability += feature.danceability;
-          totalEnergy += feature.energy;
-          totalLoudness += feature.loudness;
-          totalPositivity += feature.valence;
-          totalSpeed += feature.tempo;
-          totalInstrumentalness += feature.instrumentalness;
-          totalLiveness += feature.liveness;
-          totalDurationMs += feature.duration_ms;
+          if (feature) {
+            totalDanceability += feature.danceability;
+            totalEnergy += feature.energy;
+            totalLoudness += feature.loudness;
+            totalPositivity += feature.valence;
+            totalSpeed += feature.tempo;
+            totalInstrumentalness += feature.instrumentalness;
+            totalLiveness += feature.liveness;
+            totalDurationMs += feature.duration_ms;
+          }
         });
 
         setFeatureValues((featureValues) => {
@@ -233,16 +238,17 @@ const AutomaticRecommendations = () => {
     });
 
     spotifyApi.getTopArtists(1, TimeRange.LONG_TERM).then((response) => {
-      setTopArtist({
-        id: response[0].id,
-        name: response[0].name,
-      });
+      if (response.length > 0) {
+        setTopArtist({
+          id: response[0].id,
+          name: response[0].name,
+        });
+      }
     });
   }, []);
 
   useEffect(() => {
-    console.log('recommendations', recommendations);
-    tableStateDispatch({ type: UPDATE_DATA, value: recommendations });
+    tableStateDispatch({type: UPDATE_DATA, value: recommendations});
   }, []);
 
   const getRecommendations = () => {
@@ -271,33 +277,81 @@ const AutomaticRecommendations = () => {
         });
       });
 
-      tableStateDispatch({ type: IS_NOT_LOADING });
+      tableStateDispatch({type: IS_NOT_LOADING});
       setRecommendations(tracksToAdd);
     });
   };
 
+  const shouldShowRecommendationBlockOne = () => {
+    return featureValues.danceability.average > 0 && featureValues.energy.average > 0 &&
+      featureValues.positivity.average > 0 && featureValues.loudness.average > -120 &&
+      featureValues.speed.average > 0;
+  };
+
+  const shouldShowRecommendationBlockTwo = () => {
+    return featureValues.instrumentalness.average > 0 && featureValues.liveness.average > 0 &&
+      featureValues.durationMs.average > 0;
+  };
+
+  const shouldShowRecommendationBlockThree = () => {
+    return topArtist.name && topGenre;
+  };
+
   return (
     <>
-      <h5 style={{marginLeft: 8}}>
-        The music you listen to most is:{' '}
-        {featureValues.danceability.description} <Tag color={featureValues.danceability.color}>danceability</Tag>{' '}
-        {featureValues.energy.description}<Tag color={featureValues.energy.color}>energy</Tag>{' '}
-        {featureValues.positivity.description}<Tag color={featureValues.positivity.color}>positivity</Tag>{' '}
-        {featureValues.loudness.description}<Tag color={featureValues.loudness.color}>loud</Tag>{' '}
-        and {featureValues.speed.description}<Tag color={featureValues.speed.color}>fast</Tag>
-        <br /><br />
+      <div style={{marginLeft: 8}}>
+        {shouldShowRecommendationBlockOne() &&
+        <>
+          <h5>
+            The music you listen to most is:{' '}
+            {featureValues.danceability.description} <Tag
+            color={featureValues.danceability.color}>danceability</Tag>{' '}
+            {featureValues.energy.description}<Tag color={featureValues.energy.color}>energy</Tag>{' '}
+            {featureValues.positivity.description}<Tag color={featureValues.positivity.color}>positivity</Tag>{' '}
+            {featureValues.loudness.description}<Tag color={featureValues.loudness.color}>loud</Tag>{' '}
+            and {featureValues.speed.description}<Tag color={featureValues.speed.color}>fast</Tag>
+          </h5>
+          <br/>
+        </>
+        }
 
-        You tend to prefer <Tag>{featureValues.instrumentalness.description}</Tag> tracks which are generally
-        recorded<Tag>in the studio</Tag>. The songs you listen to tend to be around
-        <Tag>{featureValues.durationMs.description}</Tag> long on average.
-        <br /><br />
+        {shouldShowRecommendationBlockTwo() &&
+        <>
+          <h5>
+            You tend to prefer <Tag>{featureValues.instrumentalness.description}</Tag> tracks which are generally
+            recorded<Tag>in the studio</Tag>. The songs you listen to tend to be around
+            <Tag>{featureValues.durationMs.description}</Tag> long on average.
+          </h5>
+          <br/>
+        </>
+        }
 
-        Your top artist is <Tag>{topArtist.name}</Tag> and your top genre is<Tag>{topGenre}</Tag>.
-      </h5>
-      <br /><br />
+        {shouldShowRecommendationBlockThree() &&
+        <>
+          <h5>
+            Your top artist is <Tag>{topArtist.name}</Tag> and your top genre is<Tag>{topGenre}</Tag>.
+          </h5>
+          <br/>
+        </>
+        }
 
-      <Button color="green" onClick={getRecommendations}>Get Recommendations</Button>
-      <br />
+        {!shouldShowRecommendationBlockOne() && !shouldShowRecommendationBlockTwo() && !shouldShowRecommendationBlockThree() &&
+        <>
+          <Message
+            type="warning"
+            title="Not enough data"
+            description={`There isn't enough data to automatically determine what type of music you listen to the most.
+            Try listening to more music to change this, or use the simple/advanced filters to manually choose what
+            type of recommendations you'd like to see.`}
+          />
+        </>
+        }
+      </div>
+
+      {shouldShowRecommendationBlockOne() && shouldShowRecommendationBlockTwo() && shouldShowRecommendationBlockThree() &&
+        <Button color="green" onClick={getRecommendations}>Get Recommendations</Button>
+      }
+      <br/>
 
       <RecommendationTable
         recommendations={recommendations}
