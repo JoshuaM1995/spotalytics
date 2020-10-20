@@ -9,6 +9,7 @@ import TopAlbums from "./TopAlbums";
 import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
 import apiRequest from "../../utils/apiRequest";
 import './Dashboard.scss';
+import SpotifyApi from '../../api/SpotifyApi';
 
 const cache = require('localstorage-ttl');
 
@@ -16,39 +17,37 @@ const Dashboard = () => {
   const [totalArtists, setTotalArtists] = useState(0);
   const [totalAlbums, setTotalAlbums] = useState(0);
   const [totalTracks, setTotalTracks] = useState(0);
-  const { spotifyContext } = useContext(SpotifyContext);
+  const {spotifyContext} = useContext(SpotifyContext);
 
   useEffect(() => {
     const totalArtistCountCache = cache.get(CacheKey.FOLLOWED_ARTISTS_COUNT);
     const totalAlbumCountCache = cache.get(CacheKey.ALBUMS_SAVED_COUNT);
     const totalTrackCountCache = cache.get(CacheKey.TRACKS_FAVORITED_COUNT);
+    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
-    if(!totalArtistCountCache) {
-      apiRequest<number>('artists/total', ApiMethod.GET, spotifyContext.accessToken)
-        .then((response) => {
-          setTotalArtists(response.data);
-          cache.set(CacheKey.FOLLOWED_ARTISTS_COUNT, response.data, 300000);
-        });
+    if (!totalArtistCountCache) {
+      spotifyApi.getTotalArtistCount().then(totalArtistCount => {
+        setTotalArtists(totalArtistCount);
+        cache.set(CacheKey.FOLLOWED_ARTISTS_COUNT, totalArtistCount, 300000);
+      });
     } else {
       setTotalArtists(totalArtistCountCache);
     }
 
-    if(!totalAlbumCountCache) {
-      apiRequest<number>('albums/total', ApiMethod.GET, spotifyContext.accessToken)
-        .then((response) => {
-          setTotalAlbums(response.data);
-          cache.set(CacheKey.ALBUMS_SAVED_COUNT, response.data, 300000);
-        });
+    if (!totalAlbumCountCache) {
+      spotifyApi.getTotalAlbumCount().then(totalAlbumCount => {
+        setTotalAlbums(totalAlbumCount);
+        cache.set(CacheKey.ALBUMS_SAVED_COUNT, totalAlbumCount, 300000);
+      });
     } else {
       setTotalAlbums(totalAlbumCountCache);
     }
 
-    if(!totalTrackCountCache) {
-      apiRequest<number>('tracks/total', ApiMethod.GET, spotifyContext.accessToken)
-        .then((response) => {
-          setTotalTracks(response.data);
-          cache.set(CacheKey.TRACKS_FAVORITED_COUNT, response.data, 300000);
-        });
+    if (!totalTrackCountCache) {
+      spotifyApi.getTotalTrackCount().then(totalTrackCount => {
+        setTotalTracks(totalTrackCount);
+        cache.set(CacheKey.TRACKS_FAVORITED_COUNT, totalTrackCount, 300000);
+      });
     } else {
       setTotalTracks(totalTrackCountCache);
     }
@@ -62,17 +61,17 @@ const Dashboard = () => {
         closable
         showIcon
       />
-      <br />
+      <br/>
 
       <Row>
         <Col xs={24} sm={24} md={8}>
-            <StatisticCardLink
-              to="/artists/followed"
-              background={'#429321'}
-              icon="user-plus"
-              statisticValue={totalArtists}
-              statisticText="Artists Followed"
-            />
+          <StatisticCardLink
+            to="/artists/followed"
+            background={'#429321'}
+            icon="user-plus"
+            statisticValue={totalArtists}
+            statisticText="Artists Followed"
+          />
         </Col>
         <Col xs={24} sm={24} md={8}>
           <StatisticCardLink
@@ -93,20 +92,20 @@ const Dashboard = () => {
           />
         </Col>
       </Row>
-      <br />
+      <br/>
 
       <Panel className="panel-light">
-        <TopArtists />
+        <TopArtists/>
       </Panel>
-      <br />
+      <br/>
 
       <Panel className="panel-light">
-        <TopAlbums />
+        <TopAlbums/>
       </Panel>
-      <br />
+      <br/>
 
       <Panel className="panel-light">
-        <TopTracks timeRange={TimeRange.SHORT_TERM} limit={10} />
+        <TopTracks timeRange={TimeRange.SHORT_TERM} limit={10}/>
       </Panel>
     </Page>
   );

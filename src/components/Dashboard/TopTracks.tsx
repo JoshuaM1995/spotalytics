@@ -5,8 +5,9 @@ import {getProgressLineProps} from "../../utils/progress";
 import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
 import SpotifyContext from "../../context/spotify";
 import apiRequest from "../../utils/apiRequest";
+import SpotifyApi from "../../api/SpotifyApi";
 
-const ls = require('localstorage-ttl');
+const cache = require('localstorage-ttl');
 
 interface TopTracksProps {
   timeRange?: TimeRange;
@@ -36,20 +37,17 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
   const {spotifyContext} = useContext(SpotifyContext);
 
   useEffect(() => {
-    const topTracksCache = ls.get(CacheKey.DASHBOARD_TOP_TRACKS);
+    const topTracksCache = cache.get(CacheKey.DASHBOARD_TOP_TRACKS);
+    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     if (!topTracksCache || (topTracksCache && !topTracksCache[topTracksTimeRange])) {
-      const body = {
-        options: { time_range: topTracksTimeRange, limit },
-      };
-      apiRequest<any>('tracks/top/me', ApiMethod.GET, spotifyContext.accessToken, body)
-        .then((response) => {
-          setTopTracks(getTopTracksValues(response.data.items));
+      spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
+          setTopTracks(getTopTracksValues(tracks));
 
           // Cache the results for an hour so we don't make constant api requests
-          ls.set(CacheKey.DASHBOARD_TOP_TRACKS, {
+          cache.set(CacheKey.DASHBOARD_TOP_TRACKS, {
             ...topTracksCache,
-            [topTracksTimeRange]: getTopTracksValues(response.data.items),
+            [topTracksTimeRange]: getTopTracksValues(tracks),
           }, 1000 * 60 * 60);
         });
     } else {
