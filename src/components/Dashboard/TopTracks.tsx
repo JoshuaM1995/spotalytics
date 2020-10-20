@@ -42,14 +42,14 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
 
     if (!topTracksCache || (topTracksCache && !topTracksCache[topTracksTimeRange])) {
       spotifyApi.getTopTracks(topTracksTimeRange, limit).then(tracks => {
-          setTopTracks(getTopTracksValues(tracks));
+        setTopTracks(getTopTracksValues(tracks));
 
-          // Cache the results for an hour so we don't make constant api requests
-          cache.set(CacheKey.DASHBOARD_TOP_TRACKS, {
-            ...topTracksCache,
-            [topTracksTimeRange]: getTopTracksValues(tracks),
-          }, 1000 * 60 * 60);
-        });
+        // Cache the results for an hour so we don't make constant api requests
+        cache.set(CacheKey.DASHBOARD_TOP_TRACKS, {
+          ...topTracksCache,
+          [topTracksTimeRange]: getTopTracksValues(tracks),
+        }, 1000 * 60 * 60);
+      });
     } else {
       setTopTracks(topTracksCache[topTracksTimeRange]);
     }
@@ -78,6 +78,7 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
     <>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h3>Top Tracks</h3>
+        {topTracks.length > 0 &&
         <SelectPicker
           defaultValue={timeRange}
           value={topTracksTimeRange}
@@ -87,10 +88,18 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
           searchable={false}
           onChange={(value) => setTopTracksTimeRange(value)}
         />
+        }
       </div>
       <br/>
-      <List hover>
-        {topTracks.map((track: any, index: number) => (
+      {topTracks.length === 0 &&
+        <div style={{ width: '60%', margin: '0 auto', textAlign: 'center' }}>
+          <Icon icon="question-circle" size="5x" /><br />
+          <h3>Not Enough Data</h3>
+          <h5>You haven't listened to enough music to determine your top tracks yet. Listen to some more music and try again later.</h5>
+        </div>
+      }
+      {topTracks.length > 0 && topTracks.map((track: any, index: number) => (
+        <List hover>
           <List.Item key={track.track_name} index={index}>
             <FlexboxGrid>
               <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
@@ -131,16 +140,16 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
               </FlexboxGrid.Item>
             </FlexboxGrid>
           </List.Item>
-        ))}
-      </List>
+        </List>
+      ))}
       <br/>
 
-      <div className="btn-more">
-        <Button appearance="primary" size="lg">
-          More Tracks{' '}
-          <Icon icon="long-arrow-right"/>
-        </Button>
-      </div>
+      {/*<div className="btn-more">*/}
+      {/*  <Button appearance="primary" size="lg">*/}
+      {/*    More Tracks{' '}*/}
+      {/*    <Icon icon="long-arrow-right"/>*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
     </>
   );
 };

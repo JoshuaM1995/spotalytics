@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {numberWithCommas} from "../../utils/global";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
-import {Button, Icon, SelectPicker} from "rsuite";
+import {Button, Icon, SelectPicker, FlexboxGrid} from "rsuite";
 
 interface TopArtistsProps {
   timeRange?: TimeRange;
@@ -44,27 +44,39 @@ const TopArtists = ({limit = 5, timeRange = TimeRange.SHORT_TERM}: TopArtistsPro
     <>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h3>Top Artists</h3>
-        <SelectPicker
-          defaultValue={TimeRange.SHORT_TERM}
-          value={topArtistsTimeRange}
-          data={topArtistsTimeRanges}
-          style={{width: 250}}
-          cleanable={false}
-          searchable={false}
-          onChange={(value) => setTopArtistsTimeRange(value)}
-        />
+        {topArtistsImages.length > 0 &&
+          <SelectPicker
+            defaultValue={TimeRange.SHORT_TERM}
+            value={topArtistsTimeRange}
+            data={topArtistsTimeRanges}
+            style={{width: 250}}
+            cleanable={false}
+            searchable={false}
+            onChange={(value) => setTopArtistsTimeRange(value)}
+          />
+        }
       </div>
       <br/>
 
-      <ImageBlockList images={topArtistsImages}/>
+      {
+        topArtistsImages.length === 0 &&
+        <div style={{ width: '60%', margin: '0 auto', textAlign: 'center' }}>
+          <Icon icon="question-circle" size="5x" /><br />
+          <h3>Not Enough Data</h3>
+          <h5>You haven't listened to enough music to determine your top artists yet. Listen to some more music and try again later.</h5>
+        </div>
+      }
+      {topArtistsImages.length > 0 &&
+        <ImageBlockList images={topArtistsImages}/>
+      }
       <br/>
 
-      <div className="btn-more">
-        <Button appearance="primary" size="lg">
-          More Artists{' '}
-          <Icon icon="long-arrow-right"/>
-        </Button>
-      </div>
+      {/*<div className="btn-more">*/}
+      {/*  <Button appearance="primary" size="lg">*/}
+      {/*    More Artists{' '}*/}
+      {/*    <Icon icon="long-arrow-right"/>*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
     </>
   );
 };
