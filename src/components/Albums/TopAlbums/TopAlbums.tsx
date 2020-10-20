@@ -1,12 +1,12 @@
 import React from 'react';
 import Page from "../../Page/Page";
 
-const TopArtists = () => {
+const TopAlbums = () => {
   return (
-    <Page title="Top Artists">
+    <Page title="Top Albums">
       <h4>Coming soon...</h4>
     </Page>
   );
 };
 
-export default TopArtists;
+export default TopAlbums;

@@ -74,13 +74,18 @@ const SideNavigation = () => {
               title="Albums"
               icon={<Icon icon="play-circle"/>}
             >
-              <Dropdown.Item eventKey="3-1" icon={<Icon icon="bar-chart-ranking" flip="horizontal"/>}>
+              <DropdownItemLink
+                to="/albums/top"
+                path="/albums/top"
+                eventKey="3-2"
+              >
+                <Icon icon="heart" />
                 Top Albums
-              </Dropdown.Item>
+              </DropdownItemLink>
               <DropdownItemLink
                 to="/albums/saved"
                 path="/albums/saved"
-                eventKey="3-2"
+                eventKey="3-3"
               >
                 <Icon icon="heart" />
                 Saved Albums
