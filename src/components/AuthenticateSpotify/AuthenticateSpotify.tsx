@@ -19,14 +19,17 @@ const AuthenticateSpotify = () => {
       const spotifyApi = new SpotifyApi(accessToken);
       spotifyApi.getCurrentUserProfile().then((currentUser: SpotifyApi.CurrentUsersProfileResponse) => {
         setSpotifyContext((spotifyContext: SpotifyContext) => {
-          return {
+          const newSpotifyContext = {
             ...spotifyContext,
             isAuthenticated: true,
             accessToken,
             currentUser,
           };
+          localStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(newSpotifyContext));
+
+          return newSpotifyContext;
         });
-        localStorage.setItem(SPOTIFY_CONTEXT, JSON.stringify(spotifyContext));
+
         setRedirect(true);
       });
     }
@@ -40,7 +43,7 @@ const AuthenticateSpotify = () => {
       });
       localStorage.removeItem(SPOTIFY_CONTEXT);
     }
-  }, [action, spotifyContext, setSpotifyContext]);
+  }, [action]);
 
   return (
     <>
