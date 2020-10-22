@@ -2,7 +2,7 @@ import {Dropdown, Icon, Nav, Navbar} from "rsuite";
 import React, {useContext, useState} from "react";
 import SpotifyContext from "../../../context/spotify";
 import {Redirect} from "react-router";
-import {SPOTIFY_CONTEXT} from "../../../utils/constants";
+import {CacheKey, SPOTIFY_CONTEXT} from "../../../utils/constants";
 
 interface NavToggleProps {
   expand: any;
@@ -30,6 +30,12 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
         isAuthenticated: false,
       });
       localStorage.removeItem(SPOTIFY_CONTEXT);
+
+      // Delete all the items in the cache
+      for (const cacheKey in CacheKey) {
+        localStorage.removeItem(cacheKey);
+      }
+
       setIsUnlinkIconLoading(false);
 
       setRedirect(<Redirect to="/unauthenticated-spotify" />);
