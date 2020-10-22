@@ -63,7 +63,7 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
                       onClick={() => unlinkSpotifyAccount()}
                     >
                       <Icon icon={isUnlinkIconLoading ? 'spinner' : 'spotify'} pulse={isUnlinkIconLoading}/>
-                      {isUnlinkIconLoading ? 'Unlinking Spotify...' : 'Unlink Application'}
+                      {isUnlinkIconLoading ? 'Unlinking Spotify...' : 'Unlink Account'}
                     </span>
                   )}
                 >

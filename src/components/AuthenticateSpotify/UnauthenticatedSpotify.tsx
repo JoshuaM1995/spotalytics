@@ -14,7 +14,7 @@ const UnauthenticatedSpotify = () => {
               <br/>
               <h5 style={{fontWeight: 'normal'}}>
                 Your Spotify account has been unlinked. You may now remove this site
-                from your list of "approved applications"
+                from your list of "approved applications" if you'd like.
               </h5>
               <br/>
               <a

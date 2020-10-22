@@ -65,7 +65,7 @@ const App = () => {
               <GuardedRoute path="/tracks" render={() => <TracksRoutes/>} />
               <GuardedRoute exact path="/authenticate-spotify" component={AuthenticateSpotify} />
               <GuardedRoute exact path="/authenticate-spotify/:action" component={AuthenticateSpotify} />
-              <GuardedRoute exact path="/unauthenticated-spotify" component={UnauthenticatedSpotify} />
+              <Route exact path="/unauthenticated-spotify" component={UnauthenticatedSpotify} />
               <Route path="*">
                 <NotFound/>
               </Route>
