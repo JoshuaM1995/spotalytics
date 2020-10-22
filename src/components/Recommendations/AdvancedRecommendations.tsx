@@ -116,10 +116,10 @@ const AdvancedRecommendations = () => {
                     be returned. For artists and tracks that are very new or obscure there
                     might not be enough data to generate a list of tracks."
       />
-      <br />
+      <br/>
 
-      <h3 style={{ marginLeft: 8 }}>Filters</h3>
-      <br />
+      <h3 style={{marginLeft: 8}}>Filters</h3>
+      <br/>
 
       <Formik initialValues={initialValues} onSubmit={getRecommendations}>
         {(props: FormikProps<SpotifyAdvancedRecommendationOptions>) => (
@@ -302,7 +302,8 @@ const AdvancedRecommendations = () => {
                 <br/>
                 <Field
                   name="min_key"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={keyOptions}
@@ -313,7 +314,7 @@ const AdvancedRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -321,7 +322,8 @@ const AdvancedRecommendations = () => {
                 <br/>
                 <Field
                   name="max_key"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={keyOptions}
@@ -332,7 +334,7 @@ const AdvancedRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -340,7 +342,8 @@ const AdvancedRecommendations = () => {
                 <br/>
                 <Field
                   name="min_mode"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={modalityOptions}
@@ -351,7 +354,7 @@ const AdvancedRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -359,7 +362,8 @@ const AdvancedRecommendations = () => {
                 <br/>
                 <Field
                   name="max_mode"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={modalityOptions}
@@ -370,7 +374,7 @@ const AdvancedRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
             </Row>
 
@@ -380,7 +384,8 @@ const AdvancedRecommendations = () => {
                 <br/>
                 <Field
                   name="min_time_signature"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={timeSignatureOptions}
@@ -391,7 +396,7 @@ const AdvancedRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -399,7 +404,8 @@ const AdvancedRecommendations = () => {
                 <br/>
                 <Field
                   name="max_time_signature"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={timeSignatureOptions}
@@ -410,7 +416,7 @@ const AdvancedRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -445,14 +451,15 @@ const AdvancedRecommendations = () => {
                 </ControlLabel>
                 <Field
                   name="min_popularity"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <Slider
                       {...field}
                       progress
                       onChange={(value) => form.setFieldValue('min_popularity', value)}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -465,14 +472,15 @@ const AdvancedRecommendations = () => {
                 </ControlLabel>
                 <Field
                   name="max_popularity"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <Slider
                       {...field}
                       progress
                       onChange={(value) => form.setFieldValue('max_popularity', value)}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -486,7 +494,8 @@ const AdvancedRecommendations = () => {
                 </ControlLabel>
                 <Field
                   name="min_tempo"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <Slider
                       {...field}
                       progress
@@ -496,7 +505,7 @@ const AdvancedRecommendations = () => {
                       onChange={(value) => form.setFieldValue('min_tempo', value)}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -510,7 +519,8 @@ const AdvancedRecommendations = () => {
                 </ControlLabel>
                 <Field
                   name="max_tempo"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <Slider
                       {...field}
                       progress
@@ -520,12 +530,12 @@ const AdvancedRecommendations = () => {
                       onChange={(value) => form.setFieldValue('max_tempo', value)}
                     />
                   )}
-                />
+                </Field>
               </Col>
             </Row>
             <br/>
 
-            <RecommendationSeedData title="Seed Data" showArtists showTracks showGenres />
+            <RecommendationSeedData title="Seed Data" showArtists showTracks showGenres/>
 
             <Button color="green" style={{marginTop: 35}} type="submit">
               Get Recommendations

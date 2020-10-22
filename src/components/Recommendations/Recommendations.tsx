@@ -32,13 +32,13 @@ const Recommendations = () => {
           active={activeTab === Tab.SIMPLE_FILTERS}
           onClick={() => changeTab(Tab.SIMPLE_FILTERS)}
         >
-          Simple Filters
+          Simple Recommendation Filters
         </Nav.Item>
         <Nav.Item
           active={activeTab === Tab.ADVANCED_FILTERS}
           onClick={() => changeTab(Tab.ADVANCED_FILTERS)}
         >
-          Advanced Filters
+          Advanced Recommendation Filters
         </Nav.Item>
       </Nav>
       <br />

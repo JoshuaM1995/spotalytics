@@ -21,7 +21,8 @@ const RecommendationInputNumber = ({ label, inputName, helpText, min, max, step 
       </ControlLabel>
       <Field
         name={inputName}
-        render={({field, form}: any) => (
+      >
+        {({field, form}: any) => (
           <InputNumber
             {...field}
             step={step ?? 0.1}
@@ -30,7 +31,7 @@ const RecommendationInputNumber = ({ label, inputName, helpText, min, max, step 
             onChange={(value) => form.setFieldValue(inputName, value)}
           />
         )}
-      />
+      </Field>
     </>
   );
 };

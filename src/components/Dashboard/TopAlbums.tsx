@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
 import {TimeRange} from "../../utils/constants";
-import {Button, Icon, SelectPicker} from "rsuite";
+import {Icon, SelectPicker} from "rsuite";
 
 interface TopAlbumsProps {
   timeRange?: TimeRange;

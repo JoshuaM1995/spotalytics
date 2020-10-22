@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {numberWithCommas} from "../../utils/global";
 import SpotifyContext from "../../context/spotify";
 import SpotifyApi from "../../api/SpotifyApi";
-import {Button, Icon, SelectPicker, FlexboxGrid} from "rsuite";
+import {Icon, SelectPicker} from "rsuite";
 
 interface TopArtistsProps {
   timeRange?: TimeRange;

@@ -1,5 +1,5 @@
 import {Dropdown, Icon, Nav, Navbar} from "rsuite";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import SpotifyContext from "../../../context/spotify";
 import {Redirect} from "react-router";
 import {CacheKey, SPOTIFY_CONTEXT} from "../../../utils/constants";

@@ -212,7 +212,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="recommendation_data"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={seedTypesOptions}
@@ -225,7 +226,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -239,7 +240,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="instrumentalness"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={instrumentalnessOptions}
@@ -249,7 +251,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -259,7 +261,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="acousticness"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={acousticnessOptions}
@@ -269,7 +272,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -279,7 +282,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="live_tracks"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={liveTrackOptions}
@@ -289,7 +293,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
             </Row>
 
@@ -306,7 +310,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="danceability"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={genericRangeOptions}
@@ -316,7 +321,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -333,7 +338,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="energy"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={genericRangeOptions}
@@ -343,7 +349,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -353,7 +359,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="spoken_word"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={spokenWordOptions}
@@ -363,7 +370,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -377,7 +384,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="positivity"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={genericRangeOptions}
@@ -387,7 +395,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
             </Row>
 
@@ -399,7 +407,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="loudness"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={loudnessOptions}
@@ -409,7 +418,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -419,7 +428,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="duration"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={durationOptions}
@@ -429,7 +439,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -439,7 +449,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="popularity"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={genericRangeOptions}
@@ -449,7 +460,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
 
               <Col xs={24} sm={12} md={6}>
@@ -459,7 +470,8 @@ const SimpleRecommendations = () => {
                 <br/>
                 <Field
                   name="tempo"
-                  render={({field, form}: any) => (
+                >
+                  {({field, form}: any) => (
                     <SelectPicker
                       {...field}
                       data={tempoOptions}
@@ -469,7 +481,7 @@ const SimpleRecommendations = () => {
                       style={{width: '100%'}}
                     />
                   )}
-                />
+                </Field>
               </Col>
             </Row>
             <br />

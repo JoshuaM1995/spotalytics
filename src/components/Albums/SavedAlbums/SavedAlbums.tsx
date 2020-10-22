@@ -12,10 +12,9 @@ const SavedAlbums = () => {
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [albums, setAlbums] = useState<any[]>([]);
   const {spotifyContext} = useContext(SpotifyContext);
+  const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   useEffect(() => {
-    const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
-
     spotifyApi.getCurrentUserSavedAlbums(itemsPerPage).then((response: any) => {
       setAlbums(response.items);
       setPageTitle(`${pageTitle} (${response.total})`);

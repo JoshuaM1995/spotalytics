@@ -6,8 +6,7 @@ import SpotifyContext from "../../context/spotify";
 import TopTracks from "./TopTracks";
 import TopArtists from "./TopArtists";
 import TopAlbums from "./TopAlbums";
-import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
-import apiRequest from "../../utils/apiRequest";
+import {CacheKey, TimeRange} from "../../utils/constants";
 import './Dashboard.scss';
 import SpotifyApi from '../../api/SpotifyApi';
 

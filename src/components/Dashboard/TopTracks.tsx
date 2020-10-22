@@ -1,10 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, FlexboxGrid, Icon, List, Progress, SelectPicker} from "rsuite";
+import {FlexboxGrid, Icon, List, Progress, SelectPicker} from "rsuite";
 import {Link} from "react-router-dom";
 import {getProgressLineProps} from "../../utils/progress";
-import {ApiMethod, CacheKey, TimeRange} from "../../utils/constants";
+import {CacheKey, TimeRange} from "../../utils/constants";
 import SpotifyContext from "../../context/spotify";
-import apiRequest from "../../utils/apiRequest";
 import SpotifyApi from "../../api/SpotifyApi";
 
 const cache = require('localstorage-ttl');
@@ -99,8 +98,8 @@ const TopTracks = ({timeRange = TimeRange.SHORT_TERM, limit = 10}: TopTracksProp
         </div>
       }
       {topTracks.length > 0 && topTracks.map((track: any, index: number) => (
-        <List hover>
-          <List.Item key={track.track_name} index={index}>
+        <List hover key={track.track_name} index={index}>
+          <List.Item>
             <FlexboxGrid>
               <FlexboxGrid.Item colspan={2} className="center" style={{height: '60px'}}>
                 <Link to={`/album/${track.album_id}`}>

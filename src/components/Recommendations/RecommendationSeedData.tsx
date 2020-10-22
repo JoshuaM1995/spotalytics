@@ -139,7 +139,8 @@ const RecommendationSeedData = ({
         <ControlLabel style={{marginBottom: 8}}>Seed Artists</ControlLabel>
         <Field
           name="seed_artists"
-          render={({field, form}: any) => (
+        >
+          {({field, form}: any) => (
             <TagPicker
               {...field}
               data={artists}
@@ -159,7 +160,7 @@ const RecommendationSeedData = ({
               }}
             />
           )}
-        />
+        </Field>
       </Col>}
 
       {showTracks &&
@@ -167,7 +168,8 @@ const RecommendationSeedData = ({
         <ControlLabel style={{marginBottom: 8}}>Seed Tracks</ControlLabel>
         <Field
           name="seed_tracks"
-          render={({field, form}: any) => (
+        >
+          {({field, form}: any) => (
             <TagPicker
               {...field}
               data={tracks}
@@ -187,7 +189,7 @@ const RecommendationSeedData = ({
               }}
             />
           )}
-        />
+        </Field>
       </Col>}
 
       {showGenres &&
@@ -195,7 +197,8 @@ const RecommendationSeedData = ({
         <ControlLabel style={{ marginBottom: 8 }}>Seed Genres</ControlLabel>
         <Field
           name="seed_genres"
-          render={({field, form}: any) => (
+        >
+          {({field, form}: any) => (
             <TagPicker
               {...field}
               data={genreOptions}
@@ -204,7 +207,7 @@ const RecommendationSeedData = ({
               onChange={(value) => form.setFieldValue('seed_genres', value)}
             />
           )}
-        />
+        </Field>
       </Col>}
     </Row>
   );
