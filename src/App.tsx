@@ -34,7 +34,7 @@ const App = () => {
 
         // If the spotify context is in session storage set the spotify context to
         // the value of what's in local storage
-        if(localStorageSpotifyContext) {
+        if(localStorageSpotifyContext.isAuthenticated) {
           setSpotifyContext({ ...spotifyContext, ...localStorageSpotifyContext });
         } else {
           next.redirect('/authenticate-spotify');
