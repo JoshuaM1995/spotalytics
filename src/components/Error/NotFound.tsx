@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Icon, IconButton} from "rsuite";
 import {Link} from "react-router-dom";
 import Page from "../Page/Page";
 import './Error.scss';
+import SpotifyContext from "../../context/spotify";
 
 const NotFound = () => {
   return (

@@ -49,7 +49,7 @@ const initialAverageFeatureValues: AverageFeatureValues = {
   durationMs: {average: 0, description: ''},
 };
 
-const TRACKS_TO_ANALYZE = 50;
+const NUM_TRACKS_TO_ANALYZE = 50;
 
 const getFeatureDescription = (feature: Feature, average: number): string => {
   switch (feature) {
@@ -144,7 +144,7 @@ const AutomaticRecommendations = () => {
   const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
 
   useEffect(() => {
-    spotifyApi.getTopTracks(TimeRange.LONG_TERM, TRACKS_TO_ANALYZE).then((topTracks) => {
+    spotifyApi.getTopTracks(TimeRange.LONG_TERM, NUM_TRACKS_TO_ANALYZE).then((topTracks) => {
       const trackIds: string[] = [];
       const artistIds: string[] = [];
 
@@ -194,43 +194,43 @@ const AutomaticRecommendations = () => {
             ...featureValues,
             danceability: {
               ...featureValues.danceability,
-              average: totalDanceability / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.DANCEABILITY, totalDanceability / TRACKS_TO_ANALYZE),
+              average: totalDanceability / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.DANCEABILITY, totalDanceability / NUM_TRACKS_TO_ANALYZE),
             },
             energy: {
               ...featureValues.energy,
-              average: totalEnergy / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.ENERGY, totalEnergy / TRACKS_TO_ANALYZE),
+              average: totalEnergy / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.ENERGY, totalEnergy / NUM_TRACKS_TO_ANALYZE),
             },
             loudness: {
               ...featureValues.loudness,
-              average: totalLoudness / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.LOUDNESS, totalLoudness / TRACKS_TO_ANALYZE),
+              average: totalLoudness / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.LOUDNESS, totalLoudness / NUM_TRACKS_TO_ANALYZE),
             },
             positivity: {
               ...featureValues.positivity,
-              average: totalPositivity / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.POSITIVITY, totalPositivity / TRACKS_TO_ANALYZE),
+              average: totalPositivity / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.POSITIVITY, totalPositivity / NUM_TRACKS_TO_ANALYZE),
             },
             speed: {
               ...featureValues.speed,
-              average: totalSpeed / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.SPEED, totalSpeed / TRACKS_TO_ANALYZE),
+              average: totalSpeed / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.SPEED, totalSpeed / NUM_TRACKS_TO_ANALYZE),
             },
             instrumentalness: {
               ...featureValues.instrumentalness,
-              average: totalInstrumentalness / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.INSTRUMENTALNESS, totalInstrumentalness / TRACKS_TO_ANALYZE),
+              average: totalInstrumentalness / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.INSTRUMENTALNESS, totalInstrumentalness / NUM_TRACKS_TO_ANALYZE),
             },
             liveness: {
               ...featureValues.liveness,
-              average: totalLiveness / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.LIVENESS, totalLiveness / TRACKS_TO_ANALYZE),
+              average: totalLiveness / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.LIVENESS, totalLiveness / NUM_TRACKS_TO_ANALYZE),
             },
             durationMs: {
               ...featureValues.durationMs,
-              average: totalDurationMs / TRACKS_TO_ANALYZE,
-              description: getFeatureDescription(Feature.DURATION, totalDurationMs / TRACKS_TO_ANALYZE),
+              average: totalDurationMs / NUM_TRACKS_TO_ANALYZE,
+              description: getFeatureDescription(Feature.DURATION, totalDurationMs / NUM_TRACKS_TO_ANALYZE),
             },
           };
         });
