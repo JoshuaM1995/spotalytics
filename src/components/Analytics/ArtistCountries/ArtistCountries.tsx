@@ -1,7 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ResponsiveChoropleth} from '@nivo/geo';
 import artistCountriesFeatures from './artistCountriesFeatures';
-import './ArtistCountries.scss';
 import {Container} from "rsuite";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
@@ -10,6 +9,7 @@ import {alpha2to3} from 'iso3166-alpha-converter'
 import axios from 'axios';
 import {CacheKey} from "../../../utils/constants";
 import * as _ from 'lodash';
+import '../Analytics.scss';
 
 const cache = require('localstorage-ttl');
 
@@ -20,15 +20,12 @@ interface ArtistCountry {
 
 const ArtistCountries = () => {
   const [artistCountriesData, setArtistCountriesData] = useState<ArtistCountry[]>([]);
-  const [totalArtistCount, setTotalArtistCount] = useState(0);
+  const [totalDomainCount, setTotalDomainCount] = useState(0);
   const {spotifyContext} = useContext(SpotifyContext);
 
   useAsyncEffect(async () => {
     const artistCountriesDataCache: ArtistCountry[] = cache.get(CacheKey.ARTIST_COUNTRIES_DATA);
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
-
-    const totalArtists = await spotifyApi.getTotalArtistCount(1);
-    setTotalArtistCount(totalArtists);
 
     if (!artistCountriesDataCache) {
       const promises: Promise<any>[] = [];
@@ -57,10 +54,14 @@ const ArtistCountries = () => {
         _.forEach(countries, (value: any, key: any) => {
           artistCountriesNew.push({ id: key, value: value.length });
         });
+        const artistWithMostCountries = _.sortBy(artistCountriesNew, 'value').reverse()[0];
+        setTotalDomainCount(artistWithMostCountries.value);
         setArtistCountriesData(artistCountriesNew);
         cache.set(CacheKey.ARTIST_COUNTRIES_DATA, artistCountriesNew, 86400000);
       }));
     } else {
+      const artistWithMostCountries = _.sortBy(artistCountriesDataCache, 'value').reverse()[0];
+      setTotalDomainCount(artistWithMostCountries.value);
       setArtistCountriesData(artistCountriesDataCache);
     }
   }, []);
@@ -77,7 +78,7 @@ const ArtistCountries = () => {
         features={artistCountriesFeatures}
         margin={{top: 0, right: 0, bottom: 0, left: 0}}
         colors="spectral"
-        domain={[0, totalArtistCount]}
+        domain={[0, totalDomainCount]}
         unknownColor="#666666"
         label="properties.name"
         valueFormat=".2s"
@@ -112,17 +113,12 @@ const ArtistCountries = () => {
           }
         ]}
         tooltip={({ feature }: any) => {
-          const { label, data } = feature;
+          const { label, data, properties } = feature;
 
           return (
-            <div style={{
-              color: 'black',
-              background: 'white',
-              border: '1px solid black',
-              borderRadius: '3px',
-              padding: '5px 8px',
-            }}>
+            <div className="nivo-tooltip">
               {data && <>{label}: {data.value} {data.value > 1 ? 'Artists' : 'Artist'}</>}
+              {!data && <>{properties.name}: 0 Artists</>}
             </div>
           );
         }}

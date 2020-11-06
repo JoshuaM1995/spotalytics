@@ -5,6 +5,7 @@ import useAsyncEffect from "../../../hooks/useAsyncEffect";
 import {TimeRange} from "../../../utils/constants";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
+import '../Analytics.scss';
 
 interface TasteProfileData {
   track_attribute: string;
@@ -49,7 +50,6 @@ const TasteProfile = () => {
     const trackFeatures = await spotifyApi.getTracksFeatures(trackIds);
 
     trackFeatures.forEach((feature) => {
-      console.log({ feature });
       if (feature) {
         totalDanceability += feature.danceability;
         totalEnergy += feature.energy;
