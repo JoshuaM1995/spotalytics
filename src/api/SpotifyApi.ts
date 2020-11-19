@@ -1,5 +1,6 @@
 import moment from "moment";
 import {TimeRange} from "../utils/constants";
+import * as _ from 'lodash';
 
 const Spotify = require('spotify-web-api-js');
 
@@ -214,6 +215,38 @@ export default class SpotifyApi {
 
         resolve(response);
       });
+    });
+  }
+
+  public async getCurrentUserAllFollowedArtists(): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      const limit = 50;
+      const totalArtistCount = await this.getTotalArtistCount(1);
+      const numLoops = totalArtistCount > limit ? Math.ceil(totalArtistCount / limit) : 1;
+      let after = '';
+      let options = { limit };
+      let followedArtists: any[] = [];
+
+      for (let i = 0; i < numLoops; i++) {
+        if (after) {
+          options = { ...options, ...{ after } };
+        }
+
+        try {
+          const response = await this.spotify.getFollowedArtists(options);
+          followedArtists = [
+            ...followedArtists,
+            ...response.artists.items,
+          ];
+
+          const last = _.last(followedArtists);
+          after = last.id;
+        } catch(error) {
+          SpotifyApi.processError(error, reject);
+        }
+      }
+
+      resolve(followedArtists);
     });
   }
 
