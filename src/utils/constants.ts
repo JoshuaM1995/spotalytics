@@ -24,3 +24,5 @@ export enum ApiMethod {
   PATCH = 'PATCH',
   DELETE = 'DELETE',
 }
+
+export const AUDIODB_BASE_URL = `https://www.theaudiodb.com/api/v1/json/${process.env.REACT_APP_AUDIODB_KEY}`;

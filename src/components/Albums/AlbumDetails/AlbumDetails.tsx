@@ -1,12 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Page from "../../Page/Page";
 import {useParams} from "react-router";
-import {Badge, Col, Icon, Panel, Row, Table} from "rsuite";
+import {Badge, Col, Icon, Panel, Rate, Row, Table} from "rsuite";
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
 import './AlbumDetails.scss';
 import {Link} from "react-router-dom";
 import {getTrackLength} from "../../../utils/track";
+import axios from "axios";
+import {AUDIODB_BASE_URL} from "../../../utils/constants";
+import useAsyncEffect from "../../../hooks/useAsyncEffect";
 
 const {Column, HeaderCell, Cell} = Table;
 const TrackNumberCell = ({rowData, dataKey, ...props}: any) => {
@@ -41,12 +44,23 @@ const AlbumDetails = () => {
   const {albumId} = useParams();
   const {spotifyContext} = useContext(SpotifyContext);
   const [albumInfo, setAlbumInfo] = useState<any>();
+  const [albumScore, setAlbumScore] = useState<number>();
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
-    spotifyApi.getAlbumInfo(albumId).then((album: any) => {
-      setAlbumInfo(album);
-    });
+    const album = await  spotifyApi.getAlbumInfo(albumId);
+    setAlbumInfo(album);
+
+    // Get album ratings
+    const getAlbumInfo = await axios.get(
+      `${AUDIODB_BASE_URL}/searchalbum.php?s=${album.artists[0].name}&a=${album.name}`,
+      { headers: null },
+    );
+
+    if (getAlbumInfo.data.album) {
+      const albumInfo = getAlbumInfo.data.album[0];
+      setAlbumScore(albumInfo.intScore > 0 ? albumInfo.intScore : 0);
+    }
   }, [albumId, spotifyContext.accessToken]);
 
   return (
@@ -63,6 +77,13 @@ const AlbumDetails = () => {
                 title={albumInfo?.name}
                 style={{width: '400px', height: '400px', position: 'relative'}}
               />
+            </div>
+            <br />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Rate value={albumScore} max={10} readOnly />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {!albumScore && <>No album ratings found.</>}
             </div>
             <br />
             <h1 style={{textAlign: 'center'}}>
