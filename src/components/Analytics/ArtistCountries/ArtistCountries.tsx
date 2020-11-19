@@ -10,6 +10,7 @@ import axios from 'axios';
 import {CacheKey} from "../../../utils/constants";
 import * as _ from 'lodash';
 import '../Analytics.scss';
+import UnknownArtists from "./UnknownArtists";
 
 const cache = require('localstorage-ttl');
 
@@ -18,13 +19,19 @@ interface ArtistCountry {
   value: number;
 }
 
+export interface UnknownArtist {
+  artist: string;
+}
+
 const ArtistCountries = () => {
   const [artistCountriesData, setArtistCountriesData] = useState<ArtistCountry[]>([]);
   const [totalDomainCount, setTotalDomainCount] = useState(0);
+  const [unknownArtists, setUnknownArtists] = useState<UnknownArtist[]>([]);
   const {spotifyContext} = useContext(SpotifyContext);
 
   useAsyncEffect(async () => {
     const artistCountriesDataCache: ArtistCountry[] = cache.get(CacheKey.ARTIST_COUNTRIES_DATA);
+    const unknownArtistsDataCache: UnknownArtist[] = cache.get(CacheKey.UNKNOWN_ARTISTS);
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     if (!artistCountriesDataCache) {
@@ -38,14 +45,18 @@ const ArtistCountries = () => {
       });
 
       axios.all(promises).then(axios.spread((...responses: any) => {
-        let artistCountries: { name: string, country: string }[] = [];
+        const artistCountries: { country: string }[] = [];
+        const unknownArtists: UnknownArtist[] = [];
 
         responses.forEach((response: any) => {
           if (response.data.artists !== null) {
-            artistCountries.push({
-              name: 'test',
-              country: alpha2to3[response.data.artists[0].strCountryCode.toLowerCase()] ?? 'N/A',
-            });
+            if (response.data.artists[0].strCountryCode) {
+              artistCountries.push({
+                country: alpha2to3[response.data.artists[0].strCountryCode.toLowerCase()] ?? 'N/A',
+              });
+            } else {
+              unknownArtists.push({ artist: response.data.artists[0].strArtist });
+            }
           }
         });
 
@@ -57,12 +68,15 @@ const ArtistCountries = () => {
         const artistWithMostCountries = _.sortBy(artistCountriesNew, 'value').reverse()[0];
         setTotalDomainCount(artistWithMostCountries.value);
         setArtistCountriesData(artistCountriesNew);
+        setUnknownArtists(unknownArtists);
         cache.set(CacheKey.ARTIST_COUNTRIES_DATA, artistCountriesNew, 86400000);
+        cache.set(CacheKey.UNKNOWN_ARTISTS, unknownArtists, 86400000);
       }));
     } else {
       const artistWithMostCountries = _.sortBy(artistCountriesDataCache, 'value').reverse()[0];
       setTotalDomainCount(artistWithMostCountries.value);
       setArtistCountriesData(artistCountriesDataCache);
+      setUnknownArtists(unknownArtistsDataCache);
     }
   }, []);
 
@@ -123,6 +137,8 @@ const ArtistCountries = () => {
           );
         }}
       />
+
+      <UnknownArtists artists={unknownArtists} />
     </Container>
   );
 };
