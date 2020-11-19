@@ -41,7 +41,6 @@ const TasteProfile = () => {
     let totalLiveness = 0;
     let totalSpeechiness = 0;
     let totalAcousticness = 0;
-    let totalPositiveness = 0;
 
     topTracks.forEach((track) => {
       trackIds.push(track.id);
@@ -60,7 +59,6 @@ const TasteProfile = () => {
         totalLiveness += feature.liveness;
         totalSpeechiness += feature.speechiness;
         totalAcousticness += feature.acousticness;
-        totalPositiveness += feature.valence;
       }
     });
 
@@ -72,7 +70,6 @@ const TasteProfile = () => {
       { id: "Liveness", value: parseFloat((totalLiveness / NUM_LOOKUPS * 10).toFixed(2)) },
       { id: "Speechiness", value: parseFloat((totalSpeechiness / NUM_LOOKUPS * 10).toFixed(2)) },
       { id: "Acousticness", value: parseFloat((totalAcousticness / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Positiveness", value: parseFloat((totalPositiveness / NUM_LOOKUPS * 10).toFixed(2)) },
     ]);
   }, [spotifyContext.accessToken]);
 
