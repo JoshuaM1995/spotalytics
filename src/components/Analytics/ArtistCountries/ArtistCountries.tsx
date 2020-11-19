@@ -7,7 +7,7 @@ import SpotifyContext from "../../../context/spotify";
 import useAsyncEffect from "../../../hooks/useAsyncEffect";
 import {alpha2to3} from 'iso3166-alpha-converter'
 import axios from 'axios';
-import {CacheKey} from "../../../utils/constants";
+import {AUDIODB_BASE_URL, CacheKey} from "../../../utils/constants";
 import * as _ from 'lodash';
 import '../Analytics.scss';
 import UnknownArtists from "./UnknownArtists";
@@ -39,7 +39,7 @@ const ArtistCountries = () => {
 
       const allFollowedArtists: any[] = await spotifyApi.getCurrentUserAllFollowedArtists();
       allFollowedArtists.forEach((artist) => {
-        promises.push(axios.get(`https://www.theaudiodb.com/api/v1/json/523532/search.php?s=${artist.name}`, {
+        promises.push(axios.get(`${AUDIODB_BASE_URL}/search.php?s=${artist.name}`, {
           headers: null,
         }));
       });
