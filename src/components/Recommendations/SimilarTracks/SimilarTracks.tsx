@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Icon, InputPicker } from 'rsuite';
+import { ControlLabel, FormGroup, Icon, InputPicker } from 'rsuite';
 import Page from '../../Page/Page';
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
@@ -44,26 +44,30 @@ const SimilarTracks = () => {
 
   return (
     <Page title="Similar Tracks">
-      <h4>Enter a track and we will find similar tracks and create a playlist for you.</h4>
+      <h5>Search for and select a track, and we'll analyze it's audio properties and create a playlist with similar tracks.</h5>
       <br />
 
-      <InputPicker
-        data={tracks}
-        onSearch={(value) => searchTracks(value)}
-        onSelect={selectTrack}
-        loading={areTracksLoading}
-        style={{ minWidth: '300px' }}
-        renderMenu={menu => {
-          if (areTracksLoading) {
-            return (
-              <p style={{ padding: 4, color: '#999', textAlign: 'center' }}>
-                <Icon icon="spinner" spin /> Loading...
-              </p>
-            );
-          }
-          return menu;
-        }}
-      />
+      <FormGroup>
+        <ControlLabel>Search Track</ControlLabel>
+        <br />
+        <InputPicker
+          data={tracks}
+          onSearch={(value) => searchTracks(value)}
+          onSelect={selectTrack}
+          loading={areTracksLoading}
+          style={{ minWidth: '300px' }}
+          renderMenu={menu => {
+            if (areTracksLoading) {
+              return (
+                <p style={{ padding: 4, color: '#999', textAlign: 'center' }}>
+                  <Icon icon="spinner" spin /> Loading...
+                </p>
+              );
+            }
+            return menu;
+          }}
+        />
+      </FormGroup>
 
       {/* TODO: Add header "Similar Tracks to Fearless - Pyramaze" */}
       {/* TODO: Add table with tracks and allow the user to save to a playlist, similar to on the recommendations page */}
