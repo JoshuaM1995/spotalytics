@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useState } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { ControlLabel, FormGroup, Icon, InputPicker } from 'rsuite';
 import Page from '../../Page/Page';
 import SpotifyApi from "../../../api/SpotifyApi";
@@ -9,6 +9,12 @@ import RecommendedTracksTable from '../RecommendationTable';
 import tableReducer, { TableState } from '../../../reducers/tableReducer';
 import { IS_NOT_LOADING } from '../../../actions/tableActions';
 import moment from 'moment';
+import { useParams } from 'react-router';
+import useAsyncEffect from '../../../hooks/useAsyncEffect';
+
+interface SimilarTracksParams {
+  trackId?: string;
+}
 
 const initialTableState: TableState<RecommendedTrack> = {
   data: [],
@@ -22,9 +28,25 @@ const SimilarTracks = () => {
   const [tracks, setTracks] = useState<any[]>([]);
   const [seedTrackName, setSeedTrackName] = useState<string>();
   const [recommendedTracks, setRecommendedTracks] = useState<RecommendedTrack[]>([]);
+  const [trackInfo, setTrackInfo] = useState<SpotifyApi.SingleTrackResponse>();
   const { spotifyContext } = useContext(SpotifyContext);
   const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
+  const { trackId } = useParams<SimilarTracksParams>();
+
+  useAsyncEffect(async () => {
+    // If a track id is part of the route params, load that track information, select it, then display recommendations in the table
+    if (trackId && !seedTrackName) {
+      const trackInfo = await spotifyApi.getTrackInfo(trackId);
+      setTrackInfo(trackInfo);
+
+      setTracks([
+        { value: trackId, label: trackInfo.name }
+      ]);
+
+      await selectTrack(trackId);
+    }
+  }, [trackId])
 
   const searchTracks = _.debounce(async (searchTerm: string) => {
     setAreTracksLoading(true);
@@ -42,8 +64,8 @@ const SimilarTracks = () => {
 
   const selectTrack = async (trackId: string) => {
     const response: any = await spotifyApi.getTrackFeatures(trackId);
-    const trackInfo = await spotifyApi.getTrackInfo(trackId);
-    setSeedTrackName(`${trackInfo.name} by ${trackInfo.artists[0].name}`);
+    const track = trackInfo ?? await spotifyApi.getTrackInfo(trackId);
+    setSeedTrackName(`${track.name} by ${track.artists[0].name}`);
 
     // Remove metadata and only keep the track's features
     let recommendationOptions = _.omit(response, ['analysis_url', 'id', 'track_href', 'type', 'uri']);
@@ -82,7 +104,7 @@ const SimilarTracks = () => {
 
   return (
     <Page title="Similar Tracks">
-      <h5>Search for and select a track, and we'll analyze it's audio properties and create a playlist with similar tracks.</h5>
+      <h5>Search for and select a track, and we'll analyze its audio properties and create a playlist with similar tracks.</h5>
       <br />
 
       <FormGroup>
@@ -105,6 +127,7 @@ const SimilarTracks = () => {
             }
             return menu;
           }}
+          value={trackId ?? undefined}
         />
       </FormGroup>
 

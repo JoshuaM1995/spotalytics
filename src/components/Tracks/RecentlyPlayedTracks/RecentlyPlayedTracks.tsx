@@ -1,15 +1,15 @@
-import React, {ReactElement, useContext, useEffect, useReducer, useState} from 'react';
+import React, { ReactElement, useContext, useEffect, useReducer, useState } from 'react';
 import Page from "../../Page/Page";
-import {Badge, Table} from "rsuite";
+import { Badge, Button, Icon, IconButton, Table } from "rsuite";
 import TablePagination from "rsuite/es/Table/TablePagination";
-import tableReducer, {TableState} from "../../../reducers/tableReducer";
-import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA, UPDATE_DISPLAY_LENGTH, UPDATE_PAGE} from "../../../actions/tableActions";
-import {getFilteredTableData} from "../../../utils/table";
+import tableReducer, { TableState } from "../../../reducers/tableReducer";
+import { IS_LOADING, IS_NOT_LOADING, UPDATE_DATA, UPDATE_DISPLAY_LENGTH, UPDATE_PAGE } from "../../../actions/tableActions";
+import { getFilteredTableData } from "../../../utils/table";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import moment from 'moment';
 import './RecentlyPlayedTracks.scss';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface RecentlyPlayedTrack {
   track: string;
@@ -23,6 +23,16 @@ const initialTableState: TableState<RecentlyPlayedTrack> = {
   page: 1,
   displayLength: 25,
   isLoading: true,
+};
+
+const SimilarTracksCell = ({ rowData, dataKey, ...props }: any) => {
+  return (
+    <Cell {...props}>
+      <Link to={`/discover/similar-tracks/${rowData[dataKey]}`}>
+        <IconButton icon={<Icon icon="music" />} color="red">Similar Tracks</IconButton>
+      </Link>
+    </Cell>
+  );
 };
 
 const RecentlyPlayedTracks = () => {
@@ -43,32 +53,35 @@ const RecentlyPlayedTracks = () => {
       recentlyPlayedTracks.forEach((recentlyPlayedTrack: any) => {
         const artists: ReactElement[] = [];
         let trackToAdd: {
-          isPlaying: ReactElement|string;
-          artists: ReactElement[]|string[];
+          isPlaying: ReactElement | string;
+          artists: ReactElement[] | string[];
           playedAt: string;
-          trackName: ReactElement|string
+          trackId: string;
+          trackName: ReactElement | string
         };
 
-        if(recentlyPlayedTrack.item) {
+        if (recentlyPlayedTrack.item) {
           recentlyPlayedTrack.item.artists.forEach((artist: any) => {
-            artists.push(<><Link to={`/artist/${artist.id}`}>{ artist.name }</Link>{', '}</>);
+            artists.push(<><Link to={`/artist/${artist.id}`}>{artist.name}</Link>{', '}</>);
           });
 
           trackToAdd = {
             isPlaying: recentlyPlayedTrack.is_playing ? <Badge content="Playing" className="badge-playing" />
-                                                      : <Badge content="Not Playing" className="badge-not-playing" />,
-            trackName: <a href={recentlyPlayedTrack.item.uri}>{ recentlyPlayedTrack.item.name }</a>,
+              : <Badge content="Not Playing" className="badge-not-playing" />,
+            trackId: recentlyPlayedTrack.track.id,
+            trackName: <a href={recentlyPlayedTrack.item.uri}>{recentlyPlayedTrack.item.name}</a>,
             artists: [],
             playedAt: moment(recentlyPlayedTrack.timestamp).format('MMMM Do, YYYY [at] h:mm A'),
           };
         } else {
           recentlyPlayedTrack.track.artists.forEach((artist: any) => {
-            artists.push(<><Link to={`/artist/${artist.id}`}>{ artist.name }</Link>{', '}</>);
+            artists.push(<><Link to={`/artist/${artist.id}`}>{artist.name}</Link>{', '}</>);
           });
 
           trackToAdd = {
             isPlaying: '',
-            trackName: <a href={recentlyPlayedTrack.track.uri}>{ recentlyPlayedTrack.track.name }</a>,
+            trackId: recentlyPlayedTrack.track.id,
+            trackName: <a href={recentlyPlayedTrack.track.uri}>{recentlyPlayedTrack.track.name}</a>,
             artists: [],
             playedAt: moment(recentlyPlayedTrack.played_at).format('MMMM Do, YYYY [at] h:mm A'),
           };
@@ -97,6 +110,8 @@ const RecentlyPlayedTracks = () => {
         height={800}
         data={data}
         loading={isLoading}
+        className="recently-played-tracks-table"
+        wordWrap
       >
         <Column width={100} align="center">
           <HeaderCell />
@@ -113,9 +128,14 @@ const RecentlyPlayedTracks = () => {
           <Cell dataKey="artists" />
         </Column>
 
-        <Column width={200} align="right">
+        <Column width={250}>
           <HeaderCell>Played At</HeaderCell>
           <Cell dataKey="playedAt" />
+        </Column>
+
+        <Column width={200} align="right">
+          <HeaderCell>Similar Tracks</HeaderCell>
+          <SimilarTracksCell dataKey="trackId" />
         </Column>
       </Table>
 
