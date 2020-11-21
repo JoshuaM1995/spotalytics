@@ -29,6 +29,7 @@ const SimilarTracks = () => {
   const [seedTrackName, setSeedTrackName] = useState<string>();
   const [recommendedTracks, setRecommendedTracks] = useState<RecommendedTrack[]>([]);
   const [trackInfo, setTrackInfo] = useState<SpotifyApi.SingleTrackResponse>();
+  const [trackCleared, setTrackCleared] = useState(false);
   const { spotifyContext } = useContext(SpotifyContext);
   const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
@@ -64,7 +65,15 @@ const SimilarTracks = () => {
 
   const selectTrack = async (trackId: string) => {
     const response: any = await spotifyApi.getTrackFeatures(trackId);
-    const track = trackInfo ?? await spotifyApi.getTrackInfo(trackId);
+    let track;
+
+    // Don't use the pre-filled track info from the id in the url params if the track has been cleared
+    if (trackCleared) {
+      track = await spotifyApi.getTrackInfo(trackId);
+    } else {
+      track = trackInfo ?? await spotifyApi.getTrackInfo(trackId);
+    }
+
     setSeedTrackName(`${track.name} by ${track.artists[0].name}`);
 
     // Remove metadata and only keep the track's features
@@ -100,6 +109,7 @@ const SimilarTracks = () => {
     tableStateDispatch({type: IS_NOT_LOADING});
     setRecommendedTracks([]);
     setSeedTrackName(undefined);
+    setTrackCleared(true);
   };
 
   return (
@@ -127,7 +137,7 @@ const SimilarTracks = () => {
             }
             return menu;
           }}
-          value={trackId ?? undefined}
+          value={!trackCleared ? (trackId ?? undefined) : undefined}
         />
       </FormGroup>
 
