@@ -25,15 +25,13 @@ const initialTableState: TableState<RecentlyPlayedTrack> = {
   isLoading: true,
 };
 
-const SimilarTracksCell = ({ rowData, dataKey, ...props }: any) => {
-  return (
-    <Cell {...props}>
-      <Link to={`/discover/similar-tracks/${rowData[dataKey]}`}>
-        <IconButton icon={<Icon icon="music" />} color="red">Similar Tracks</IconButton>
-      </Link>
-    </Cell>
-  );
-};
+const SimilarTracksCell = ({ rowData, dataKey, ...props }: any) => (
+  <Cell {...props}>
+    <Link to={`/discover/similar-tracks/${rowData[dataKey]}`}>
+      <IconButton icon={<Icon icon="music" />} color="red">Similar Tracks</IconButton>
+    </Link>
+  </Cell>
+);
 
 const RecentlyPlayedTracks = () => {
   const [data, setData] = useState<RecentlyPlayedTrack[]>([]);
