@@ -19,7 +19,7 @@ const AlbumGrid = ({ albums, infiniteScroll, infiniteScrollProps }: AlbumGridPro
     >
       <FlexboxGrid justify="center">
           {albums.map((album: any, index: number) => (
-            <FlexboxGrid.Item componentClass={Col} xs={24} sm={12} md={6} key={index} className="album-card-container">
+            <FlexboxGrid.Item componentClass={Col} xs={24} sm={12} md={4} key={index} className="album-card-container">
               <Panel bodyFill className="album-card">
                 <Link to={`/album/${album.album.id}`}>
                   <img src={album.album.images[0].url} alt="" />
