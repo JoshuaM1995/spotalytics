@@ -74,7 +74,7 @@ const TasteProfile = () => {
   }, [spotifyContext.accessToken]);
 
   return (
-    <Container className="analytics-container">
+    <Container className="analytics-container" style={{ height: window.outerHeight - 250 }}>
       <div style={{textAlign: 'center', margin: '15px 0 30px 0'}}>
         <h3>Taste Profile</h3>
         <h5>The attributes of the music you listen to based on your top 50 tracks.</h5>
