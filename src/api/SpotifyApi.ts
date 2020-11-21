@@ -174,6 +174,17 @@ export default class SpotifyApi {
     });
   }
 
+  public getTrackInfo(trackId: string): Promise<SpotifyApi.SingleTrackResponse> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const trackInfo: SpotifyApi.SingleTrackResponse = await this.spotify.getTrack(trackId);
+        resolve(trackInfo);
+      } catch(error) {
+        SpotifyApi.processError(error, reject);
+      }
+    });
+  }
+
   public getAlbumInfo(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spotify.getAlbum(id, (error: any, response: any) => {
@@ -333,6 +344,19 @@ export default class SpotifyApi {
     return this.spotify.search(query, types, { limit });
   }
 
+
+  public getTrackFeatures(trackId: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const audioFeatures: SpotifyApi.AudioFeaturesResponse = await this.spotify.getAudioFeaturesForTrack(trackId);
+        resolve(audioFeatures);
+      } catch (error) {
+        SpotifyApi.processError(error, reject);
+        reject(error);
+      }
+    });
+  }
+
   public getTracksFeatures(trackIds: string[]): Promise<SpotifyApi.AudioFeaturesObject[]> {
     return new Promise((resolve, reject) => {
       this.spotify.getAudioFeaturesForTracks(trackIds).then((response: SpotifyApi.MultipleAudioFeaturesResponse) => {
@@ -382,14 +406,5 @@ export default class SpotifyApi {
 
       reject(error);
     }
-  }
-
-  public getAudioFeatures(trackId: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.spotify.getAudioFeaturesForTrack(trackId, (error: any, response: any) => {
-        SpotifyApi.processError(error, reject);
-        resolve(response);
-      });
-    });
   }
 }

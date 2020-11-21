@@ -1,14 +1,29 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useReducer, useState } from 'react'
 import { ControlLabel, FormGroup, Icon, InputPicker } from 'rsuite';
 import Page from '../../Page/Page';
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
 import _ from "lodash";
+import { RecommendedTrack } from '../../../utils/types';
+import RecommendedTracksTable from '../RecommendationTable';
+import tableReducer, { TableState } from '../../../reducers/tableReducer';
+import { IS_NOT_LOADING } from '../../../actions/tableActions';
+import moment from 'moment';
+
+const initialTableState: TableState<RecommendedTrack> = {
+  data: [],
+  page: 1,
+  displayLength: 100,
+  isLoading: true,
+};
 
 const SimilarTracks = () => {
   const [areTracksLoading, setAreTracksLoading] = useState(false);
   const [tracks, setTracks] = useState<any[]>([]);
+  const [seedTrackName, setSeedTrackName] = useState<string>();
+  const [recommendedTracks, setRecommendedTracks] = useState<RecommendedTrack[]>([]);
   const { spotifyContext } = useContext(SpotifyContext);
+  const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
   const searchTracks = _.debounce(async (searchTerm: string) => {
@@ -26,8 +41,9 @@ const SimilarTracks = () => {
   }, 200);
 
   const selectTrack = async (trackId: string) => {
-    const response: any = await spotifyApi.getAudioFeatures(trackId);
-    console.log('selectTrack response', response);
+    const response: any = await spotifyApi.getTrackFeatures(trackId);
+    const trackInfo = await spotifyApi.getTrackInfo(trackId);
+    setSeedTrackName(`${trackInfo.name} by ${trackInfo.artists[0].name}`);
 
     // Remove metadata and only keep the track's features
     let recommendationOptions = _.omit(response, ['analysis_url', 'id', 'track_href', 'type', 'uri']);
@@ -35,11 +51,33 @@ const SimilarTracks = () => {
     recommendationOptions = _.mapKeys(recommendationOptions, (value, key) => `target_${key}`);
     recommendationOptions = {
       ...recommendationOptions,
-      ...{ seed_tracks: trackId, limit: 100 },
+      ...{ seed_tracks: trackId, limit: 50 },
     };
-    // TODO: Save these track recommendations in the state
-    const trackRecommendations = await spotifyApi.getFilteredRecommendations(recommendationOptions);
-    console.log('trackRecommendations', trackRecommendations);
+    const tracksResponse = await spotifyApi.getFilteredRecommendations(recommendationOptions);
+    const tracks: RecommendedTrack[] = [];
+    tracksResponse.tracks.forEach((track: any, key) => {
+      tracks.push({
+        id: track.id,
+        trackUri: track.uri,
+        trackName: track.name,
+        artistId: track.artists[0].id,
+        artistName: track.artists[0].name,
+        albumId: track.album.id,
+        albumName: track.album.name,
+        duration: track.duration_ms,
+      });
+    });
+
+    tableStateDispatch({type: IS_NOT_LOADING});
+    setRecommendedTracks(tracks);
+  };
+
+  const removeSelectedTrack = () => {
+    setAreTracksLoading(false);
+    setTracks([]);
+    tableStateDispatch({type: IS_NOT_LOADING});
+    setRecommendedTracks([]);
+    setSeedTrackName(undefined);
   };
 
   return (
@@ -54,6 +92,7 @@ const SimilarTracks = () => {
           data={tracks}
           onSearch={(value) => searchTracks(value)}
           onSelect={selectTrack}
+          onClean={removeSelectedTrack}
           loading={areTracksLoading}
           style={{ minWidth: '300px' }}
           renderMenu={menu => {
@@ -69,8 +108,18 @@ const SimilarTracks = () => {
         />
       </FormGroup>
 
-      {/* TODO: Add header "Similar Tracks to Fearless - Pyramaze" */}
-      {/* TODO: Add table with tracks and allow the user to save to a playlist, similar to on the recommendations page */}
+      {recommendedTracks.length > 0 && seedTrackName &&
+        <div style={{ marginTop: '30px' }}>
+          <h4>Similar tracks to {seedTrackName}</h4>
+
+          <RecommendedTracksTable
+            recommendations={recommendedTracks}
+            tableState={tableState}
+            tableStateDispatch={tableStateDispatch}
+            playlistNameOverride={`Similar tracks to ${seedTrackName} (${moment().format('YYYY-MM-DD')})`}
+          />
+        </div>
+      }
     </Page>
   );
 };
