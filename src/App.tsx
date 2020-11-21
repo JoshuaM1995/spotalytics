@@ -21,6 +21,7 @@ import AlbumRoutes from "./router/AlbumRoutes";
 import Recommendations from "./components/Recommendations/Recommendations";
 import {SPOTIFY_CONTEXT} from "./utils/constants";
 import AnalyticsRoutes from "./router/AnalyticsRoutes";
+import DiscoverRoutes from './router/DiscoverRoutes';
 
 const App = () => {
   const [spotifyContext, setSpotifyContext] = useState(spotifyContextDefaultValue);
@@ -58,7 +59,7 @@ const App = () => {
             <Switch>
               <Route exact path="/" component={Home} />
               <GuardedRoute exact path="/dashboard" component={Dashboard} />
-              <GuardedRoute exact path="/recommendations" component={Recommendations} />
+              <GuardedRoute path="/discover" render={() => <DiscoverRoutes/>} />
               <GuardedRoute path="/analytics" render={() => <AnalyticsRoutes/>} />
               <GuardedRoute path="/artist" render={() => <ArtistRoutes/>} />
               <GuardedRoute path="/artists" render={() => <ArtistsRoutes/>} />
