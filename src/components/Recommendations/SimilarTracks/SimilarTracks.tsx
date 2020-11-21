@@ -7,7 +7,7 @@ import _ from "lodash";
 import { RecommendedTrack } from '../../../utils/types';
 import RecommendedTracksTable from '../RecommendationTable';
 import tableReducer, { TableState } from '../../../reducers/tableReducer';
-import { IS_NOT_LOADING } from '../../../actions/tableActions';
+import { IS_LOADING, IS_NOT_LOADING } from '../../../actions/tableActions';
 import moment from 'moment';
 import { useParams } from 'react-router';
 import useAsyncEffect from '../../../hooks/useAsyncEffect';
@@ -64,6 +64,8 @@ const SimilarTracks = () => {
   }, 200);
 
   const selectTrack = async (trackId: string) => {
+    tableStateDispatch({type: IS_LOADING});
+
     const response: any = await spotifyApi.getTrackFeatures(trackId);
     let track;
 

@@ -145,7 +145,7 @@ const RecommendedTracksTable = ({
           <ArtistNameCell dataKey="artistName" />
         </Column>
 
-        <Column width={200}>
+        <Column width={300}>
           <HeaderCell>Album</HeaderCell>
           <AlbumNameCell dataKey="albumName" />
         </Column>
