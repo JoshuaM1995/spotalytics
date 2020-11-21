@@ -40,7 +40,7 @@ import SpotifyContext from "../../context/spotify";
 import {IS_LOADING, IS_NOT_LOADING, UPDATE_DATA} from "../../actions/tableActions";
 import tableReducer, {TableState} from "../../reducers/tableReducer";
 import RecommendationSeedData from "./RecommendationSeedData";
-import RecommendationTable from "./RecommendationTable";
+import RecommendedTracksTable from "./RecommendationTable";
 import {RecommendedTrack} from "../../utils/types";
 
 const initialValues: SpotifySimpleRecommendationOptions = {
@@ -501,7 +501,7 @@ const SimpleRecommendations = () => {
         )}
       </Formik>
 
-      <RecommendationTable
+      <RecommendedTracksTable
         recommendations={recommendations}
         tableState={tableState}
         tableStateDispatch={tableStateDispatch}
