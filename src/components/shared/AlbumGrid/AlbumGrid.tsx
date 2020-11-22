@@ -1,4 +1,4 @@
-import React, {ComponentProps, ReactElement} from 'react';
+import React, {ComponentProps, ReactElement, useEffect} from 'react';
 import {Col, FlexboxGrid, Panel} from "rsuite";
 import './AlbumGrid.scss';
 import InfiniteScroll from "react-infinite-scroller";
@@ -12,6 +12,10 @@ interface AlbumGridProps {
 }
 
 const AlbumGrid = ({ albums, infiniteScroll, infiniteScrollProps }: AlbumGridProps) => {
+  useEffect(() => {
+    console.log('albums', albums);
+  }, [albums])
+
   return (
     <ConditionalWrapper
       condition={infiniteScroll}

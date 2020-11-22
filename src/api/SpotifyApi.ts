@@ -194,6 +194,24 @@ export default class SpotifyApi {
     });
   }
 
+  public getAlbumTracks(id: string, options?: any): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let album;
+
+        if (options) {
+          album = await this.spotify.getAlbumTracks(id, options);
+        } else {
+          album = await this.spotify.getAlbumTracks(id);
+        }
+
+        resolve(album.items);
+      } catch(error) {
+        SpotifyApi.processError(error, reject);
+      }
+    });
+  }
+
   public getTopTracksByCountry(artistId: string, countryCode: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spotify.getArtistTopTracks(artistId, countryCode, (error: any, response: any) => {
@@ -340,7 +358,7 @@ export default class SpotifyApi {
     query: string,
     types: ('album' | 'artist' | 'playlist' | 'track')[],
     limit = 20,
-  ): Promise<SpotifyApi.ArtistSearchResponse> {
+  ): Promise<SpotifyApi.ArtistSearchResponse | SpotifyApi.AlbumSearchResponse | SpotifyApi.TrackSearchResponse | SpotifyApi.PlaylistSearchResponse> {
     return this.spotify.search(query, types, { limit });
   }
 
