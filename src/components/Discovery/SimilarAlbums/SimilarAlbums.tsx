@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import React, { useContext, useReducer, useState } from 'react'
 import { ControlLabel, FormGroup, Icon, InputPicker } from 'rsuite';
 import Page from '../../Page/Page';
 import SpotifyApi from "../../../api/SpotifyApi";
 import SpotifyContext from "../../../context/spotify";
 import _ from "lodash";
-import { RecommendedTrack } from '../../../utils/types';
-import RecommendedTracksTable from '../RecommendationTable';
 import tableReducer, { TableState } from '../../../reducers/tableReducer';
 import { IS_LOADING, IS_NOT_LOADING } from '../../../actions/tableActions';
-import moment from 'moment';
 import { useParams } from 'react-router';
 import useAsyncEffect from '../../../hooks/useAsyncEffect';
 import AlbumGrid from '../../shared/AlbumGrid/AlbumGrid';
@@ -42,10 +39,6 @@ const SimilarTracks = () => {
       const albumInfo = await spotifyApi.getAlbumInfo(albumId);
       setAlbumInfo(albumInfo);
 
-      setAlbums([
-        { value: albumId, label: albumInfo.name }
-      ]);
-
       await selectAlbum(albumId);
     }
   }, [albumId])
@@ -68,7 +61,6 @@ const SimilarTracks = () => {
     tableStateDispatch({ type: IS_LOADING });
 
     const albumTracks = await spotifyApi.getAlbumTracks(albumId);
-    console.log('albumTracks', albumTracks);
     let album;
 
     // Don't use the pre-filled album info from the id in the url params if the album has been cleared
@@ -123,14 +115,17 @@ const SimilarTracks = () => {
       seed_artists: album.artists[0].id,
       limit: 50
     };
-    const tracksResponse = await spotifyApi.getFilteredRecommendations(recommendationOptions);
-    const albums: any[] = [];
-    console.log('tracksResponse', tracksResponse);
+    const tracksResponse: any = await spotifyApi.getFilteredRecommendations(recommendationOptions);
 
-    // TODO: Loop through tracks and get the album they belong to
+    let recommendedAlbums = tracksResponse.tracks;
+    recommendedAlbums = recommendedAlbums.map(({ album }: any) => album);
+    // Remove duplicate albums
+    recommendedAlbums = _.uniqBy(recommendedAlbums, 'id');
+    // Don't show the album that was searched for in the recommendations
+    recommendedAlbums = _.remove(recommendedAlbums, (album: any) => album.id !== albumId);
 
     tableStateDispatch({ type: IS_NOT_LOADING });
-    setRecommendedAlbums(albums);
+    setRecommendedAlbums(recommendedAlbums);
   };
 
   const removeSelectedTrack = () => {
@@ -173,9 +168,9 @@ const SimilarTracks = () => {
 
       {recommendedAlbums.length > 0 && seedAlbumName &&
         <div style={{ marginTop: '30px' }}>
-          <h4>Similar tracks to {seedAlbumName}</h4>
+          <h4>Similar albums to {seedAlbumName}</h4>
 
-          <AlbumGrid albums={albums} />
+          <AlbumGrid albums={recommendedAlbums} />
         </div>
       }
     </Page>

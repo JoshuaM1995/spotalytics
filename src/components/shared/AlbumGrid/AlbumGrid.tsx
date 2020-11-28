@@ -12,6 +12,7 @@ interface AlbumGridProps {
 }
 
 const AlbumGrid = ({ albums, infiniteScroll, infiniteScrollProps }: AlbumGridProps) => {
+  console.log({ 'AlbumGrid albums': albums });
   return (
     <ConditionalWrapper
       condition={infiniteScroll}
