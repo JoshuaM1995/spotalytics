@@ -16,7 +16,8 @@ const SavedAlbums = () => {
 
   useEffect(() => {
     spotifyApi.getCurrentUserSavedAlbums(itemsPerPage).then((response: any) => {
-      setAlbums(response.items);
+      const formattedAlbums = response.items.map((album: any) => album.album);
+      setAlbums(formattedAlbums);
       setPageTitle(`${pageTitle} (${response.total})`);
     });
   }, []);
@@ -29,9 +30,10 @@ const SavedAlbums = () => {
       const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
       spotifyApi.getCurrentUserSavedAlbums(itemsPerPage, offset).then((response: any) => {
+        const formattedAlbums = response.items.map((album: any) => album.album);
         setAlbums([
           ...albums,
-          ...response.items,
+          ...formattedAlbums,
         ]);
 
         // Once we reached the end of the artists, stop the scrolling events

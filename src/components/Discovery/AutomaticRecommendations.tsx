@@ -7,7 +7,7 @@ import moment from 'moment';
 import {topValueInArray} from "../../utils/global";
 import tableReducer, {TableState} from "../../reducers/tableReducer";
 import {RecommendedTrack} from "../../utils/types";
-import RecommendationTable from "./RecommendationTable";
+import RecommendedTracksTable from "./RecommendationTable";
 import {IS_NOT_LOADING, UPDATE_DATA} from "../../actions/tableActions";
 
 enum Feature {
@@ -353,7 +353,7 @@ const AutomaticRecommendations = () => {
       }
       <br/>
 
-      <RecommendationTable
+      <RecommendedTracksTable
         recommendations={recommendations}
         tableState={tableState}
         tableStateDispatch={tableStateDispatch}

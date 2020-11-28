@@ -81,7 +81,7 @@ const ArtistCountries = () => {
   }, []);
 
   return (
-    <Container className="analytics-container">
+    <Container className="analytics-container" style={{ height: window.outerHeight - 150 }}>
       <div style={{textAlign: 'center', margin: '15px 0 30px 0'}}>
         <h3>Artist's Countries</h3>
         <h5>Displays which countries have the most artists based on the artists you follow.</h5>

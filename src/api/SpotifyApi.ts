@@ -1,5 +1,5 @@
 import moment from "moment";
-import {TimeRange} from "../utils/constants";
+import { TimeRange } from "../utils/constants";
 import * as _ from 'lodash';
 
 const Spotify = require('spotify-web-api-js');
@@ -33,7 +33,7 @@ export default class SpotifyApi {
 
   public getTotalArtistCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotify.getFollowedArtists({limit}, (error: any, response: any) => {
+      this.spotify.getFollowedArtists({ limit }, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);
         resolve(response.artists.total);
       });
@@ -42,7 +42,7 @@ export default class SpotifyApi {
 
   public getTotalAlbumCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMySavedAlbums({limit}, (error: any, response: any) => {
+      this.spotify.getMySavedAlbums({ limit }, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
@@ -54,7 +54,7 @@ export default class SpotifyApi {
 
   public getTotalTrackCount(limit: number = 1): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMySavedTracks({limit}, (error: any, response: any) => {
+      this.spotify.getMySavedTracks({ limit }, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
@@ -66,7 +66,7 @@ export default class SpotifyApi {
 
   public getTopArtists(limit: number = 5, time_range = TimeRange.SHORT_TERM): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMyTopArtists({limit, time_range}, (error: any, response: any) => {
+      this.spotify.getMyTopArtists({ limit, time_range }, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
@@ -78,7 +78,7 @@ export default class SpotifyApi {
 
   public getTopAlbums(limit: number = 5, time_range = TimeRange.SHORT_TERM): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMyTopTracks({limit, time_range}, (error: any, response: any) => {
+      this.spotify.getMyTopTracks({ limit, time_range }, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
@@ -102,7 +102,7 @@ export default class SpotifyApi {
     limit: number = 10,
   ): Promise<SpotifyApi.TrackObjectFull[]> {
     return new Promise((resolve, reject) => {
-      this.spotify.getMyTopTracks({limit, time_range}, (error: any, response: any) => {
+      this.spotify.getMyTopTracks({ limit, time_range }, (error: any, response: any) => {
         if (error) {
           reject(error);
         }
@@ -159,7 +159,7 @@ export default class SpotifyApi {
     return new Promise((resolve, reject) => {
       this.spotify.getArtist(artistId, (error: any, artistInfo: any) => {
         SpotifyApi.processError(error, reject);
-          resolve(artistInfo);
+        resolve(artistInfo);
       });
     });
   }
@@ -174,12 +174,41 @@ export default class SpotifyApi {
     });
   }
 
+  public getTrackInfo(trackId: string): Promise<SpotifyApi.SingleTrackResponse> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const trackInfo: SpotifyApi.SingleTrackResponse = await this.spotify.getTrack(trackId);
+        resolve(trackInfo);
+      } catch(error) {
+        SpotifyApi.processError(error, reject);
+      }
+    });
+  }
+
   public getAlbumInfo(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spotify.getAlbum(id, (error: any, response: any) => {
         SpotifyApi.processError(error, reject);
         resolve(response);
       });
+    });
+  }
+
+  public getAlbumTracks(id: string, options?: any): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let album;
+
+        if (options) {
+          album = await this.spotify.getAlbumTracks(id, options);
+        } else {
+          album = await this.spotify.getAlbumTracks(id);
+        }
+
+        resolve(album.items);
+      } catch(error) {
+        SpotifyApi.processError(error, reject);
+      }
     });
   }
 
@@ -241,7 +270,7 @@ export default class SpotifyApi {
 
           const last = _.last(followedArtists);
           after = last.id;
-        } catch(error) {
+        } catch (error) {
           SpotifyApi.processError(error, reject);
         }
       }
@@ -269,7 +298,7 @@ export default class SpotifyApi {
 
       // If we are including the song that's currently playing, we decrement the limit by one since we'll be
       // prepending the currently played track to the array of recently played tracks
-      if(trackLimit && includeCurrentlyPlaying && currentlyPlayingTrack) {
+      if (trackLimit && includeCurrentlyPlaying && currentlyPlayingTrack) {
         limit--;
       }
 
@@ -279,7 +308,7 @@ export default class SpotifyApi {
         SpotifyApi.processError(error, reject);
 
         // If we are including the track that's currently playing, prepend it to the array of recently played tracks
-        if(includeCurrentlyPlaying && currentlyPlayingTrack) {
+        if (includeCurrentlyPlaying && currentlyPlayingTrack) {
           recentlyPlayedTracks.items.unshift(currentlyPlayingTrack);
         }
 
@@ -288,7 +317,7 @@ export default class SpotifyApi {
     };
 
     return new Promise((resolve, reject) => {
-      if(includeCurrentlyPlaying) {
+      if (includeCurrentlyPlaying) {
         this.spotify.getMyCurrentPlayingTrack({}, (error: any, response: any) => {
           SpotifyApi.processError(error, reject);
           getRecentlyPlayedTracks(resolve, reject, response);
@@ -318,7 +347,7 @@ export default class SpotifyApi {
   }
 
   public getCurrentUserProfile(): Promise<SpotifyApi.CurrentUsersProfileResponse> {
-      return this.spotify.getMe();
+    return this.spotify.getMe();
   }
 
   public getPlaylistById(playlistId: string): Promise<SpotifyApi.SinglePlaylistResponse> {
@@ -329,8 +358,21 @@ export default class SpotifyApi {
     query: string,
     types: ('album' | 'artist' | 'playlist' | 'track')[],
     limit = 20,
-  ): Promise<SpotifyApi.ArtistSearchResponse> {
+  ): Promise<SpotifyApi.ArtistSearchResponse | SpotifyApi.AlbumSearchResponse | SpotifyApi.TrackSearchResponse | SpotifyApi.PlaylistSearchResponse> {
     return this.spotify.search(query, types, { limit });
+  }
+
+
+  public getTrackFeatures(trackId: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const audioFeatures: SpotifyApi.AudioFeaturesResponse = await this.spotify.getAudioFeaturesForTrack(trackId);
+        resolve(audioFeatures);
+      } catch (error) {
+        SpotifyApi.processError(error, reject);
+        reject(error);
+      }
+    });
   }
 
   public getTracksFeatures(trackIds: string[]): Promise<SpotifyApi.AudioFeaturesObject[]> {
