@@ -1,9 +1,9 @@
 import React from 'react';
 import { useRouteMatch } from 'react-router';
 import { Route } from 'react-router-dom';
-import Recommendations from '../components/Recommendations/Recommendations';
-import SimilarAlbums from '../components/Recommendations/SimilarAlbums/SimilarAlbums';
-import SimilarTracks from '../components/Recommendations/SimilarTracks/SimilarTracks';
+import Recommendations from '../components/Discovery/Recommendations';
+import SimilarAlbums from '../components/Discovery/SimilarAlbums/SimilarAlbums';
+import SimilarTracks from '../components/Discovery/SimilarTracks/SimilarTracks';
 
 const DiscoverRoutes = () => {
   const match = useRouteMatch();

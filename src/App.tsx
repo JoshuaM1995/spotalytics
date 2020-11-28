@@ -18,7 +18,6 @@ import './App.scss';
 import SomethingWentWrong from "./components/Error/SomethingWentWrong";
 import ArtistRoutes from "./router/ArtistRoutes";
 import AlbumRoutes from "./router/AlbumRoutes";
-import Recommendations from "./components/Recommendations/Recommendations";
 import {SPOTIFY_CONTEXT} from "./utils/constants";
 import AnalyticsRoutes from "./router/AnalyticsRoutes";
 import DiscoverRoutes from './router/DiscoverRoutes';
