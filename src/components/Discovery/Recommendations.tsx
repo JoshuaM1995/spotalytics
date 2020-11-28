@@ -15,28 +15,24 @@ enum Tab {
 const Recommendations = () => {
   const [activeTab, setActiveTab] = useState(Tab.AUTOMATIC_RECOMMENDATIONS);
 
-  const changeTab = (activeKey: Tab) => {
-    setActiveTab(activeKey);
-  };
-
   return (
     <Page title="Recommendations">
       <Nav appearance="subtle" justified>
         <Nav.Item
           active={activeTab === Tab.AUTOMATIC_RECOMMENDATIONS}
-          onClick={() => changeTab(Tab.AUTOMATIC_RECOMMENDATIONS)}
+          onClick={() => setActiveTab(Tab.AUTOMATIC_RECOMMENDATIONS)}
         >
           Automatic Recommendations
         </Nav.Item>
         <Nav.Item
           active={activeTab === Tab.SIMPLE_FILTERS}
-          onClick={() => changeTab(Tab.SIMPLE_FILTERS)}
+          onClick={() => setActiveTab(Tab.SIMPLE_FILTERS)}
         >
           Simple Recommendation Filters
         </Nav.Item>
         <Nav.Item
           active={activeTab === Tab.ADVANCED_FILTERS}
-          onClick={() => changeTab(Tab.ADVANCED_FILTERS)}
+          onClick={() => setActiveTab(Tab.ADVANCED_FILTERS)}
         >
           Advanced Recommendation Filters
         </Nav.Item>

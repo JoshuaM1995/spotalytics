@@ -1,51 +1,37 @@
-import React, { ReactElement, useContext, useEffect, useReducer, useState } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import Page from "../../Page/Page";
-import { Badge, Button, Icon, IconButton, Table } from "rsuite";
-import TablePagination from "rsuite/es/Table/TablePagination";
-import tableReducer, { TableState } from "../../../reducers/tableReducer";
-import { IS_LOADING, IS_NOT_LOADING, UPDATE_DATA, UPDATE_DISPLAY_LENGTH, UPDATE_PAGE } from "../../../actions/tableActions";
-import { getFilteredTableData } from "../../../utils/table";
+import { Badge, ButtonGroup, ButtonToolbar, Icon, IconButton } from "rsuite";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
 import moment from 'moment';
 import './RecentlyPlayedTracks.scss';
 import { Link } from "react-router-dom";
+import RecentlyPlayedTracksTable from './RecentlyPlayedTracksTable';
+import RecentlyPlayedTracksTimeline from './RecentlyPlayedTracksTimeline';
+import RecentlyPlayedTracksCalendar from './RecentlyPlayedTracksCalendar';
 
-interface RecentlyPlayedTrack {
+export interface RecentlyPlayedTrack {
   track: string;
   artists: string;
   playedAt: any;
 }
 
-const { Column, HeaderCell, Cell } = Table;
-const initialTableState: TableState<RecentlyPlayedTrack> = {
-  data: [],
-  page: 1,
-  displayLength: 25,
-  isLoading: true,
-};
-
-const SimilarTracksCell = ({ rowData, dataKey, ...props }: any) => (
-  <Cell {...props}>
-    <Link to={`/discover/similar-tracks/${rowData[dataKey]}`}>
-      <IconButton icon={<Icon icon="music" />} color="red">Similar Tracks</IconButton>
-    </Link>
-  </Cell>
-);
+enum ViewMode {
+  TABLE = 'TABLE',
+  TIMELINE = 'TIMELINE',
+  CALENDAR = 'CALENDAR',
+}
 
 const RecentlyPlayedTracks = () => {
   const [data, setData] = useState<RecentlyPlayedTrack[]>([]);
-  const [tableState, tableStateDispatch] = useReducer(tableReducer, initialTableState);
   const [tracks, setTracks] = useState<any>([]);
-  const { data: recentlyPlayedTracks, page, displayLength, isLoading } = tableState;
+  const [viewMode, setViewMode] = useState(ViewMode.TABLE);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
-    tableStateDispatch({ type: IS_LOADING });
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     spotifyApi.getRecentlyPlayedTracks(50, true).then((recentlyPlayedTracks: any[]) => {
-      tableStateDispatch({ type: IS_NOT_LOADING });
       const tracksToAdd: any[] = [];
 
       recentlyPlayedTracks.forEach((recentlyPlayedTrack: any) => {
@@ -93,62 +79,33 @@ const RecentlyPlayedTracks = () => {
     });
   }, [spotifyContext.accessToken]);
 
-  useEffect(() => {
-    setData(getFilteredTableData<RecentlyPlayedTrack>(recentlyPlayedTracks, page, displayLength));
-    tableStateDispatch({ type: IS_NOT_LOADING });
-  }, [recentlyPlayedTracks, page, displayLength]);
-
-  useEffect(() => {
-    tableStateDispatch({ type: UPDATE_DATA, value: tracks });
-  }, [tracks]);
-
   return (
     <Page title="Recently Played Tracks">
-      <Table
-        height={800}
-        data={data}
-        loading={isLoading}
-        className="recently-played-tracks-table"
-        wordWrap
-      >
-        <Column width={100} align="center">
-          <HeaderCell />
-          <Cell dataKey="isPlaying" />
-        </Column>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <ButtonToolbar>
+            <ButtonGroup>
+              <IconButton
+                color={viewMode === ViewMode.TABLE ? 'green' : undefined}
+                icon={<Icon icon="table"/>}
+                onClick={() => setViewMode(ViewMode.TABLE)}
+              />
+              <IconButton
+                color={viewMode === ViewMode.TIMELINE ? 'green' : undefined}
+                icon={<Icon icon="clock-o"/>}
+                onClick={() => setViewMode(ViewMode.TIMELINE)}
+              />
+              <IconButton
+                color={viewMode === ViewMode.CALENDAR ? 'green' : undefined}
+                icon={<Icon icon="calendar"/>}
+                onClick={() => setViewMode(ViewMode.CALENDAR)}
+              />
+            </ButtonGroup>
+          </ButtonToolbar>
+      </div>
 
-        <Column width={400}>
-          <HeaderCell>Track Name</HeaderCell>
-          <Cell dataKey="trackName" />
-        </Column>
-
-        <Column width={300}>
-          <HeaderCell>Artist(s)</HeaderCell>
-          <Cell dataKey="artists" />
-        </Column>
-
-        <Column width={250}>
-          <HeaderCell>Played At</HeaderCell>
-          <Cell dataKey="playedAt" />
-        </Column>
-
-        <Column width={200} align="right">
-          <HeaderCell>Similar Tracks</HeaderCell>
-          <SimilarTracksCell dataKey="trackId" />
-        </Column>
-      </Table>
-
-      <TablePagination
-        lengthMenu={[
-          { value: 10, label: 10 },
-          { value: 25, label: 25 },
-          { value: 50, label: 50 },
-        ]}
-        activePage={page}
-        displayLength={displayLength}
-        total={recentlyPlayedTracks.length}
-        onChangePage={(dataKey) => tableStateDispatch({ type: UPDATE_PAGE, value: dataKey })}
-        onChangeLength={(dataKey) => tableStateDispatch({ type: UPDATE_DISPLAY_LENGTH, value: dataKey })}
-      />
+      {viewMode === ViewMode.TABLE && <RecentlyPlayedTracksTable data={data} setData={setData} tracks={tracks} />}
+      {viewMode === ViewMode.TIMELINE && <RecentlyPlayedTracksTimeline data={data} setData={setData} tracks={tracks} />}
+      {viewMode === ViewMode.CALENDAR && <RecentlyPlayedTracksCalendar data={data} setData={setData} tracks={tracks} />}
     </Page>
   );
 };
