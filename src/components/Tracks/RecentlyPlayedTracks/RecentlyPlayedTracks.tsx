@@ -16,6 +16,17 @@ export interface RecentlyPlayedTrack {
   playedAt: any;
 }
 
+export type TrackToAdd = {
+  isPlaying: ReactElement | string;
+  artists: ReactElement[] | string[];
+  playedAt: string;
+  trackId: string;
+  trackName: ReactElement | string;
+  artistName: ReactElement | string;
+  albumId: string;
+  albumImage: string;
+};
+
 enum ViewMode {
   TABLE = 'TABLE',
   TIMELINE = 'TIMELINE',
@@ -25,37 +36,39 @@ enum ViewMode {
 const RecentlyPlayedTracks = () => {
   const [data, setData] = useState<RecentlyPlayedTrack[]>([]);
   const [tracks, setTracks] = useState<any>([]);
-  const [viewMode, setViewMode] = useState(ViewMode.TABLE);
+  // const [viewMode, setViewMode] = useState(ViewMode.TABLE);
+  const [viewMode, setViewMode] = useState(ViewMode.TIMELINE);
   const { spotifyContext } = useContext(SpotifyContext);
 
   useEffect(() => {
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     spotifyApi.getRecentlyPlayedTracks(50, true).then((recentlyPlayedTracks: any[]) => {
-      const tracksToAdd: any[] = [];
+      const tracksToAdd: TrackToAdd[] = [];
 
       recentlyPlayedTracks.forEach((recentlyPlayedTrack: any) => {
         const artists: ReactElement[] = [];
-        let trackToAdd: {
-          isPlaying: ReactElement | string;
-          artists: ReactElement[] | string[];
-          playedAt: string;
-          trackId: string;
-          trackName: ReactElement | string
-        };
+        let trackToAdd: TrackToAdd;
+
+        console.log({ recentlyPlayedTrack });
 
         if (recentlyPlayedTrack.item) {
           recentlyPlayedTrack.item.artists.forEach((artist: any) => {
             artists.push(<><Link to={`/artist/${artist.id}`}>{artist.name}</Link>{', '}</>);
           });
 
+          console.log({ recentlyPlayedTrack });
+
           trackToAdd = {
             isPlaying: recentlyPlayedTrack.is_playing ? <Badge content="Playing" className="badge-playing" />
               : <Badge content="Not Playing" className="badge-not-playing" />,
-            trackId: recentlyPlayedTrack.track.id,
+            trackId: recentlyPlayedTrack.item.id,
             trackName: <a href={recentlyPlayedTrack.item.uri}>{recentlyPlayedTrack.item.name}</a>,
             artists: [],
             playedAt: moment(recentlyPlayedTrack.timestamp).format('MMMM Do, YYYY [at] h:mm A'),
+            artistName: <Link to={`/artist/${recentlyPlayedTrack.item.artists[0].id}`}>{recentlyPlayedTrack.item.artists[0].name}</Link>,
+            albumId: recentlyPlayedTrack.item.album.id,
+            albumImage: recentlyPlayedTrack.item.album.images[0].url,
           };
         } else {
           recentlyPlayedTrack.track.artists.forEach((artist: any) => {
@@ -66,8 +79,11 @@ const RecentlyPlayedTracks = () => {
             isPlaying: '',
             trackId: recentlyPlayedTrack.track.id,
             trackName: <a href={recentlyPlayedTrack.track.uri}>{recentlyPlayedTrack.track.name}</a>,
+            artistName: <Link to={`/artist/${recentlyPlayedTrack.track.artists[0].id}`}>{recentlyPlayedTrack.track.artists[0].name}</Link>,
             artists: [],
             playedAt: moment(recentlyPlayedTrack.played_at).format('MMMM Do, YYYY [at] h:mm A'),
+            albumImage: recentlyPlayedTrack.track.album.images[0].url,
+            albumId: recentlyPlayedTrack.track.album.id,
           };
         }
 
