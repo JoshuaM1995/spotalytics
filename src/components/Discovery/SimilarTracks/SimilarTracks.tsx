@@ -87,9 +87,8 @@ const SimilarTracks = () => {
       ...{ seed_tracks: trackId, limit: 50 },
     };
     const tracksResponse = await spotifyApi.getFilteredRecommendations(recommendationOptions);
-    const tracks: RecommendedTrack[] = [];
-    tracksResponse.tracks.forEach((track: any, key) => {
-      tracks.push({
+    let recommendedTracks: RecommendedTrack[] = tracksResponse.tracks.map((track: any) => {
+      return {
         id: track.id,
         trackUri: track.uri,
         trackName: track.name,
@@ -98,11 +97,13 @@ const SimilarTracks = () => {
         albumId: track.album.id,
         albumName: track.album.name,
         duration: track.duration_ms,
-      });
+      };
     });
+    // Don't show the track that was searched for in the recommendations
+    recommendedTracks = _.remove(recommendedTracks, (track: any) => track.id !== trackId);
 
     tableStateDispatch({type: IS_NOT_LOADING});
-    setRecommendedTracks(tracks);
+    setRecommendedTracks(recommendedTracks);
   };
 
   const removeSelectedTrack = () => {
@@ -151,7 +152,7 @@ const SimilarTracks = () => {
             recommendations={recommendedTracks}
             tableState={tableState}
             tableStateDispatch={tableStateDispatch}
-            playlistNameOverride={`Similar tracks to ${seedTrackName} (${moment().format('YYYY-MM-DD')})`}
+            playlistNameOverride={`Similar tracks to ${seedTrackName}`}
           />
         </div>
       }
