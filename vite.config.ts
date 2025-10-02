@@ -10,7 +10,7 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
-    target: "es2015",
+    target: "esnext",
     modulePreload: {
       polyfill: false,
     },
@@ -35,8 +35,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["process", "moment"],
-  },
-  esbuild: {
-    target: "esnext",
   },
 });
