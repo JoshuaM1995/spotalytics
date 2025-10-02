@@ -1,1 +1,9 @@
 /* /index.html 200
+
+# MIME type headers for JavaScript modules
+/assets/*.js
+  Content-Type: application/javascript
+
+# MIME type headers for CSS files
+/assets/*.css
+  Content-Type: text/css

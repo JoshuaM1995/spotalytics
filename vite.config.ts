@@ -10,9 +10,17 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
-    target: "esnext",
+    target: "es2015",
     modulePreload: {
       polyfill: false,
+    },
+    rollupOptions: {
+      output: {
+        format: "es",
+        entryFileNames: "assets/[name]-[hash].js",
+        chunkFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash].[ext]",
+      },
     },
   },
   envPrefix: "VITE_",
