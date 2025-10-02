@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 // import jwt from "jsonwebtoken";
@@ -11,11 +11,16 @@ import * as serviceWorker from "./serviceWorker";
 // );
 // axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
 
-ReactDOM.render(
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Root element not found");
+}
+
+const root = createRoot(container);
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -27,6 +27,7 @@ const ArtistDetails = () => {
   const [followers, setFollowers] = useState(0);
 
   useEffect(() => {
+    if (!artistId) return;
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
 
     spotifyApi.getArtistInfo(artistId).then((artist: any) => {
@@ -69,7 +70,7 @@ const ArtistDetails = () => {
               </Col>
 
               <Col xs={24} md={12}>
-                <FollowArtistButton artistId={artistId} setFollowers={setFollowers} />
+                {artistId && <FollowArtistButton artistId={artistId} setFollowers={setFollowers} />}
               </Col>
             </Row>
           </>}
@@ -109,16 +110,16 @@ const ArtistDetails = () => {
           </Nav>
 
           <Content style={{display: (activeTab === Tab.ALBUMS) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistAlbums artistId={artistId} active/>
+            {artistId && <ArtistAlbums artistId={artistId} active/>}
             <br/>
           </Content>
 
           <Content style={{display: (activeTab === Tab.TOP_TRACKS) ? 'block' : 'none', marginTop: '20px'}}>
-            <ArtistTopTracks artistId={artistId} active={activeTab === Tab.TOP_TRACKS}/>
+            {artistId && <ArtistTopTracks artistId={artistId} active={activeTab === Tab.TOP_TRACKS}/>}
           </Content>
 
           <Content style={{display: (activeTab === Tab.RELATED_ARTISTS) ? 'block' : 'none', marginTop: '20px'}}>
-            <RelatedArtists artistId={artistId} active={activeTab === Tab.RELATED_ARTISTS}/>
+            {artistId && <RelatedArtists artistId={artistId} active={activeTab === Tab.RELATED_ARTISTS}/>}
             <br/>
           </Content>
 

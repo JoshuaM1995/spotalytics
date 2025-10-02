@@ -1,7 +1,7 @@
-import React, {PropsWithChildren} from 'react';
-import {Dropdown} from "rsuite";
-import {Link, Route} from "react-router-dom";
-import {DropdownMenuItemProps} from "rsuite/es/Dropdown/DropdownMenuItem";
+import React, { PropsWithChildren } from "react";
+import { Dropdown } from "rsuite";
+import { Link, useLocation } from "react-router-dom";
+import { DropdownMenuItemProps } from "rsuite/es/Dropdown/DropdownMenuItem";
 
 interface DropdownItemChildProps extends DropdownMenuItemProps {
   path: string;
@@ -10,21 +10,32 @@ interface DropdownItemChildProps extends DropdownMenuItemProps {
 }
 
 const DropdownItemLink = ({
-  path, exact, to, eventKey, children
+  path,
+  exact,
+  to,
+  eventKey,
+  children,
 }: PropsWithChildren<DropdownMenuItemProps>) => {
+  const location = useLocation();
+
+  const isActive = () => {
+    if (exact) {
+      return location.pathname === to;
+    }
+
+    return location.pathname.startsWith(path);
+  };
+
   return (
-    <Route path={path} exact={exact} children={({match}) => (
-      <Dropdown.Item
-        eventKey={eventKey}
-        active={!!match}
-        renderItem={() => (
-          <Link to={to} className="rs-dropdown-item-content">
-            {children}
-          </Link>
-        )}
-      >
-      </Dropdown.Item>
-    )}/>
+    <Dropdown.Item
+      eventKey={eventKey}
+      active={isActive()}
+      renderItem={() => (
+        <Link to={to} className="rs-dropdown-item-content">
+          {children}
+        </Link>
+      )}
+    ></Dropdown.Item>
   );
 };
 

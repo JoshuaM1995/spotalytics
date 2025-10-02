@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import Page from "../../Page/Page";
 import SpotifyContext from "../../../context/spotify";
 import AlbumGrid from "../../shared/AlbumGrid/AlbumGrid";

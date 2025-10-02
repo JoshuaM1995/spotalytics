@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import Page from "../Page/Page";
 import { Col, Icon, IconButton, Panel, Row } from "rsuite";
 import SpotifyContext from "../../context/spotify";
-import { Redirect } from "react-router";
+import { Navigate } from "react-router-dom";
 import SpotifyApi from "../../api/SpotifyApi";
 
 const Home = () => {
   const { spotifyContext } = useContext(SpotifyContext);
 
   if (spotifyContext.isAuthenticated) {
-    return <Redirect to="/dashboard" />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
