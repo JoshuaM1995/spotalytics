@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {UnknownArtist} from "./ArtistCountries";
+import { useEffect } from "react";
+import { UnknownArtist } from "./ArtistCountries";
 
 interface UnknownArtistsProps {
   artists: UnknownArtist[];
@@ -8,7 +8,7 @@ interface UnknownArtistsProps {
 // TODO: Implement this feature
 const UnknownArtists = ({ artists }: UnknownArtistsProps) => {
   useEffect(() => {
-    console.log('Unknown artists', artists);
+    console.log("Unknown artists", artists);
   }, [artists]);
 
   return <></>;

@@ -1,8 +1,8 @@
-import {Dropdown, Icon, Nav, Navbar} from "rsuite";
-import React, {useContext, useState} from "react";
+import { Dropdown, Icon, Nav, Navbar } from "rsuite";
+import { useContext, useState } from "react";
 import SpotifyContext from "../../../context/spotify";
-import {Redirect} from "react-router";
-import {CacheKey, SPOTIFY_CONTEXT} from "../../../utils/constants";
+import { Navigate } from "react-router-dom";
+import { CacheKey, SPOTIFY_CONTEXT } from "../../../utils/constants";
 
 interface NavToggleProps {
   expand: any;
@@ -12,13 +12,13 @@ interface NavToggleProps {
 const iconStyles = {
   width: 56,
   height: 56,
-  lineHeight: '56px',
-  textAlign: 'center'
+  lineHeight: "56px",
+  textAlign: "center",
 };
 
 const NavToggle = ({ expand, onChange }: NavToggleProps) => {
   const { spotifyContext, setSpotifyContext } = useContext(SpotifyContext);
-  const [ redirect, setRedirect ] = useState(<></>);
+  const [redirect, setRedirect] = useState(<></>);
   const [isUnlinkIconLoading, setIsUnlinkIconLoading] = useState(false);
 
   const unlinkSpotifyAccount = () => {
@@ -39,49 +39,59 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
 
       setIsUnlinkIconLoading(false);
 
-      setRedirect(<Redirect to="/unauthenticated-spotify" />);
+      setRedirect(<Navigate to="/unauthenticated-spotify" replace />);
     }, 1000);
   };
 
   return (
     <>
-      { redirect }
+      {redirect}
       <Navbar appearance="subtle" className="nav-toggle">
         <Navbar.Body>
-          {spotifyContext.isAuthenticated &&
+          {spotifyContext.isAuthenticated && (
             <Nav>
               <Dropdown
                 placement="topStart"
                 trigger="click"
-                renderTitle={children => {
+                renderTitle={() => {
                   // @ts-ignore
-                  return <Icon style={iconStyles} icon="cog"/>;
+                  return <Icon style={iconStyles} icon="cog" />;
                 }}
               >
-                <Dropdown.Item eventKey="5-1" icon={<Icon icon="user-circle"/>}>
+                <Dropdown.Item
+                  eventKey="5-1"
+                  icon={<Icon icon="user-circle" />}
+                >
                   My Profile
                 </Dropdown.Item>
                 <Dropdown.Item
                   eventKey="5-2"
-                  icon={<Icon icon="spotify"/>}
+                  icon={<Icon icon="spotify" />}
                   renderItem={() => (
                     <span
                       className="rs-dropdown-item-content"
                       onClick={() => unlinkSpotifyAccount()}
                     >
-                      <Icon icon={isUnlinkIconLoading ? 'spinner' : 'spotify'} pulse={isUnlinkIconLoading}/>
-                      {isUnlinkIconLoading ? 'Unlinking Spotify...' : 'Unlink Account'}
+                      <Icon
+                        icon={isUnlinkIconLoading ? "spinner" : "spotify"}
+                        pulse={isUnlinkIconLoading}
+                      />
+                      {isUnlinkIconLoading
+                        ? "Unlinking Spotify..."
+                        : "Unlink Account"}
                     </span>
                   )}
-                >
-                </Dropdown.Item>
+                ></Dropdown.Item>
               </Dropdown>
             </Nav>
-          }
+          )}
 
           <Nav pullRight>
-            <Nav.Item onClick={onChange} style={{ width: 56, textAlign: 'center' }}>
-              <Icon icon={expand ? 'angle-left' : 'angle-right'} />
+            <Nav.Item
+              onClick={onChange}
+              style={{ width: 56, textAlign: "center" }}
+            >
+              <Icon icon={expand ? "angle-left" : "angle-right"} />
             </Nav.Item>
           </Nav>
         </Navbar.Body>

@@ -1,15 +1,11 @@
-import React from 'react';
-import {useRouteMatch} from 'react-router';
-import {Route} from 'react-router-dom';
+import { Routes, Route } from "react-router-dom";
 import AlbumDetails from "../components/Albums/AlbumDetails/AlbumDetails";
 
 const AlbumRoutes = () => {
-  const match = useRouteMatch();
-
   return (
-    <>
-      <Route exact path={`${match.path}/:albumId`} render={() => <AlbumDetails />} />
-    </>
+    <Routes>
+      <Route path=":albumId" element={<AlbumDetails />} />
+    </Routes>
   );
 };
 

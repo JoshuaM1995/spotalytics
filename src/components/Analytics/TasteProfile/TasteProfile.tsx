@@ -1,11 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {Container} from "rsuite";
-import {ResponsivePie} from '@nivo/pie';
+import { useContext, useState } from "react";
+import { Container } from "rsuite";
+import { ResponsivePie } from "@nivo/pie";
 import useAsyncEffect from "../../../hooks/useAsyncEffect";
-import {TimeRange} from "../../../utils/constants";
+import { TimeRange } from "../../../utils/constants";
 import SpotifyContext from "../../../context/spotify";
 import SpotifyApi from "../../../api/SpotifyApi";
-import '../Analytics.scss';
+import "../Analytics.scss";
 
 interface TasteProfileData {
   track_attribute: string;
@@ -25,13 +25,18 @@ const defaultTasteProfileData: TasteProfileData[] = [
 
 const TasteProfile = () => {
   const { spotifyContext } = useContext(SpotifyContext);
-  const [tasteProfileData, setTasteProfileData] = useState<any[]>(defaultTasteProfileData);
+  const [tasteProfileData, setTasteProfileData] = useState<any[]>(
+    defaultTasteProfileData
+  );
 
   useAsyncEffect(async () => {
     const NUM_LOOKUPS = 50;
     const spotifyApi = new SpotifyApi(spotifyContext.accessToken);
     const trackIds: string[] = [];
-    const topTracks = await spotifyApi.getTopTracks(TimeRange.LONG_TERM, NUM_LOOKUPS);
+    const topTracks = await spotifyApi.getTopTracks(
+      TimeRange.LONG_TERM,
+      NUM_LOOKUPS
+    );
     let totalDanceability = 0;
     let totalEnergy = 0;
     let totalLoudness = 0;
@@ -63,21 +68,49 @@ const TasteProfile = () => {
     });
 
     setTasteProfileData([
-      { id: "Danceability", value: parseFloat((totalDanceability / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Energy", value: parseFloat((totalEnergy / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Positivity", value: parseFloat((totalPositivity / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Instrumentalness", value: parseFloat((totalInstrumentalness / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Liveness", value: parseFloat((totalLiveness / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Speechiness", value: parseFloat((totalSpeechiness / NUM_LOOKUPS * 10).toFixed(2)) },
-      { id: "Acousticness", value: parseFloat((totalAcousticness / NUM_LOOKUPS * 10).toFixed(2)) },
+      {
+        id: "Danceability",
+        value: parseFloat(((totalDanceability / NUM_LOOKUPS) * 10).toFixed(2)),
+      },
+      {
+        id: "Energy",
+        value: parseFloat(((totalEnergy / NUM_LOOKUPS) * 10).toFixed(2)),
+      },
+      {
+        id: "Positivity",
+        value: parseFloat(((totalPositivity / NUM_LOOKUPS) * 10).toFixed(2)),
+      },
+      {
+        id: "Instrumentalness",
+        value: parseFloat(
+          ((totalInstrumentalness / NUM_LOOKUPS) * 10).toFixed(2)
+        ),
+      },
+      {
+        id: "Liveness",
+        value: parseFloat(((totalLiveness / NUM_LOOKUPS) * 10).toFixed(2)),
+      },
+      {
+        id: "Speechiness",
+        value: parseFloat(((totalSpeechiness / NUM_LOOKUPS) * 10).toFixed(2)),
+      },
+      {
+        id: "Acousticness",
+        value: parseFloat(((totalAcousticness / NUM_LOOKUPS) * 10).toFixed(2)),
+      },
     ]);
   }, [spotifyContext.accessToken]);
 
   return (
-    <Container className="analytics-container" style={{ height: window.outerHeight - 250 }}>
-      <div style={{textAlign: 'center', margin: '15px 0 30px 0'}}>
+    <Container
+      className="analytics-container"
+      style={{ height: window.outerHeight - 250 }}
+    >
+      <div style={{ textAlign: "center", margin: "15px 0 30px 0" }}>
         <h3>Taste Profile</h3>
-        <h5>The attributes of the music you listen to based on your top 50 tracks.</h5>
+        <h5>
+          The attributes of the music you listen to based on your top 50 tracks.
+        </h5>
       </div>
 
       <ResponsivePie
@@ -86,108 +119,108 @@ const TasteProfile = () => {
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}
-        colors={{ scheme: 'spectral' }}
+        colors={{ scheme: "spectral" }}
         borderWidth={1}
-        borderColor={{ from: 'color', modifiers: [ [ 'darker', 0.2 ] ] }}
+        borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
         radialLabelsSkipAngle={10}
         radialLabelsTextColor="#333333"
-        radialLabelsLinkColor={{ from: 'color' }}
+        radialLabelsLinkColor={{ from: "color" }}
         sliceLabelsSkipAngle={10}
         sliceLabelsTextColor="#333333"
         defs={[
           {
-            id: 'dots',
-            type: 'patternDots',
-            background: 'inherit',
-            color: 'rgba(255, 255, 255, 0.3)',
+            id: "dots",
+            type: "patternDots",
+            background: "inherit",
+            color: "rgba(255, 255, 255, 0.3)",
             size: 4,
             padding: 1,
-            stagger: true
+            stagger: true,
           },
           {
-            id: 'lines',
-            type: 'patternLines',
-            background: 'inherit',
-            color: 'rgba(255, 255, 255, 0.3)',
+            id: "lines",
+            type: "patternLines",
+            background: "inherit",
+            color: "rgba(255, 255, 255, 0.3)",
             rotation: -45,
             lineWidth: 6,
-            spacing: 10
-          }
+            spacing: 10,
+          },
         ]}
         fill={[
           {
             match: {
-              id: 'ruby'
+              id: "ruby",
             },
-            id: 'dots'
+            id: "dots",
           },
           {
             match: {
-              id: 'c'
+              id: "c",
             },
-            id: 'dots'
+            id: "dots",
           },
           {
             match: {
-              id: 'go'
+              id: "go",
             },
-            id: 'dots'
+            id: "dots",
           },
           {
             match: {
-              id: 'python'
+              id: "python",
             },
-            id: 'dots'
+            id: "dots",
           },
           {
             match: {
-              id: 'scala'
+              id: "scala",
             },
-            id: 'lines'
+            id: "lines",
           },
           {
             match: {
-              id: 'lisp'
+              id: "lisp",
             },
-            id: 'lines'
+            id: "lines",
           },
           {
             match: {
-              id: 'elixir'
+              id: "elixir",
             },
-            id: 'lines'
+            id: "lines",
           },
           {
             match: {
-              id: 'javascript'
+              id: "javascript",
             },
-            id: 'lines'
-          }
+            id: "lines",
+          },
         ]}
         legends={[
           {
-            anchor: 'bottom',
-            direction: 'row',
+            anchor: "bottom",
+            direction: "row",
             justify: false,
             translateX: 0,
             translateY: 56,
             itemsSpacing: 0,
             itemWidth: 100,
             itemHeight: 18,
-            itemTextColor: '#999',
-            itemDirection: 'left-to-right',
+            itemTextColor: "#999",
+            itemDirection: "left-to-right",
             itemOpacity: 1,
             symbolSize: 18,
-            symbolShape: 'circle',
+            symbolShape: "circle",
             effects: [
               {
-                on: 'hover',
+                on: "hover",
                 style: {
-                  itemTextColor: '#000'
-                }
-              }
-            ]
-          }
+                  itemTextColor: "#000",
+                },
+              },
+            ],
+          },
         ]}
       />
     </Container>
