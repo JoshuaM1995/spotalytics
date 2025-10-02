@@ -1,11 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {Dropdown, Icon, Nav, Sidebar, Sidenav} from "rsuite";
+import React, { useContext, useState } from "react";
+import { Dropdown, Icon, Nav, Sidebar, Sidenav } from "rsuite";
 import NavToggle from "../NavToggle/NavToggle";
 import NavigationItem from "../NavigationItem/NavigationItem";
 import DropdownItem from "../Dropdown/DropdownItem";
 import DropdownItemLink from "../Dropdown/DropdownItemLink";
 import SpotifyContext from "../../../context/spotify";
-import './SideNavigation.scss';
+import "./SideNavigation.scss";
 
 const SideNavigation = () => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -13,46 +13,39 @@ const SideNavigation = () => {
 
   return (
     <Sidebar
-      style={{display: 'flex', flexDirection: 'column'}}
+      style={{ display: "flex", flexDirection: "column" }}
       width={isExpanded ? 260 : 56}
       collapsible
     >
       <Sidenav.Header>
         {/*@ts-ignore*/}
         <div className="header">
-          <Icon icon="logo-analytics" size="lg" style={{verticalAlign: 0}}/>
-          <span style={{marginLeft: 18}}>
-            { process.env.REACT_APP_SITE_NAME }
+          <Icon icon="logo-analytics" size="lg" style={{ verticalAlign: 0 }} />
+          <span style={{ marginLeft: 18 }}>
+            {import.meta.env.VITE_SITE_NAME}
           </span>
         </div>
       </Sidenav.Header>
-      <Sidenav
-        expanded={isExpanded}
-        appearance="inverse"
-      >
+      <Sidenav expanded={isExpanded} appearance="inverse">
         <Sidenav.Body>
           <Nav>
-            {!spotifyContext.isAuthenticated &&
+            {!spotifyContext.isAuthenticated && (
               <NavigationItem to="/" path="/" exact>
-                <Icon icon="home"/>
+                <Icon icon="home" />
                 Home
               </NavigationItem>
-            }
+            )}
             <NavigationItem to="/dashboard" path="/dashboard">
-              <Icon icon="dashboard"/>
+              <Icon icon="dashboard" />
               Dashboard
             </NavigationItem>
             <DropdownItem
               eventKey="2"
               title="Discover"
-              icon={<Icon icon="search"/>}
+              icon={<Icon icon="search" />}
               path="/discover"
             >
-              <DropdownItemLink
-                to="/discover"
-                path="/discover"
-                eventKey="2-1"
-              >
+              <DropdownItemLink to="/discover" path="/discover" eventKey="2-1">
                 <Icon icon="creative" />
                 Recommendations
               </DropdownItemLink>
@@ -76,7 +69,7 @@ const SideNavigation = () => {
             <DropdownItem
               eventKey="3"
               title="Analytics"
-              icon={<Icon icon="charts"/>}
+              icon={<Icon icon="charts" />}
               path="/analytics"
             >
               <DropdownItemLink
@@ -99,7 +92,7 @@ const SideNavigation = () => {
             <DropdownItem
               eventKey="4"
               title="Artists"
-              icon={<Icon icon="user"/>}
+              icon={<Icon icon="user" />}
               path="/artists"
             >
               <DropdownItemLink
@@ -122,7 +115,7 @@ const SideNavigation = () => {
             <Dropdown
               eventKey="5"
               title="Albums"
-              icon={<Icon icon="play-circle"/>}
+              icon={<Icon icon="play-circle" />}
             >
               <DropdownItemLink
                 to="/albums/top"
@@ -141,11 +134,7 @@ const SideNavigation = () => {
                 Saved Albums
               </DropdownItemLink>
             </Dropdown>
-            <Dropdown
-              eventKey="6"
-              title="Tracks"
-              icon={<Icon icon="music"/>}
-            >
+            <Dropdown eventKey="6" title="Tracks" icon={<Icon icon="music" />}>
               <DropdownItemLink
                 to="/tracks/top"
                 path="/tracks/top"
@@ -174,9 +163,13 @@ const SideNavigation = () => {
           </Nav>
         </Sidenav.Body>
       </Sidenav>
-      <NavToggle expand={isExpanded} onChange={() => setIsExpanded(!isExpanded)}/>
+      <NavToggle
+        expand={isExpanded}
+        onChange={() => setIsExpanded(!isExpanded)}
+      />
     </Sidebar>
   );
 };
 
 export default SideNavigation;
+
