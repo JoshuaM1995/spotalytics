@@ -27,7 +27,10 @@ export default defineConfig({
   define: {
     global: "globalThis",
     "process.env": "import.meta.env",
+    "process.env.RUN_ENV": '"production"',
     "import.meta.env.RUN_ENV": '"production"',
+    "process.env.NODE_ENV": '"production"',
+    RUN_ENV: '"production"',
   },
   resolve: {
     alias: {
