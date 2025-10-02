@@ -6,9 +6,6 @@
     "@nivo/bar": "^0.63.1",
     "@nivo/geo": "^0.63.1",
     "@nivo/pie": "^0.64.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
     "@types/chance": "^1.1.0",
     "@types/spotify-api": "0.0.3",
     "axios": "^0.19.2",
@@ -30,7 +27,6 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-router-guards": "^1.0.2",
-    "react-scripts": "3.4.1",
     "react-serialize": "^0.2.0",
     "rsuite": "^4.7.0",
     "sass": "^1.93.2",
@@ -39,10 +35,10 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "CI='' react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "browserslist": {
     "production": [
@@ -69,6 +65,13 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-infinite-scroller": "^1.2.1",
     "@types/react-router-dom": "^5.1.5",
-    "@types/styled-components": "^5.1.0"
+    "@types/styled-components": "^5.1.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@vitejs/plugin-react": "^4.0.0",
+    "jsdom": "^22.0.0",
+    "vite": "^4.4.0",
+    "vitest": "^0.34.0"
   }
 }
