@@ -9,7 +9,7 @@ export default defineConfig({
     open: true,
   },
   build: {
-    outDir: "build",
+    outDir: "dist",
     target: "es2015",
     modulePreload: {
       polyfill: false,
