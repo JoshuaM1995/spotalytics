@@ -10,6 +10,10 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
+    target: "esnext",
+    modulePreload: {
+      polyfill: false,
+    },
   },
   envPrefix: "VITE_",
   define: {
@@ -23,5 +27,8 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["process", "moment"],
+  },
+  esbuild: {
+    target: "esnext",
   },
 });
