@@ -1,10 +1,10 @@
-declare module 'rsuite' {
-  import { ReactNode } from 'react';
-  
+declare module "rsuite" {
+  import { ReactNode } from "react";
+
   export interface TableColumnProps {
     children?: ReactNode;
     width?: number;
-    align?: 'left' | 'center' | 'right';
+    align?: "left" | "center" | "right";
     resizable?: boolean;
     sortable?: boolean;
     fixed?: boolean;
@@ -12,7 +12,7 @@ declare module 'rsuite' {
     minWidth?: number;
     [key: string]: any;
   }
-  
+
   // Re-export all components as any to avoid type issues
   export const Table: any;
   export const Column: any;
